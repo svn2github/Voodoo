@@ -1,0 +1,6 @@
+D:\ForSunSoft\bin\Release\MySql.Data.dll
+D:\ForSunSoft\obj\Release\ResolveAssemblyReference.cache
+D:\ForSunSoft\bin\Release\Voodoo.dll
+D:\ForSunSoft\bin\Release\Voodoo.pdb
+D:\ForSunSoft\obj\Release\Voodoo.dll
+D:\ForSunSoft\obj\Release\Voodoo.pdb

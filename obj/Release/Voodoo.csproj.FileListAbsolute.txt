@@ -1,0 +1,9 @@
+D:\Voodoo\bin\Release\Voodoo.dll
+D:\Voodoo\bin\Release\Voodoo.pdb
+D:\Voodoo\bin\Release\MySql.Data.dll
+D:\Voodoo\obj\Release\ResolveAssemblyReference.cache
+D:\Voodoo\obj\Release\Voodoo.dll
+D:\Voodoo\obj\Release\Voodoo.pdb
+D:\Voodoo\bin\Release\Microsoft.Office.Interop.Excel.dll
+D:\Voodoo\bin\Release\office.dll
+D:\Voodoo\bin\Release\Microsoft.Vbe.Interop.dll

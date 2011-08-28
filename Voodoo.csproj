@@ -1,0 +1,296 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CF4C09DC-B002-4A0D-856B-DCD5E3719213}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Voodoo</RootNamespace>
+    <AssemblyName>Voodoo</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Voodoo.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="MySql.Data, Version=6.2.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ref\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=1.2.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ref\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ref\System.Data.SQLite.DLL</HintPath>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\DbHelper\SQLiteHelper.cs" />
+    <Compile Include="Extend\bool.cs" />
+    <Compile Include="Cache\Cache.cs" />
+    <Compile Include="Config\Info.cs" />
+    <Compile Include="Config\SystemSetting.cs" />
+    <Compile Include="Cookies\Cookie.cs" />
+    <Compile Include="Data\DbHelper\MySqlHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\DbHelper\OledbHelper.cs" />
+    <Compile Include="Data\DbHelper\OracleHelper.cs" />
+    <Compile Include="Data\DbHelper\SqlHelper.cs" />
+    <Compile Include="Data\IDbHelper.cs" />
+    <Compile Include="Extend\Chinese.cs" />
+    <Compile Include="Extend\DateTime.cs" />
+    <Compile Include="Extend\int.cs" />
+    <Compile Include="Extend\Linq.cs" />
+    <Compile Include="IO\Directory.cs" />
+    <Compile Include="IO\ExcelHelper.cs" />
+    <Compile Include="IO\File.cs" />
+    <Compile Include="IO\File.Extend.cs" />
+    <Compile Include="IO\XML.cs" />
+    <Compile Include="Extend\Js.cs" />
+    <Compile Include="Extend\JsonObject.cs" />
+    <Compile Include="Extend\myDouble.cs" />
+    <Compile Include="Extend\myXML.cs" />
+    <Compile Include="Extend\NetExt.cs" />
+    <Compile Include="LinqExt\ConditionBuilder.cs" />
+    <Compile Include="LinqExt\ExpressionVisitor.cs" />
+    <Compile Include="LinqExt\PartialEvaluator.cs" />
+    <Compile Include="LinqExt\TableExtensions.cs" />
+    <Compile Include="Net\Collect.cs" />
+    <Compile Include="Net\CollectionRules.cs" />
+    <Compile Include="Net\CollectionRulesView.cs" />
+    <Compile Include="Net\FTPClient.cs" />
+    <Compile Include="Net\Mail\Pop3.cs" />
+    <Compile Include="Net\Mail\SMTP.cs" />
+    <Compile Include="Net\robot\QQ.cs" />
+    <Compile Include="Net\Telnet.cs" />
+    <Compile Include="Net\TopicInfo.cs" />
+    <Compile Include="Net\Url.cs" />
+    <Compile Include="Net\WebServiceHelper.cs" />
+    <Compile Include="Net\WebSite.cs" />
+    <Compile Include="Extend\obj.cs" />
+    <Compile Include="other\Address.cs" />
+    <Compile Include="other\BeianInfo.cs" />
+    <Compile Include="other\Contact.cs" />
+    <Compile Include="other\enum.cs" />
+    <Compile Include="other\FileAttribute.cs" />
+    <Compile Include="other\PhoneNumber.cs" />
+    <Compile Include="other\Result.cs" />
+    <Compile Include="Pay\AliPay\alipay_function.cs" />
+    <Compile Include="Pay\AliPay\alipay_notify.cs" />
+    <Compile Include="Pay\AliPay\alipay_service.cs" />
+    <Compile Include="Pay\YeePay\Buy.cs" />
+    <Compile Include="Pay\YeePay\BuyBankDirectConnectResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Pay\YeePay\BuyCallbackResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Pay\YeePay\BuyQueryOrdDetailResult.cs" />
+    <Compile Include="Pay\YeePay\BuyRefundOrdResult.cs" />
+    <Compile Include="Pay\YeePay\Digest.cs" />
+    <Compile Include="Pay\YeePay\FormatQueryString.cs" />
+    <Compile Include="Pay\YeePay\HmacMD5.cs" />
+    <Compile Include="Pay\YeePay\HttpUtils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Extend\Regex.cs" />
+    <Compile Include="Security\ChineseIDCard.cs" />
+    <Compile Include="Security\Client.cs" />
+    <Compile Include="Security\Encrypt.cs" />
+    <Compile Include="Security\Request.cs" />
+    <Compile Include="Security\Server.cs" />
+    <Compile Include="Extend\string.cs" />
+    <Compile Include="UI\AspNetPager\aspnetpager.cs" />
+    <Compile Include="UI\AspNetPager\Designer\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\CustomAttributes.cs" />
+    <Compile Include="UI\AspNetPager\Designer\CustomInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\CustomInfoForm.Designer.cs">
+      <DependentUpon>CustomInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\NavTextForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\NavTextForm.Designer.cs">
+      <DependentUpon>NavTextForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\PageIndexBoxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\PageIndexBoxForm.Designer.cs">
+      <DependentUpon>PageIndexBoxForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\PagerDesigner.cs" />
+    <Compile Include="UI\AspNetPager\Designer\SPHelpForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\SPHelpForm.Designer.cs">
+      <DependentUpon>SPHelpForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\SPVarRegForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\SPVarRegForm.Designer.cs">
+      <DependentUpon>SPVarRegForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\StoredProcForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Designer\StoredProcForm.Designer.cs">
+      <DependentUpon>StoredProcForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\AspNetPager\Enumerations.cs" />
+    <Compile Include="UI\AspNetPager\Events.cs" />
+    <Compile Include="UI\AspNetPager\Helper.cs" />
+    <Compile Include="UI\AspNetPager\Methods.cs" />
+    <Compile Include="UI\AspNetPager\PageChangingEventArgs.cs" />
+    <Compile Include="UI\AspNetPager\PostBack.cs" />
+    <Compile Include="UI\AspNetPager\Properties.cs" />
+    <Compile Include="UI\ChineseVerifyCode.cs" />
+    <Compile Include="UI\Format.cs" />
+    <Compile Include="UI\SafeCode.cs">
+    </Compile>
+    <Compile Include="UI\TextBox.cs" />
+    <Compile Include="UI\Button.cs" />
+    <Compile Include="UI\VerifyCode.cs" />
+    <Compile Include="Extend\WS.cs" />
+    <Compile Include="Extend\validation.cs" />
+    <Compile Include="Extend\WebControl.cs" />
+    <Compile Include="XML\SgmlParser.cs" />
+    <Compile Include="XML\SgmlReader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\AspNetPager\Designer\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AspNetPager\Designer\CustomInfoForm.resx">
+      <DependentUpon>CustomInfoForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AspNetPager\Designer\NavTextForm.resx">
+      <DependentUpon>NavTextForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AspNetPager\Designer\PageIndexBoxForm.resx">
+      <DependentUpon>PageIndexBoxForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AspNetPager\Designer\SPHelpForm.resx">
+      <DependentUpon>SPHelpForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AspNetPager\Designer\SPVarRegForm.resx">
+      <DependentUpon>SPVarRegForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AspNetPager\Designer\StoredProcForm.resx">
+      <DependentUpon>StoredProcForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UI\AspNetPager\Resources\aspnetpager.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UI\AspNetPager\anp.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\AspNetPager\AspNetPager.bmp" />
+    <EmbeddedResource Include="UI\AspNetPager\AspNetPager.en.resx">
+      <DependentUpon>aspnetpager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AspNetPager\AspNetPager.resx">
+      <DependentUpon>aspnetpager.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AspNetPager\AspNetPager.zh-CHT.resx">
+      <DependentUpon>aspnetpager.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="UI\AspNetPager\AspNetPagerDocs.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IO\EXIFInfo\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

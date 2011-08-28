@@ -1,0 +1,336 @@
+﻿<%@ CodeTemplate Language="C#" Debug="True" TargetLanguage="T-SQL"  ResponseEncoding="UTF-8"  Description="Generates a script based on the data from a table." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table to get the data from." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text" %>
+
+
+<<%=""%>%@ Import Namespace="Voodoo" %>
+<<%=""%>%@ Register Assembly="Voodoo" Namespace="Voodoo.UI" TagPrefix="cc1" %>
+
+
+
+    <link rel="stylesheet" type="text/css" href="../skin/css/base.css" />
+    <script type="text/javascript" src="../skin/js/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="../skin/js/common.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $("#btn_Del").click(function() {
+                if ($(".list input:checked").size() == 0) {
+                    alert("您没有选中任何项，将不执行任何操作！");
+                    return false;
+                }
+                return confirm("模块数据删除后不可恢复，并且将造成所删模块不能访问的问题，是否继续操作？");
+            })
+        })
+    </script>
+
+
+<div class="tip">
+    <img height="14" src="../skin/images/frame/book1.gif" width="20" />
+    &nbsp; 任何不谨慎的操作将造成不可恢复的损失，请谨慎操作！
+</div>
+<table width='98%' border='0' cellpadding='1' cellspacing='1' bgcolor='#CBD8AC' align="center"
+    style="margin-top: 8px">
+    <tr bgcolor='#EEF4EA'>
+        <td background='../skin/images/wbg.gif' align='center'>
+            <table border='0' cellpadding='0' cellspacing='0'>
+			<% for(int i=1;i<SourceTable.Columns.Count;i++)
+				{
+			%>
+                <tr>
+                    <td>
+                        <%=SourceTable.Columns[i].Description%>：
+                    </td>
+                    <td style="width: 160px">
+                        <asp:TextBox ID="txt_<%=SourceTable.Columns[i].Name%>" runat="server"></asp:TextBox>
+                    </td>
+                </tr>
+				<%}%>
+                <tr>
+                    <td>
+                        <asp:ImageButton ID="btn_Search" ImageUrl="../skin/images/frame/search.gif" runat="server"
+                            CssClass="np" OnClick="btn_Search_Click" />
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<table width="98%" border="0" cellpadding="2" cellspacing="1" align="center" class="list">
+    <tr bgcolor="#EEF4EA" class="Title">
+        <td height="24" colspan="<%=SourceTable.Columns.Count+1%>">
+            &nbsp;XXXX列表&nbsp;
+        </td>
+    </tr>
+<tr align="center" bgcolor="#FAFAF1" class="Header">
+	<td width="4%">
+		选择
+	</td>
+<% for(int i=1;i<SourceTable.Columns.Count;i++)
+	{
+%>
+
+    <td width="18%">
+	    <%=SourceTable.Columns[i].Description%>
+	</td>
+<%  } %>
+	<td width="18%">
+		操作
+	</td>
+<tr>
+<tr>
+<asp:Repeater ID="list" runat="server">
+	<ItemTemplate>
+		<td>
+			<input name="ids" type="checkbox" id="ids" value="<<%=""%>%#Eval("Id") %>" class="np">
+		</td>
+<% for(int i=1;i<SourceTable.Columns.Count;i++)
+	{
+%>
+		
+		<td>
+			<<%=""%>%# Eval("<%=SourceTable.Columns[i].Name%>")%>
+		</td>
+		
+<%  } %>
+		<td>
+			<<%=""%>%if (SysPartRole.AllowEdit == true)
+            { %>
+			<a href="<%=SourceTable.Name%>Edit.aspx?id=<<%=""%>%#Eval("id")%>">编辑</a> | 
+			<<%=""%>%} %>
+			<<%=""%>%if (SysPartRole.AllowDelete == true)
+            { %>
+			<a href="?action=delete&id=<<%=""%>%#Eval("id")%>" onclick="return confirm('数据删除后不可恢复，确定要执行删除操作？')">删除</a>
+			<<%=""%>%} %>
+		</td>
+	</ItemTemplate>
+</asp:Repeater>
+</tr>
+<tr bgcolor="#FAFAF1">
+	<td colspan="<%=SourceTable.Columns.Count+1%>" height="28">
+		&nbsp;
+        <input id="Button1" type="button" value="新增" onclick="location.href='<%=SourceTable.Name%>Edit.aspx'" class="coolbg" />
+        <input id="Button2" type="button" value="全选" onclick="selAll()" class="coolbg" />
+        <input id="Button3" type="button" value="反选" onclick="noSelAll()" class="coolbg" />
+        <asp:Button ID="btn_Del" runat="server" Text="删除" CssClass="coolbg" OnClick="btn_Del_Click" />
+	</td>
+</tr>
+<tr>
+	<td colspan="<%=SourceTable.Columns.Count+1%>" align="center">
+		<cc1:AspNetPager ID="pager" runat="server" PageSize="10" AlwaysShow="true" CustomInfoHTML="共%RecordCount%条记录，%CurrentPageIndex%/%PageCount%页"
+            FirstPageText="[首页]" LastPageText="[尾页]" NextPageText="[后页]" PrevPageText="[前页]"
+            ShowCustomInfoSection="Left" onpagechanged="pager_PageChanged" />
+	</td>
+</tr>
+</table>
+
+using Voodoo;
+using Voodoo.Business;
+using Voodoo.LinqExt;
+
+
+
+
+
+CodeBehind:
+
+protected void Page_Load(object sender, EventArgs e)
+{
+    
+    if (!IsPostBack)
+    {
+		if (WS.RequestString("action") == "delete" && WS.RequestInt("id") > 0)
+		{
+			OnDelete();
+		}
+        BindData();
+    }
+}
+
+/// <summary>
+/// 绑定列表
+/// </summary>
+protected void BindData()
+{
+    DataSysDataContext dsd = new DataSysDataContext();
+    var l = from m in dsd.<%=SourceTable.Name%>
+            where 
+				<%
+				for(int i=0;i<SourceTable.Columns.Count;i++)
+				{%>
+				m.<%=SourceTable.Columns[i].Name%>.IndexOf(txt_<%=SourceTable.Columns[i].Name%>.Text) > -1 <%
+					if(i!=SourceTable.Columns.Count-1)
+					{
+						Response.Write("&&\n");
+					}
+				}
+				%>
+            select m;
+    pager.RecordCount = l.Count();
+    list.DataSource = l;
+    list.DataBind();
+}
+
+
+protected override void OnInit(EventArgs e)
+{
+    this.MenuId = ;//需要设置
+    base.OnInit(e);
+}
+
+public override void OnDelete()
+{
+    DataSysDataContext dsd = new DataSysDataContext();
+
+    if (WS.RequestString("action") == "delete" && WS.RequestInt("id") > 0 && !IsPostBack)
+    {
+
+        dsd.<%=SourceTable.Name%>.Delete(p => p.Id == WS.RequestInt("id"));
+    }
+    if (IsPostBack)
+    {
+        int[] Ids = WS.RequestString("ids").Split(',').ToIntArray();
+        dsd.<%=SourceTable.Name%>.Delete(p => p.Id.InArray(Ids));
+    }
+
+    base.OnDelete();
+    Js.AlertAndChangUrl("删除成功！", "<%=SourceTable.Name%>List.aspx");
+}
+
+protected void btn_Del_Click(object sender, EventArgs e)
+{
+    OnDelete();
+}
+
+protected void btn_Search_Click(object sender, ImageClickEventArgs e)
+{
+    pager.CurrentPageIndex = 1;
+    BindData();
+}
+
+protected void pager_PageChanged(object sender, EventArgs e)
+{
+    BindData();
+}
+
+<script runat="template">
+
+#region Pascal???
+public string ToPascal(string s)
+{
+ return s.Substring(0,1).ToUpper()+s.Substring(1);
+}
+#endregion
+#region ?????
+public string ToCamel(string s)
+{
+ return s.Substring(0,1).ToLower()+s.Substring(1);
+}
+#endregion
+
+private DataTable _sourceTableData;
+
+private DataTable SourceTableData
+{
+	get
+	{
+		if (_sourceTableData == null)
+		{
+			_sourceTableData = SourceTable.GetTableData();
+		}
+		
+		return _sourceTableData;
+	}
+}
+
+public string GetTableRowValues(DataRow row)
+{
+	StringBuilder rowBuilder = new StringBuilder();
+	
+	for (int i = 0; i < SourceTable.Columns.Count; i++)
+	{
+		ColumnSchema column = SourceTable.Columns[i];
+		
+		if (IsNumericType(column))
+		{
+			if (row[i] == DBNull.Value)
+			{
+				rowBuilder.Append("NULL, ");
+			}
+			else
+			{
+				rowBuilder.Append(row[i].ToString());
+				rowBuilder.Append(", ");
+			}
+		}
+		else
+		{
+			if (row[i] == DBNull.Value)
+			{
+				rowBuilder.Append("NULL, ");
+			}
+			else if (row[i] is DateTime)
+			{
+				rowBuilder.Append("'");
+				rowBuilder.Append(((DateTime)row[i]).ToString("MM-dd-yyyy HH:mm:ss.fff"));
+				rowBuilder.Append("'");
+				rowBuilder.Append(", ");
+			}
+			else
+			{
+				rowBuilder.Append("'");
+				rowBuilder.Append(PrepareValue(row[i].ToString()));
+				rowBuilder.Append("'");
+				rowBuilder.Append(", ");
+			}
+		}
+	}
+	
+	return rowBuilder.ToString().Substring(0, rowBuilder.ToString().Length - 2);
+}
+
+public string PrepareValue(string value)
+{
+	return value.Replace("'", "''").Replace("\r\n", "' + CHAR(13) + CHAR(10) + '").Replace("\n", "' + CHAR(10) + '");
+}
+
+public bool IsNumericType(ColumnSchema column)
+{
+	switch (column.NativeType.ToLower())
+	{
+		case "bigint":
+		case "bit":
+		case "decimal":
+		case "float":
+		case "int":
+		case "money":
+		case "numeric":
+		case "real":
+		case "smallint":
+		case "smallmoney":
+		case "tinyint": return true;
+		default: return false;
+	}
+}
+
+public string GetTableOwner()
+{
+    return GetTableOwner(true);
+}
+
+public string GetTableOwner(bool includeDot)
+{
+    if (SourceTable.Owner.Length > 0)
+    {
+        return "[" + SourceTable.Owner + "].";
+    }
+    else
+    {
+        return "";
+    }
+}
+</script>

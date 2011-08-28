@@ -1,0 +1,266 @@
+﻿<%@ CodeTemplate Language="C#" Debug="True" ResponseEncoding="UTF-8"  TargetLanguage="T-SQL" Description="Generates a script based on the data from a table." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table to get the data from." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text" %>
+
+
+<div class="tip">
+    <img height="14" src="../skin/images/frame/book1.gif" width="20" />
+    &nbsp;
+    这里填写页面说明。。。。。。。。。。
+</div>
+<table align="center" border="0" cellpadding="4" cellspacing="1" class="edittable" >
+
+<%
+	for(int i=1;i<SourceTable.Columns.Count;i++)
+	{
+%>
+<tr>
+    <td>
+	    <%=SourceTable.Columns[i].Description%>:
+	</td>
+	<td>
+		<asp:TextBox ID="txt_<%=ToPascal(SourceTable.Columns[i].Name)%>" runat="server"></asp:TextBox>
+	</td>
+<tr>
+
+<%
+	}
+
+%>
+   <tr class="itemrow">
+    <td colspan="2">
+        <asp:Button ID="btn_Save" runat="server" Text="保存" onclick="btn_Save_Click" />
+        &nbsp;
+        <asp:Button ID="btn_Return" runat="server" Text="返回" OnClientClick="location.href='<%=ToPascal(SourceTable.Name)%>List.aspx';return false;" />
+     </td>
+  </tr>
+
+</table>
+
+
+???
+<%
+	for(int i=1;i<SourceTable.Columns.Count;i++)
+	{
+%>
+	txt_<%=ToPascal(SourceTable.Columns[i].Name)%>.Text=m.<%=ToPascal(SourceTable.Columns[i].Name)%>.ToString();
+<%
+	}
+
+%>
+
+
+??:
+
+<%
+	for(int i=1;i<SourceTable.Columns.Count;i++)
+	{
+%>
+	m.<%=ToPascal(SourceTable.Columns[i].Name)%>=txt_<%=ToPascal(SourceTable.Columns[i].Name)%>.Text.TrimDbDangerousChar();
+<%
+	}
+
+%>
+
+
+protected void Page_Load(object sender, EventArgs e)
+{
+	if (!IsPostBack)
+    {
+		DataSysDataContext dsd=new DataSysDataContext();
+		<%=SourceTable.Name%> m = new <%=SourceTable.Name%>();
+		if (WS.RequestInt("id")>0)
+        {
+            m = (from u in dsd.<%=SourceTable.Name%> where u.Id == WS.RequestInt("id") select u).First();
+			<%
+			for(int i=1;i<SourceTable.Columns.Count;i++)
+			{
+			%>
+				txt_<%=ToPascal(SourceTable.Columns[i].Name)%>.Text=m.<%=ToPascal(SourceTable.Columns[i].Name)%>.ToString();
+			<%
+			}
+			%>
+        }
+
+		
+
+	}
+}
+
+protected override void OnInit(EventArgs e)
+{
+    this.MenuId = ;//设置菜单编号
+    base.OnInit(e);
+}
+
+public override void OnEdit()
+{
+	int id=WS.RequestInt("id");
+    DataSysDataContext dsd = new DataSysDataContext();
+	<%=SourceTable.Name%> m=new <%=SourceTable.Name%>();
+    var l=from li in dsd.<%=SourceTable.Name%> where li.Id==id select li;
+	if(id> 0&& l.Count()>0)
+	{
+		m=l.First();
+	}
+	<%
+	for(int i=1;i<SourceTable.Columns.Count;i++)
+	{
+	%>
+	m.<%=ToPascal(SourceTable.Columns[i].Name)%> = txt_<%=ToPascal(SourceTable.Columns[i].Name)%>.Text.TrimDbDangerousChar();
+	<%
+	}
+
+	%>
+	
+	if(id> 0&& l.Count()>0)
+	{
+		//编辑
+		this.IsAdd="false";
+	}
+	else
+	{
+		this.IsAdd="true";
+		dsd.<%=SourceTable.Name%>.InsertOnSubmit(m);
+	}
+	
+	base.OnEdit();
+	dsd.SubmitChanges();
+	
+	Js.AlertAndChangUrl("保存成功！","<%=SourceTable.Name%>List.aspx");
+}
+
+/// <summary>
+/// 编辑按钮点击事件
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
+protected void btn_Save_Click(object sender, EventArgs e)
+{
+    OnEdit();
+}
+
+
+
+<script runat="template">
+
+#region Pascal???
+public string ToPascal(string s)
+{
+ return s.Substring(0,1).ToUpper()+s.Substring(1);
+}
+#endregion
+#region ?????
+public string ToCamel(string s)
+{
+ return s.Substring(0,1).ToLower()+s.Substring(1);
+}
+#endregion
+
+private DataTable _sourceTableData;
+
+private DataTable SourceTableData
+{
+	get
+	{
+		if (_sourceTableData == null)
+		{
+			_sourceTableData = SourceTable.GetTableData();
+		}
+		
+		return _sourceTableData;
+	}
+}
+
+public string GetTableRowValues(DataRow row)
+{
+	StringBuilder rowBuilder = new StringBuilder();
+	
+	for (int i = 0; i < SourceTable.Columns.Count; i++)
+	{
+		ColumnSchema column = SourceTable.Columns[i];
+		
+		if (IsNumericType(column))
+		{
+			if (row[i] == DBNull.Value)
+			{
+				rowBuilder.Append("NULL, ");
+			}
+			else
+			{
+				rowBuilder.Append(row[i].ToString());
+				rowBuilder.Append(", ");
+			}
+		}
+		else
+		{
+			if (row[i] == DBNull.Value)
+			{
+				rowBuilder.Append("NULL, ");
+			}
+			else if (row[i] is DateTime)
+			{
+				rowBuilder.Append("'");
+				rowBuilder.Append(((DateTime)row[i]).ToString("MM-dd-yyyy HH:mm:ss.fff"));
+				rowBuilder.Append("'");
+				rowBuilder.Append(", ");
+			}
+			else
+			{
+				rowBuilder.Append("'");
+				rowBuilder.Append(PrepareValue(row[i].ToString()));
+				rowBuilder.Append("'");
+				rowBuilder.Append(", ");
+			}
+		}
+	}
+	
+	return rowBuilder.ToString().Substring(0, rowBuilder.ToString().Length - 2);
+}
+
+public string PrepareValue(string value)
+{
+	return value.Replace("'", "''").Replace("\r\n", "' + CHAR(13) + CHAR(10) + '").Replace("\n", "' + CHAR(10) + '");
+}
+
+public bool IsNumericType(ColumnSchema column)
+{
+	switch (column.NativeType.ToLower())
+	{
+		case "bigint":
+		case "bit":
+		case "decimal":
+		case "float":
+		case "int":
+		case "money":
+		case "numeric":
+		case "real":
+		case "smallint":
+		case "smallmoney":
+		case "tinyint": return true;
+		default: return false;
+	}
+}
+
+public string GetTableOwner()
+{
+    return GetTableOwner(true);
+}
+
+public string GetTableOwner(bool includeDot)
+{
+    if (SourceTable.Owner.Length > 0)
+    {
+        return "[" + SourceTable.Owner + "].";
+    }
+    else
+    {
+        return "";
+    }
+}
+</script>

@@ -704,10 +704,9 @@ namespace Voodoo.Data.DbHelper
             {
                 group = "";
             }
-            
-            //string str_sql = "select * from (Select "+ Fields +",ROW_NUMBER() OVER(Order By "+ Sort +") as row FROM "+ Tables+ Filter+ group +") a where row between "+ strStartRow +" and "+strEndRow;
-            string str_sql = "select * from (select " + Fields + ", rownum rn from  (select * from " + Tables + Filter + group + Sort + ") A where  rownum <= " + strEndRow + ")where rn >= " + strStartRow;
 
+            //string str_sql = "select * from (Select "+ Fields +",ROW_NUMBER() OVER(Order By "+ Sort +") as row FROM "+ Tables+ Filter+ group +") a where row between "+ strStartRow +" and "+strEndRow;
+            string str_sql = "select * from (select " + Fields + ", rownum rn from  (select " + Fields + " from " + Tables + Filter + group + Sort + ") A where  rownum <= " + strEndRow + ")where rn >= " + strStartRow;
             DataTable dt = ExecuteDataTable(CommandType.Text, str_sql);
 
             dt.Columns.Add(new DataColumn("rownumber", Type.GetType("System.Int32")));

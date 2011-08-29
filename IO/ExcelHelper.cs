@@ -161,11 +161,19 @@ namespace Voodoo.IO
         /// </summary>
         /// <param name="dtData">需要转换的DataTable</param>
         /// <param name="FileName">保存文件的绝对路径</param>
-        public static void Export(System.Data.DataTable dtData, string FileName)
+        public static void Export(System.Data.DataTable dtData,string path, string FileName)
         {
             HSSFWorkbook workbook = GetWorkBook(dtData,FileName);
             //保存  
-            using (FileStream fs = new FileStream(FileName, FileMode.Create, FileAccess.Write))
+
+            FileInfo file = new FileInfo(path);
+            DirectoryInfo dir = new DirectoryInfo(file.DirectoryName);
+            if (!dir.Exists)
+            {
+                dir.Create();
+            }
+
+            using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 workbook.Write(fs);
             }

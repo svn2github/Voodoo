@@ -611,6 +611,7 @@ namespace Voodoo.Net
         }
         #endregion
 
+        #region 分析html中的标题、时间、正文
         /// <summary>
         /// 分析html中的标题、时间、正文
         /// </summary>
@@ -981,7 +982,9 @@ namespace Voodoo.Net
 
 
         }
+        #endregion
 
+        #region 根据域名获取网站名
         /// <summary>
         /// 根据域名获取网站名
         /// </summary>
@@ -1012,7 +1015,27 @@ namespace Voodoo.Net
             return m.Groups["key"].Value;
 
         }
+        #endregion
 
+        #region 下载文件到本地目录
+        /// <summary>
+        /// 下载文件到本地目录
+        /// </summary>
+        /// <param name="url">网络文件URL</param>
+        /// <param name="path">下载到本地的路径</param>
+        public static void DownFile(string url, string path)
+        {
+            string str = GetHtml(url);
+            using (FileStream fs = new FileStream(path, FileMode.Create))
+            {
+                fs.Write(str.ToByteArray(), 0, str.Length);
+                fs.Close();
+                fs.Dispose();
+            }
+            str = null;
+
+        }
+        #endregion
     }
 
     #region 用户抓取操作返回数据类，如Cookie，HTML代码等

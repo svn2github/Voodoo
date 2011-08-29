@@ -95,26 +95,6 @@ namespace Voodoo
         }
         #endregion
 
-        #region 获取CheckBoxList选中项的文本
-        /// <summary>
-        /// 获取CheckBoxList选中项的文本
-        /// </summary>
-        /// <param name="self"></param>
-        /// <returns></returns>
-        public static string GetTexts(this CheckBoxList self)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (ListItem lt in self.Items)
-            {
-                if (lt.Selected)
-                {
-                    sb.Append(lt.Text + ",");
-                }
-            }
-            return sb.TrimEnd(',').ToString();
-        }
-        #endregion
-
         #region DataTable转换为Xml字符串，为图表功能提供支持
         /// <summary>
         /// DataTable转换为Xml字符串，为图表功能提供支持
@@ -217,5 +197,7 @@ namespace Voodoo
             rbl.DataValueField = DataValueField;
             rbl.DataBind();
         }
+
+
     }
 }

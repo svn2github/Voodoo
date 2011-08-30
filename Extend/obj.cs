@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Collections;
 using System.Web.UI.WebControls;
 using System.Net;
+using System.Data;
 using System.Text.RegularExpressions;
 
 namespace Voodoo
@@ -302,7 +303,17 @@ namespace Voodoo
         }
 
 
-
+        public static DataTable Replace(this DataTable dt, string OldString, string NewString)
+        {
+            foreach(DataRow row in dt.Rows)
+            {
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    row[i] = row[i].ToString().Replace(OldString, NewString);
+                }
+            }
+            return dt;
+        }
 
     }
 }

@@ -162,6 +162,12 @@ namespace Voodoo.IO
         /// <param name="fileContent">文件内容</param>
         public static void Write(string Path, string fileContent)
         {
+            Write(Path, fileContent, "UTF-8");
+
+        }
+
+        public static void Write(string Path, string fileContent, string Encode)
+        {
             FileInfo file = new FileInfo(Path);
 
             if (!Directory.Exists(file.DirectoryName))//目录是否存在
@@ -173,11 +179,10 @@ namespace Voodoo.IO
 
             FileStream stream = null;
             stream = new FileStream(Path, FileMode.Append, FileAccess.Write, FileShare.Write);
-            StreamWriter writer = new StreamWriter(stream, Encoding.GetEncoding("utf-8"));
+            StreamWriter writer = new StreamWriter(stream, Encoding.GetEncoding(Encode));
             writer.Write(fileContent);
             writer.Close();
             stream.Close();
-
         }
 
         /// <summary>

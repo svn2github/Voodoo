@@ -95,6 +95,19 @@ namespace Voodoo
         }
         #endregion
 
+        public static string GetTexts(this CheckBoxList self)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (ListItem lt in self.Items)
+            {
+                if (lt.Selected)
+                {
+                    sb.Append(lt.Text + ",");
+                }
+            }
+            return sb.TrimEnd(',').ToString();
+        }
+
         #region DataTable转换为Xml字符串，为图表功能提供支持
         /// <summary>
         /// DataTable转换为Xml字符串，为图表功能提供支持

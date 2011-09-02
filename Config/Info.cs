@@ -25,7 +25,8 @@ namespace Voodoo.Config
         }
         #endregion
 
-       /// <summary>
+        #region 设置AppSetting的值
+        /// <summary>
         /// 设置AppSetting的值
        /// </summary>
        /// <param name="key">键</param>
@@ -45,9 +46,22 @@ namespace Voodoo.Config
            addKey.Attributes["value"].InnerText = value;
            domWebConfig.Save((HttpContext.Current.Server.MapPath("web.config")));
        }
+        #endregion
 
-        #region 根据节点名获取Web.Config文件中的某一节点
-        /// <summary>
+       #region 获取connectionStrings节点数据
+       /// <summary>
+       /// 获取connectionStrings节点数据
+       /// </summary>
+       /// <param name="key">key</param>
+       /// <returns></returns>
+       public static string GetConnectionString(string key)
+       {
+           return ConfigurationManager.ConnectionStrings[key].ConnectionString;
+       }
+       #endregion
+
+       #region 根据节点名获取Web.Config文件中的某一节点
+       /// <summary>
         /// 根据节点名获取Web.Config文件中的某一节点
         /// </summary>
         /// <param name="Names">节点的名字</param>

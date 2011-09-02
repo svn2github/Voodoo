@@ -89,7 +89,7 @@ namespace Voodoo.IO
         /// 序列化保存XML实体类型文件
         /// </summary>
         /// <param name="Info">要序列化的实体</param>
-        /// <param name="FilePath">相对地址，例如"~/files.xml"</param>
+        /// <param name="FilePath">绝对地址，例如"c:\files.xml"</param>
         public static void SaveSerialize(object Info, string FilePath)
         {
             SaveSerialize(Info.GetType(), Info, FilePath);

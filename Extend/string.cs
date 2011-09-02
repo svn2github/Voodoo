@@ -162,7 +162,7 @@ namespace Voodoo
 
         public static string TrimScript(this string html)
         {
-            html=Regex.Replace(html, "<script[\\w\\W]*?</script>", "", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, "<script[\\w\\W]*?</script>", "", RegexOptions.IgnoreCase);
             html = Regex.Replace(html, "<style[\\w\\W]*?</style>", "", RegexOptions.IgnoreCase);
             html = Regex.Replace(html, "<iframe[\\w\\W]*?</iframe>", "", RegexOptions.IgnoreCase);
             return html;
@@ -327,7 +327,7 @@ namespace Voodoo
             return self.ToDateTime(new DateTime(2000, 1, 1));
         }
 
-        public static DateTime ToDateTime(this object self,DateTime Default)
+        public static DateTime ToDateTime(this object self, DateTime Default)
         {
             try
             {
@@ -348,13 +348,24 @@ namespace Voodoo
         /// <returns></returns>
         public static Decimal ToDecimal(this object self)
         {
+            return ToDecimal(self, Decimal.MinValue);
+        }
+
+        /// <summary>
+        /// 转换为Decimal类型 
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="DefaultValue">转换失败的默认值</param>
+        /// <returns></returns>
+        public static Decimal ToDecimal(this object self,Decimal DefaultValue)
+        {
             try
             {
                 return Convert.ToDecimal(self.ToString());
             }
             catch
             {
-                return Decimal.MinValue;
+                return DefaultValue;
             }
         }
         #endregion
@@ -669,7 +680,7 @@ namespace Voodoo
         }
         #endregion
 
-        
+
 
         #region 从HTML中获取文本,保留br,p,img
         /// <summary>
@@ -809,7 +820,7 @@ namespace Voodoo
             return System.Web.HttpContext.Current.Server.UrlDecode(str);
         }
 
-        public static string UrlDecode(this string str,System.Text.Encoding encode)
+        public static string UrlDecode(this string str, System.Text.Encoding encode)
         {
             return System.Web.HttpUtility.UrlDecode(str, encode);
         }
@@ -924,7 +935,7 @@ namespace Voodoo
 
             return result;
         }
-       #endregion
+        #endregion
 
         #region 获取字符串中得匹配结果
         /// <summary>
@@ -946,6 +957,47 @@ namespace Voodoo
             return result;
         }
         #endregion
+
+        #region 转换成UTF-8字符串
+        /// <summary>
+        /// 转换成UTF-8字符串
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static String toUtf8String(this string s)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < s.Length; i++)
+            {
+                char c = s[i];
+                if (c >= 0 && c <= 255)
+                {
+                    sb.Append(c);
+                }
+                else
+                {
+                    byte[] b;
+                    try
+                    {
+                        b = Encoding.UTF8.GetBytes(c.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        b = new byte[0];
+                    }
+                    for (int j = 0; j < b.Length; j++)
+                    {
+                        int k = b[j];
+                        if (k < 0) k += 256;
+
+                        sb.Append("%" + Convert.ToString(k, 16).ToUpper());
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+        #endregion
+
 
     }
 }

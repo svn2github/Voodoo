@@ -378,6 +378,11 @@ namespace Voodoo
         /// <returns></returns>
         public static bool ToBoolean(this object self)
         {
+            if (self == null)
+            {
+                return false;
+            }
+
             if (self.ToString().ToLower() == "false")
             {
                 return false;
@@ -909,6 +914,28 @@ namespace Voodoo
         public static int CountString(this string str, string s)
         {
             return Regex.Matches(str, s, RegexOptions.IgnoreCase).Count;
+        }
+        #endregion
+
+        #region 通过正则表达式在字符串里面查找子字符串
+        /// <summary>
+        /// 通过正则表达式在字符串里面查找子字符串
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="pattern">表达式</param>
+        /// <returns></returns>
+        public static string FindString(this string str, string pattern)
+        {
+            Regex reg = new Regex(pattern);
+            Match m = reg.Match(str);
+            if (m.Groups.Count == 0)
+            {
+                return "";
+            }
+            else
+            {
+                return m.Groups[0].Value;
+            }
         }
         #endregion
 

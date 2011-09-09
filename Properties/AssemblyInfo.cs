@@ -1,16 +1,16 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
+using System.Web.UI;
 // 有关程序集的常规信息通过下列属性集
 // 控制。更改这些属性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("Voodoo")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("由kuibono以及团队成员开发完成的.NET基础类库 包括系统参数 系统配置 文件系统 Cookie操作 数据库操作 网络操作 在线支付 LINQ扩展 类型扩展等支持")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("qw")]
+[assembly: AssemblyCompany("kuibonos' team")]
 [assembly: AssemblyProduct("Voodoo")]
-[assembly: AssemblyCopyright("Copyright © qw 2010")]
+[assembly: AssemblyCopyright("Copyright © kuibono 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -34,3 +34,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: WebResource("Voodoo.UI.resource.jquery-1.6.min.js", "text/javascript")]

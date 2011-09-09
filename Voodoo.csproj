@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CF4C09DC-B002-4A0D-856B-DCD5E3719213}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -20,6 +20,26 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>http://localhost/Voodoo/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +50,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Voodoo.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,6 +59,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
@@ -124,6 +146,7 @@
     <Compile Include="Net\Collect.cs" />
     <Compile Include="Net\CollectionRules.cs" />
     <Compile Include="Net\CollectionRulesView.cs" />
+    <Compile Include="Net\Connection\Baidu.cs" />
     <Compile Include="Net\FTPClient.cs" />
     <Compile Include="Net\Mail\Pop3.cs" />
     <Compile Include="Net\Mail\SMTP.cs" />
@@ -219,6 +242,7 @@
     <Compile Include="UI\AspNetPager\Properties.cs" />
     <Compile Include="UI\ChineseVerifyCode.cs" />
     <Compile Include="UI\Format.cs" />
+    <Compile Include="UI\resource\Class1.cs" />
     <Compile Include="UI\SafeCode.cs">
     </Compile>
     <Compile Include="UI\TextBox.cs" />
@@ -227,6 +251,7 @@
     <Compile Include="Extend\WS.cs" />
     <Compile Include="Extend\validation.cs" />
     <Compile Include="Extend\WebControl.cs" />
+    <Compile Include="UI\VTextBox.cs" />
     <Compile Include="XML\SgmlParser.cs" />
     <Compile Include="XML\SgmlReader.cs" />
   </ItemGroup>
@@ -283,9 +308,46 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="UI\AspNetPager\AspNetPagerDocs.xml" />
+    <EmbeddedResource Include="UI\resource\jquery-1.6.min.js" />
+    <EmbeddedResource Include="UI\resource\jquery.validationEngine.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-cz.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-da.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-de.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-en.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-es.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-fr.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-it.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-ja.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-nl.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-pl.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-pt.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-ro.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-ru.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-sv.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-tr.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-zh_cn.js" />
+    <Content Include="UI\resource\languages\jquery.validationEngine-zh_TW.js" />
+    <EmbeddedResource Include="UI\resource\validationEngine.jquery.css" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IO\EXIFInfo\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

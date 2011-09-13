@@ -119,5 +119,10 @@ namespace Voodoo
             HttpContext.Current.Response.Write("<script>func();</script>");
         }
 
+        public static void RegScript(string ResourceName, string Key)
+        {
+
+        }
+
     }
 }

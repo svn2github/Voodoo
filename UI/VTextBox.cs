@@ -5,6 +5,7 @@ using System.Text;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
 
 namespace Voodoo.UI
 {
@@ -15,7 +16,8 @@ namespace Voodoo.UI
         /// </summary>
         public VTextBox()
         {
-
+            
+            
         }
 
         #region 私有方法
@@ -26,6 +28,8 @@ namespace Voodoo.UI
                sb.Append(",");
             }
         }
+
+
         #endregion
 
         #region 重写 Render
@@ -45,59 +49,91 @@ namespace Voodoo.UI
                 //验证开始
                 sb.Append("validate[");
 
-
+                StringBuilder sb_va = new StringBuilder();
                 //验证空
                 if (this.EnableNull == false)
                 {
-                    sb.Append("required");
+                    sb_va.Append("required");
                 }
 
                 //验证最大长度
                 if (this.MaxSize > 0)
                 {
-                    AddDouhao(sb);
-                    sb.Append("maxSize[" + MaxSize + "]");
+                    AddDouhao(sb_va);
+                    sb_va.Append("maxSize[" + MaxSize + "]");
                 }
 
                 //验证最小长度
                 if (this.MinSize > 0)
                 {
-                    AddDouhao(sb);
-                    sb.Append("minSize[" + MinSize + "]");
+                    AddDouhao(sb_va);
+                    sb_va.Append("minSize[" + MinSize + "]");
                 }
 
                 //验证最大值
                 if (!this.Max.IsNullOrEmpty())
                 {
-                    AddDouhao(sb);
-                    sb.Append("max[" + Max + "]");
+                    AddDouhao(sb_va);
+                    sb_va.Append("max[" + Max + "]");
                 }
 
                 //验证最小值
                 if (!this.Min.IsNullOrEmpty())
                 {
-                    AddDouhao(sb);
-                    sb.Append("min[" + Min + "]");
+                    AddDouhao(sb_va);
+                    sb_va.Append("min[" + Min + "]");
                 }
 
                 //对比值
                 if (!this.Equal.IsNullOrEmpty())
                 {
-                    AddDouhao(sb);
-                    sb.Append("equals[" + Equal + "]");
+                    AddDouhao(sb_va);
+                    sb_va.Append("equals[" + Equal + "]");
                 }
 
                 if (this.VType != ValidateType.notValidate)
                 {
-                    AddDouhao(sb);
-                    sb.Append("custom[" + VType.ToString() + "]");
+                    AddDouhao(sb_va);
+                    sb_va.Append("custom[" + VType.ToString() + "]");
                 }
 
                 //验证结束
+                sb.Append(sb_va);
                 sb.Append("]");
+                //sb = new StringBuilder(Voodoo.Properties.Resources.jquery_1_6_min);
                 this.CssClass = sb.ToString();
             }
             base.Render(output);
+        }
+        #endregion
+
+        #region 注册css和脚本
+        /// <summary>
+        /// 注册css和脚本
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnPreRender(EventArgs e)
+        {
+            string cssUrl = Page.ClientScript.GetWebResourceUrl(this.GetType(), "Voodoo.UI.resource.validationEngine.jquery.css");
+            StringBuilder css = new StringBuilder();
+            css.Append("<link rel='stylesheet' type='text/css' href='"+ cssUrl +"' />");
+
+            Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Voodoo.UI.resource.validationEngine.jquery.css", css.ToString());
+
+
+
+            string jquery_1_6 = Page.ClientScript.GetWebResourceUrl(this.GetType(), "Voodoo.UI.resource.jquery-1.6.min.js");
+            Page.ClientScript.RegisterClientScriptInclude("jquery", jquery_1_6);
+
+            string validationEngine = Page.ClientScript.GetWebResourceUrl(this.GetType(), "Voodoo.UI.resource.jquery.validationEngine.js");
+            Page.ClientScript.RegisterClientScriptInclude("Voodoo.UI.resource.jquery.validationEngine.js", validationEngine);
+
+            string language = Page.ClientScript.GetWebResourceUrl(this.GetType(), "Voodoo.UI.resource.languages.jquery.validationEngine-zh_cn.js");
+            Page.ClientScript.RegisterClientScriptInclude("Voodoo.UI.resource.languages.jquery.validationEngine-zh_cn.js", language);
+            //Page.ClientScript.RegisterClientScriptInclude("SH", jsUrl);
+
+            Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "onload", "<script type='text/javascript'>jQuery(document).ready(function () {  jQuery(\"form\").validationEngine(); });</script>");
+            base.OnPreRender(e);
         }
         #endregion
 
@@ -212,6 +248,24 @@ namespace Voodoo.UI
         }
         #endregion
 
+        #region 提示信息的语言
+        /// <summary>
+        /// 提示信息的语言
+        /// </summary>
+        [Description("提示信息的语言"), Category("控件验证"), DefaultValue(ValidateLanguage.zh_cn), Bindable(false)]
+        public ValidateLanguage Language
+        {
+            get
+            {
+                return (ValidateLanguage)this.ViewState["Language"];
+            }
+            set
+            {
+                this.ViewState["Language"] = value;
+            }
+        }
+        #endregion 
+
         #region 验证类型
         [Description("验证类型"), Category("控件验证"), DefaultValue(ValidateType.notValidate), Bindable(false)]
         public ValidateType VType
@@ -253,5 +307,32 @@ namespace Voodoo.UI
 
         }
         #endregion
+
+        #region 语言
+        /// <summary>
+        /// 语言
+        /// </summary>
+        public enum ValidateLanguage
+        {
+            cz,
+            da,
+            de,
+            en,
+            es,
+            fr,
+            it,
+            ja,
+            nl,
+            pl,
+            pt,
+            ro,
+            ru,
+            sv,
+            tr,
+            zh_cn,
+            zh_TW
+        }
+        #endregion
+
     }
 }

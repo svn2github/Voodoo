@@ -51,6 +51,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Voodoo.xml</DocumentationFile>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -159,6 +160,7 @@
     <Compile Include="Extend\obj.cs" />
     <Compile Include="other\Address.cs" />
     <Compile Include="other\BeianInfo.cs" />
+    <Compile Include="other\City.cs" />
     <Compile Include="other\Contact.cs" />
     <Compile Include="other\enum.cs" />
     <Compile Include="other\FileAttribute.cs" />
@@ -242,7 +244,6 @@
     <Compile Include="UI\AspNetPager\Properties.cs" />
     <Compile Include="UI\ChineseVerifyCode.cs" />
     <Compile Include="UI\Format.cs" />
-    <Compile Include="UI\resource\Class1.cs" />
     <Compile Include="UI\SafeCode.cs">
     </Compile>
     <Compile Include="UI\TextBox.cs" />
@@ -308,26 +309,30 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="UI\AspNetPager\AspNetPagerDocs.xml" />
-    <EmbeddedResource Include="UI\resource\jquery-1.6.min.js" />
+    <EmbeddedResource Include="UI\resource\jquery-1.6.min.js">
+      <CustomToolNamespace>Voodoo.UI.resource</CustomToolNamespace>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\resource\jquery.validationEngine.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-cz.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-da.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-de.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-en.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-es.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-fr.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-it.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-ja.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-nl.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-pl.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-pt.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-ro.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-ru.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-sv.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-tr.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-zh_cn.js" />
-    <Content Include="UI\resource\languages\jquery.validationEngine-zh_TW.js" />
-    <EmbeddedResource Include="UI\resource\validationEngine.jquery.css" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-cz.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-da.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-de.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-en.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-es.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-fr.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-it.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-ja.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-nl.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-pl.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-pt.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-ro.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-ru.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-sv.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-tr.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-zh_cn.js" />
+    <EmbeddedResource Include="UI\resource\languages\jquery.validationEngine-zh_TW.js" />
+    <EmbeddedResource Include="UI\resource\validationEngine.jquery.css">
+      <CustomToolNamespace>Voodoo.UI.resource</CustomToolNamespace>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IO\EXIFInfo\" />

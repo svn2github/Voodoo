@@ -95,6 +95,13 @@ namespace Voodoo
         }
         #endregion
 
+        public static string GetValue(this System.Web.UI.Control ctrl)
+        {
+            
+
+            return "";
+        }
+
         public static string GetTexts(this CheckBoxList self)
         {
             StringBuilder sb = new StringBuilder();

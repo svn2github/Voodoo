@@ -190,6 +190,7 @@
     <Compile Include="Security\Request.cs" />
     <Compile Include="Security\Server.cs" />
     <Compile Include="Extend\string.cs" />
+    <Compile Include="UI\AjaxForm.cs" />
     <Compile Include="UI\AspNetPager\aspnetpager.cs" />
     <Compile Include="UI\AspNetPager\Designer\AboutForm.cs">
       <SubType>Form</SubType>
@@ -248,10 +249,13 @@
     </Compile>
     <Compile Include="UI\TextBox.cs" />
     <Compile Include="UI\Button.cs" />
+    <Compile Include="UI\VCheckBox.cs" />
+    <Compile Include="UI\VDropDownList.cs" />
     <Compile Include="UI\VerifyCode.cs" />
     <Compile Include="Extend\WS.cs" />
     <Compile Include="Extend\validation.cs" />
     <Compile Include="Extend\WebControl.cs" />
+    <Compile Include="UI\VListBox.cs" />
     <Compile Include="UI\VTextBox.cs" />
     <Compile Include="XML\SgmlParser.cs" />
     <Compile Include="XML\SgmlReader.cs" />
@@ -309,6 +313,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="UI\AspNetPager\AspNetPagerDocs.xml" />
+    <Content Include="UI\resource\jquery.AjaxForm.js" />
     <EmbeddedResource Include="UI\resource\jquery-1.6.min.js">
       <CustomToolNamespace>Voodoo.UI.resource</CustomToolNamespace>
     </EmbeddedResource>

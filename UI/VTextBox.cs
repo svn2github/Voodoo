@@ -9,6 +9,9 @@ using System.Web.UI.HtmlControls;
 
 namespace Voodoo.UI
 {
+    /// <summary>
+    /// 带验证功能的文本框
+    /// </summary>
     public class VTextBox : System.Web.UI.WebControls.TextBox
     {
         /// <summary>

@@ -243,6 +243,7 @@
     <Compile Include="UI\AspNetPager\PageChangingEventArgs.cs" />
     <Compile Include="UI\AspNetPager\PostBack.cs" />
     <Compile Include="UI\AspNetPager\Properties.cs" />
+    <Compile Include="UI\AutoCompleleTextBox.cs" />
     <Compile Include="UI\ChineseVerifyCode.cs" />
     <Compile Include="UI\Format.cs" />
     <Compile Include="UI\SafeCode.cs">
@@ -313,7 +314,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="UI\AspNetPager\AspNetPagerDocs.xml" />
-    <Content Include="UI\resource\jquery.AjaxForm.js" />
+    <EmbeddedResource Include="UI\resource\ajax-loader.gif" />
+    <EmbeddedResource Include="UI\resource\jquery.AjaxForm.js" />
     <EmbeddedResource Include="UI\resource\jquery-1.6.min.js">
       <CustomToolNamespace>Voodoo.UI.resource</CustomToolNamespace>
     </EmbeddedResource>

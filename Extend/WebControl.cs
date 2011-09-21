@@ -81,7 +81,7 @@ namespace Voodoo
         /// <param name="self"></param>
         /// <returns>返回带逗号的字符串</returns>
         /// <example>返回1,2,3,4这种字符串</example>
-        public static string GetValues(this CheckBoxList self)
+        public static string GetValues(this ListControl self)
         {
             StringBuilder sb=new StringBuilder();
             foreach (ListItem lt in self.Items)
@@ -95,14 +95,29 @@ namespace Voodoo
         }
         #endregion
 
-        public static string GetValue(this System.Web.UI.Control ctrl)
+        #region 获取CheckBoxList选中项的序号
+        /// <summary>
+        /// 获取CheckBoxList选中项的序号
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        public static string GetCheckedIndex(this ListControl self)
         {
-            
+            StringBuilder sb = new StringBuilder();
+            for(int i=0;i<self.Items.Count;i++)
+            {
+                if(self.Items[i].Selected)
+                {
+                    sb.Append(i.ToString() + ",");
+                }
+            }
 
-            return "";
+            return sb.TrimEnd(',').ToString();
         }
+        #endregion
 
-        public static string GetTexts(this CheckBoxList self)
+        #region 获取CheckBoxList选中项的文本
+        public static string GetTexts(this ListControl self)
         {
             StringBuilder sb = new StringBuilder();
             foreach (ListItem lt in self.Items)
@@ -114,6 +129,7 @@ namespace Voodoo
             }
             return sb.TrimEnd(',').ToString();
         }
+        #endregion
 
         #region DataTable转换为Xml字符串，为图表功能提供支持
         /// <summary>
@@ -217,6 +233,145 @@ namespace Voodoo
             rbl.DataValueField = DataValueField;
             rbl.DataBind();
         }
+
+        #region 输出AjaxForm的结果
+        /// <summary>
+        /// 输出AjaxForm的结果
+        /// </summary>
+        /// <param name="form"></param>
+        public static void ResponseResult(this System.Web.UI.HtmlControls.HtmlForm form)
+        {
+            ResponseResult(form, "", "");
+        }
+
+        /// <summary>
+        /// 输出AjaxForm的结果
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="result"></param>
+        public static void ResponseResult(this System.Web.UI.HtmlControls.HtmlForm form, string result)
+        {
+            ResponseResult(form, result, "");
+        }
+        /// <summary>
+        /// 输出AjaxForm的结果 并且进行跳转
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="result">结果消息</param>
+        /// <param name="Url">跳转地址</param>
+        public static void ResponseResult(this System.Web.UI.HtmlControls.HtmlForm form, string result,string Url)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("name", typeof(string));
+            dt.Columns.Add("attr", typeof(string));
+            dt.Columns.Add("val", typeof(string));
+
+            #region 循环输出每个控件的状态
+            foreach (System.Web.UI.Control uc in form.Controls)
+            {
+
+                try
+                {
+                    System.Web.UI.WebControls.WebControl c = (System.Web.UI.WebControls.WebControl)uc;
+
+                    switch (c.GetType().Name)
+                    {
+                        case "Button":
+                        case "VTextBox":
+                        case "TextBox":
+                            if (((TextBox)c).Enabled == false)
+                            {
+                                AddRow(dt, c.ID, "disabled", (!((TextBox)c).Enabled).ToString());
+                            }
+                            if (((TextBox)c).ReadOnly == false)
+                            {
+                                AddRow(dt, c.ID, "readonly", (!((TextBox)c).Enabled).ToString());
+                            }
+                            AddRow(dt, c.ID, "value", ((TextBox)c).Text);
+                            break;
+                        case "VCheckBox":
+                        case "CheckBox":
+                            if (((CheckBox)c).Enabled == false)
+                            {
+                                AddRow(dt, c.ID, "disabled", (!c.Attributes["Enabled"].ToBoolean()).ToString());
+                            }
+                            if (((CheckBox)c).Checked)
+                            {
+                                AddRow(dt, c.ID, "checked","checked");
+                            }
+                            break;
+                        case "RadioButton":
+                            if (((RadioButton)c).Enabled == false)
+                            {
+                                AddRow(dt, c.ID, "disabled", (!c.Attributes["Enabled"].ToBoolean()).ToString());
+                            }
+                            if (((RadioButton)c).Checked)
+                            {
+                                AddRow(dt, c.ID, "checked","checked");
+                            }
+                            break;
+                        case "VListBox":
+                        case "ListBox":
+                        case "VDropDownList":
+                        case "DropDownList":
+                            AddRow(dt, c.ID, "value", ((ListControl)c).SelectedValue);
+                            break;
+                        case "LinkButton":
+                            if (((LinkButton)c).Enabled == false)
+                            {
+                                AddRow(dt, c.ID, "disabled", (!c.Attributes["Enabled"].ToBoolean()).ToString());
+                            }
+                            AddRow(dt, c.ID, "text", ((LinkButton)c).Text);
+                            break;
+                        case "HyperLink":
+                            if (((HyperLink)c).Enabled == false)
+                            {
+                                AddRow(dt, c.ID, "disabled", (!c.Attributes["Enabled"].ToBoolean()).ToString());
+                            }
+                            AddRow(dt, c.ID, "href", ((HyperLink)c).NavigateUrl);
+                            AddRow(dt, c.ID, "text", ((HyperLink)c).Text);
+                            break;
+                        case "CheckBoxList":
+                            AddRow(dt, c.ID, "checkindex", ((CheckBoxList)c).GetCheckedIndex());
+                            break;
+                        case "RadioButtonList":
+                            AddRow(dt, c.ID, "selectindex", ((RadioButtonList)c).SelectedIndex.ToString());
+                            break;
+
+                    }
+
+                }
+                catch { }
+
+            }
+            #endregion
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            sb.Append("'url':'"+ Url +"','result':'" + result + "',data:" + dt.DataTableToJson(true));
+            sb.Append("}");
+
+            System.Web.HttpContext.Current.Response.Clear();
+            System.Web.HttpContext.Current.Response.Write(sb);
+            System.Web.HttpContext.Current.Response.End();
+        }
+        /// <summary>
+        /// 私有方法
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="c1"></param>
+        /// <param name="c2"></param>
+        /// <param name="c3"></param>
+        public static void AddRow(DataTable dt, string c1, string c2, string c3)
+        {
+            DataRow r = dt.NewRow();
+            r[0] = c1;
+            r[1] = c2;
+            r[2] = c3;
+            dt.Rows.Add(r);
+        }
+
+        #endregion
 
 
     }

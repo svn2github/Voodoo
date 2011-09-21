@@ -185,15 +185,20 @@ namespace Voodoo.IO
             stream.Close();
         }
 
+        public static void AppendLine(string Path, string filename, string Str)
+        {
+            AppendLine(Path, filename, Str, "gb2312");
+        }
+
         /// <summary>
         /// 在文件尾部写入文本
         /// </summary>
         /// <param name="Path">路径（相对）</param>
         /// <param name="FileName"></param>
         /// <param name="Str"></param>
-        public static void AppendLine(string Path, string filename, string Str)
+        public static void AppendLine(string Path, string filename, string Str,string Encode)
         {
-            Path = Path;
+            //Path = Path;
             DirectoryInfo df = new DirectoryInfo(Path);
             if (!df.Exists)
             {
@@ -202,7 +207,7 @@ namespace Voodoo.IO
 
             FileStream stream = null;
             stream = new FileStream(Path + filename, FileMode.Append, FileAccess.Write, FileShare.Write);
-            StreamWriter writer = new StreamWriter(stream, Encoding.GetEncoding("gb2312"));
+            StreamWriter writer = new StreamWriter(stream, Encoding.GetEncoding(Encode));
             writer.WriteLine(Str);
             writer.Close();
             stream.Close();

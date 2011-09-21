@@ -37,6 +37,8 @@ using System.Web.UI;
 [assembly: WebResource("Voodoo.UI.resource.validationEngine.jquery.css", "text/css")]
 [assembly: WebResource("Voodoo.UI.resource.jquery-1.6.min.js", "text/javascript")]
 [assembly: WebResource("Voodoo.UI.resource.jquery.validationEngine.js", "text/javascript")]
+[assembly: WebResource("Voodoo.UI.resource.jquery.AjaxForm.js", "text/javascript")]
+[assembly: WebResource("Voodoo.UI.resource.ajax-loader.gif", "text/javascript")]
 [assembly: WebResource("Voodoo.UI.resource.languages.jquery.validationEngine-zh_cn.js", "text/javascript")]
 [assembly: WebResource("Voodoo.UI.resource.languages.jquery.validationEngine-cz.js", "text/javascript")]
 [assembly: WebResource("Voodoo.UI.resource.languages.jquery.validationEngine-da.js", "text/javascript")]

@@ -11,6 +11,16 @@ namespace Voodoo.UI
 {
     public class AjaxForm : HtmlForm
     {
+        /// <summary>
+        /// 判断是否是回传时间
+        /// </summary>
+        /// <returns></returns>
+        public bool IsCallBack()
+        {
+            return WS.RequestInt("ajax") > 0;
+        }
+
+
         #region 注册css和脚本
         /// <summary>
         /// 注册css和脚本
@@ -21,15 +31,21 @@ namespace Voodoo.UI
             string jquery_1_6 = Page.ClientScript.GetWebResourceUrl(this.GetType(), "Voodoo.UI.resource.jquery-1.6.min.js");
             Page.ClientScript.RegisterClientScriptInclude("jquery", jquery_1_6);
 
-            string script = "$(function () {\n    $(\"#" + this.ID + "\").bind('submit',function () {\n        try{if(jQuery('#"+this.ID+"').validationEngine('validate')==false){return false;}}catch(e){}\n        $.post($(this).attr(\"action\") + \"?ajax=1\",\n                    $(this).serialize(),\n                    function (data) {\n                        var j = eval(data);\n                        for (var i = 0; i < j.length; i++) {\n                            $(\"#\" + j[i][\"name\"]).prop(j[i][\"attr\"],j[i][\"val\"]);\n                        }\n                    })\n        return false;\n    });\n})";
-            Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "onsubmit", "<script type='text/javascript'>" + script + "</script>");
+            string jqyery_ajax_form = Page.ClientScript.GetWebResourceUrl(this.GetType(), "Voodoo.UI.resource.jquery.AjaxForm.js");
+            Page.ClientScript.RegisterClientScriptInclude("jqyery_ajax_form", jqyery_ajax_form);
+            if (!Page.IsStartupScriptRegistered("jqyery_ajax_form_ini"))
+            {
+                string background_image_url = Page.ClientScript.GetWebResourceUrl(this.GetType(), "Voodoo.UI.resource.ajax-loader.gif");
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "jqyery_ajax_form_ini", "<script type='text/javascript'>$(function(){ formsubmit('" + this.ID + "','" + background_image_url + "') })</script>");
+            }
             if (!Page.IsStartupScriptRegistered("__dopostback"))
             {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "__dopostback", "<script type='text/javascript'>function __doPostBack(eventTarget, eventArgument){$('#__EVENTTARGET').val(eventTarget);$('#__EVENTARGUMENT').val(eventArgument); $('#" + this.ID + "').submit(); return void(0);}</script>");
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "__dopostback", "<script type='text/javascript'>\nfunction __doPostBack(eventTarget, eventArgument)\n    {    \n$('#__EVENTTARGET').val(eventTarget);\n    $('#__EVENTARGUMENT').val(eventArgument);\n     $('#" + this.ID + "').submit();\n     return void(0);\n }\n </script>");
             }
             base.OnPreRender(e);
         }
         #endregion
+
         #region 重写 Render
         protected override void Render(HtmlTextWriter output)
         {

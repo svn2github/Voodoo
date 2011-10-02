@@ -26,7 +26,7 @@
 	<td>
 		<asp:TextBox ID="txt_<%=ToPascal(SourceTable.Columns[i].Name)%>" runat="server"></asp:TextBox>
 	</td>
-<tr>
+</tr>
 
 <%
 	}

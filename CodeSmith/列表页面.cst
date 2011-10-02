@@ -82,9 +82,10 @@
 		操作
 	</td>
 <tr>
-<tr>
+
 <asp:Repeater ID="list" runat="server">
 	<ItemTemplate>
+	<tr>
 		<td>
 			<input name="ids" type="checkbox" id="ids" value="<<%=""%>%#Eval("Id") %>" class="np">
 		</td>
@@ -107,9 +108,10 @@
 			<a href="?action=delete&id=<<%=""%>%#Eval("id")%>" onclick="return confirm('数据删除后不可恢复，确定要执行删除操作？')">删除</a>
 			<<%=""%>%} %>
 		</td>
+	</tr>
 	</ItemTemplate>
 </asp:Repeater>
-</tr>
+
 <tr bgcolor="#FAFAF1">
 	<td colspan="<%=SourceTable.Columns.Count+1%>" height="28">
 		&nbsp;

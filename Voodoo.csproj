@@ -148,6 +148,11 @@
     <Compile Include="Net\CollectionRules.cs" />
     <Compile Include="Net\CollectionRulesView.cs" />
     <Compile Include="Net\Connection\Baidu.cs" />
+    <Compile Include="Net\Connection\Google.cs" />
+    <Compile Include="Net\Connection\Kaixin001.cs" />
+    <Compile Include="Net\Connection\QQ.cs" />
+    <Compile Include="Net\Connection\RenRen.cs" />
+    <Compile Include="Net\Connection\Sina.cs" />
     <Compile Include="Net\FTPClient.cs" />
     <Compile Include="Net\Mail\Pop3.cs" />
     <Compile Include="Net\Mail\SMTP.cs" />
@@ -164,6 +169,7 @@
     <Compile Include="other\Contact.cs" />
     <Compile Include="other\enum.cs" />
     <Compile Include="other\FileAttribute.cs" />
+    <Compile Include="other\Messanger.cs" />
     <Compile Include="other\PhoneNumber.cs" />
     <Compile Include="other\Result.cs" />
     <Compile Include="Pay\AliPay\alipay_function.cs" />
@@ -342,9 +348,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="IO\EXIFInfo\" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -360,6 +363,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IO\EXIFInfo\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -280,6 +280,25 @@ namespace Voodoo
         }
         #endregion
 
+        /// <summary>
+        /// 判断指定CookieCollection是否存在指定的Cookie
+        /// </summary>
+        /// <param name="cookieCollection"></param>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        public static bool Exist(this CookieCollection cookieCollection, Cookie cookie)
+        {
+
+            foreach (Cookie c in cookieCollection)
+            {
+                if (c==cookie)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static List<string> GetMatchList(this Match m,string key)
         {
             List<string> result = new List<string>();

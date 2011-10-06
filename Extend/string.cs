@@ -331,7 +331,7 @@ namespace Voodoo
         {
             try
             {
-                return Convert.ToDateTime(self.ToString());
+                return Convert.ToDateTime(self.ToString().Replace("年", "-").Replace("月", "-").Replace("日", ""));
             }
             catch
             {
@@ -357,7 +357,7 @@ namespace Voodoo
         /// <param name="self"></param>
         /// <param name="DefaultValue">转换失败的默认值</param>
         /// <returns></returns>
-        public static Decimal ToDecimal(this object self,Decimal DefaultValue)
+        public static Decimal ToDecimal(this object self, Decimal DefaultValue)
         {
             try
             {
@@ -1025,6 +1025,41 @@ namespace Voodoo
         }
         #endregion
 
-
+        #region 点击访问WebInfo的某项内容
+        /// <summary>
+        /// 点击访问WebInfo的某项内容
+        /// </summary>
+        /// <param name="web"></param>
+        /// <param name="parttern">正则表达式</param>
+        /// <param name="encode">页面编码</param>
+        /// <returns></returns>
+        public static Voodoo.Net.WebInfo Click(this Voodoo.Net.WebInfo web, string parttern, Encoding encode)
+        {
+            string html = web.Html;
+            Match m = new Regex(parttern, RegexOptions.None).Match(html);
+            if (m.Success)
+            {
+                string url = m.Groups["key"].Value.Replace("&amp;", "&");
+                if (!url.Contains("http"))
+                {
+                    string uri = web.WebUrl.Substring(0, web.WebUrl.LastIndexOf('/'));
+                    if (url[0] == '/')
+                    {
+                        url = "http://" + new Uri(web.WebUrl).Host + url;
+                    }
+                    else
+                    {
+                        url = uri + "/" + url;
+                    }
+                }
+                web = Voodoo.Net.Url.PostGetCookieAndHtml(new System.Collections.Specialized.NameValueCollection(), url, encode, web.cookieContainer, web.cookieCollection, web.url);
+                return web;
+            }
+            else
+            {
+                return new Voodoo.Net.WebInfo();
+            }
+        }
+        #endregion
     }
 }

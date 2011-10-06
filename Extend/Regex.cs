@@ -17,10 +17,18 @@ namespace Voodoo
         /// <returns></returns>
         public static string FindText(this string str, string startString, string endString)
         {
-            string regex = startString + "(?<key>.*?)" + endString;
-            Regex r = new Regex(regex, RegexOptions.Singleline);
+            string regex = startString + "(?<key>[\\w\\W]*?)" + endString;
+            Regex r = new Regex(regex, RegexOptions.None);
             Match mc = r.Match(str);
-            return mc.Groups["key"].Value;
+            if (mc.Success)
+            {
+                return mc.Groups["key"].Value;
+            }
+            else
+            {
+                return "";
+            }
+            
         }
         #endregion
 

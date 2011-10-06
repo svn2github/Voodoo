@@ -37,7 +37,7 @@ namespace Voodoo
         /// <summary>
         /// 即时通讯
         /// </summary>
-        public List<e_Messanger> Messanger { get; set; }
+        public List<Messanger> Messanger { get; set; }
 
         /// <summary>
         /// 电话

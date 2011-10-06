@@ -435,6 +435,7 @@ namespace Voodoo.Net
         }
 
 
+
         public static CookieCollection PostAndGetCookie(System.Collections.Specialized.NameValueCollection postVars, string Url, Encoding encode, CookieContainer cookieContainer)
         {
             HttpWebRequest request = null;
@@ -537,7 +538,122 @@ namespace Voodoo.Net
         /// <param name="Url"></param>
         /// <param name="encode"></param>
         /// <returns></returns>
-        public static WebInfo PostGetCookieAndHtml(System.Collections.Specialized.NameValueCollection postVars, string Url, Encoding encode, CookieContainer cookieContainer,string Refer)
+        public static WebInfo PostGetCookieAndHtml(System.Collections.Specialized.NameValueCollection postVars, string Url, Encoding encode, CookieContainer cookieContainer,CookieCollection cookieCollection,string Refer)
+        {
+            HttpWebRequest request = null;
+            HttpWebResponse response = null;
+            StreamReader reader = null;
+            try
+            {
+                request = (HttpWebRequest)WebRequest.Create(Url);
+                //request.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.2)";
+                request.UserAgent = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
+                request.Referer = Refer;
+                request.CookieContainer = cookieContainer;
+                request.Method = "post";
+
+                request.AllowAutoRedirect = false;
+                //request.KeepAlive = false;
+                request.ProtocolVersion = HttpVersion.Version10;
+                request.Accept = "*/*";
+                
+
+
+                string param = "";
+
+                for (int i = 0; i < postVars.Count; i++)
+                {
+                    param += postVars.Keys[i] + "=" + postVars[i];
+                    if (i != postVars.Count - 1)
+                    {
+                        param += "&";
+                    }
+                }
+
+                byte[] bs = encode.GetBytes(param);
+
+                //request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = bs.Length;
+
+
+                request.Timeout = 60000;
+                //request.AllowAutoRedirect = true;
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bs, 0, bs.Length);
+                }
+
+                response = (HttpWebResponse)request.GetResponse();
+
+ 
+                if ((response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Found) && response.ContentLength < 1024 * 1024)
+                {
+
+                    reader = new StreamReader(response.GetResponseStream(), encode);
+                    string html = reader.ReadToEnd();
+
+                    WebInfo web = new WebInfo();
+                    web.statusCode = response.StatusCode;
+                    web.WebUrl = Url;
+                    if (response.StatusCode == HttpStatusCode.Found)
+                    {
+                        web.url = response.Headers["location"];
+                    }
+
+
+                    CookieCollection newCC = response.Cookies;
+                    foreach (System.Net.Cookie c in newCC)
+                    {
+                        
+                        if (!cookieCollection.Exist(c))
+                        {
+                            cookieCollection.Add(c);
+                        }
+                    }
+  
+                    try
+                    {
+                        web.cookieCollection = cookieCollection;
+                        web.cookieContainer = cookieCollection.ToCookieContainer();
+                    }
+                    catch (System.Exception e)
+                    {
+                    	
+                    }
+
+                    web.Html = html;
+
+                    while (web.statusCode == HttpStatusCode.Found)
+                    {
+                        web = PostGetCookieAndHtml(new NameValueCollection(), web.url, encode, cookieContainer,cookieCollection, Url);
+                    }
+                    
+
+                    return web;
+                }
+            }
+            catch { }
+            finally
+            {
+                if (response != null)
+                {
+                    response.Close();
+                    response = null;
+                }
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                if (request != null)
+                {
+                    request = null;
+                }
+            }
+            return null;
+        }
+
+        public static WebInfo PostGetCookieAndHtml(System.Collections.Specialized.NameValueCollection postVars, string Url, Encoding encode, CookieContainer cookieContainer, string Refer)
         {
             HttpWebRequest request = null;
             HttpWebResponse response = null;
@@ -548,8 +664,11 @@ namespace Voodoo.Net
                 request.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.2)";
                 request.Referer = Refer;
                 request.CookieContainer = cookieContainer;
+
                 request.Method = "post";
                 request.AllowAutoRedirect = false;
+                //request.KeepAlive = false;
+                request.ProtocolVersion = HttpVersion.Version10;
 
 
                 string param = "";
@@ -577,14 +696,25 @@ namespace Voodoo.Net
                 }
 
                 response = (HttpWebResponse)request.GetResponse();
+
+
                 if ((response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Found) && response.ContentLength < 1024 * 1024)
                 {
 
                     reader = new StreamReader(response.GetResponseStream(), encode);
                     string html = reader.ReadToEnd();
+                    
 
                     WebInfo web = new WebInfo();
-                    web.cookieContainer = response.Cookies.ToCookieContainer();
+                    web.statusCode = response.StatusCode;
+                    if (response.StatusCode == HttpStatusCode.Found)
+                    {
+                        web.url = response.Headers["location"];
+                    }
+
+
+                    cookieContainer.Add(response.Cookies);
+
                     web.Html = html;
 
                     return web;
@@ -1053,6 +1183,14 @@ namespace Voodoo.Net
         /// Html源文件
         /// </summary>
         public string Html { get; set; }
+
+        public System.Net.HttpStatusCode statusCode { get; set; }
+
+        public string url { get; set; }
+
+        public CookieCollection cookieCollection { get; set; }
+
+        public string WebUrl { get; set; }
     }
     #endregion
 

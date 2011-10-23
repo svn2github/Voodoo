@@ -83,7 +83,7 @@ namespace Voodoo
         /// <example>返回1,2,3,4这种字符串</example>
         public static string GetValues(this ListControl self)
         {
-            StringBuilder sb=new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             foreach (ListItem lt in self.Items)
             {
                 if (lt.Selected)
@@ -104,9 +104,9 @@ namespace Voodoo
         public static string GetCheckedIndex(this ListControl self)
         {
             StringBuilder sb = new StringBuilder();
-            for(int i=0;i<self.Items.Count;i++)
+            for (int i = 0; i < self.Items.Count; i++)
             {
-                if(self.Items[i].Selected)
+                if (self.Items[i].Selected)
                 {
                     sb.Append(i.ToString() + ",");
                 }
@@ -139,30 +139,30 @@ namespace Voodoo
         /// <param name="KeyColumn">主键，如:id</param>
         /// <param name="colors">颜色字符串，使用“,”分开。如：red,green.blue  或者#FF0000,#00FFFF,#0000FF</param>
         /// <returns></returns>
-        public static string ToXML(this DataTable dt,string KeyColumn,string colors)
+        public static string ToXML(this DataTable dt, string KeyColumn, string colors)
         {
             StringBuilder sb = new StringBuilder();
             //sb.Append("<?xml version='1.0' encoding='utf-8'?>");
-            string[] color=colors.Split(',');
+            string[] color = colors.Split(',');
             sb.Append("<chart>");
 
             sb.Append("<series>");
-            for (int i = 0; i < dt.Rows.Count;i++ )
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
                 sb.Append("<value xid='" + i + "'>" + dt.Rows[i][KeyColumn].ToString() + "</value>");
             }
             sb.Append("</series>");
 
             sb.Append("	<graphs>");
-            for (int i = 0; i < dt.Columns.Count ;i++ )
+            for (int i = 0; i < dt.Columns.Count; i++)
             {
-                if (dt.Columns[i].ColumnName.ToLower()==KeyColumn.ToLower())
+                if (dt.Columns[i].ColumnName.ToLower() == KeyColumn.ToLower())
                 {
                     continue;
                 }
-                string colorset = color.Length >= i ? " color='"+color[i]+"'" : "";
+                string colorset = color.Length >= i ? " color='" + color[i] + "'" : "";
                 sb.Append("<graph gid='" + i + "' title='" + dt.Columns[i].ColumnName + "' " + colorset + ">");
-                for (int j=0;j<dt.Rows.Count;j++)
+                for (int j = 0; j < dt.Rows.Count; j++)
                 {
                     sb.Append("<value xid='" + j + "'>" + dt.Rows[j][i].ToString() + "</value>");
                 }
@@ -218,7 +218,7 @@ namespace Voodoo
                 }
             }
         }
-        
+
         /// <summary>
         /// radioButtonList绑定数据
         /// </summary>
@@ -259,7 +259,7 @@ namespace Voodoo
         /// <param name="form"></param>
         /// <param name="result">结果消息</param>
         /// <param name="Url">跳转地址</param>
-        public static void ResponseResult(this System.Web.UI.HtmlControls.HtmlForm form, string result,string Url)
+        public static void ResponseResult(this System.Web.UI.HtmlControls.HtmlForm form, string result, string Url)
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("name", typeof(string));
@@ -297,7 +297,7 @@ namespace Voodoo
                             }
                             if (((CheckBox)c).Checked)
                             {
-                                AddRow(dt, c.ID, "checked","checked");
+                                AddRow(dt, c.ID, "checked", "checked");
                             }
                             break;
                         case "RadioButton":
@@ -307,7 +307,7 @@ namespace Voodoo
                             }
                             if (((RadioButton)c).Checked)
                             {
-                                AddRow(dt, c.ID, "checked","checked");
+                                AddRow(dt, c.ID, "checked", "checked");
                             }
                             break;
                         case "VListBox":
@@ -348,7 +348,7 @@ namespace Voodoo
 
             StringBuilder sb = new StringBuilder();
             sb.Append("{");
-            sb.Append("'url':'"+ Url +"','result':'" + result + "',data:" + dt.DataTableToJson(true));
+            sb.Append("'url':'" + Url + "','result':'" + result + "',data:" + dt.DataTableToJson(true));
             sb.Append("}");
 
             System.Web.HttpContext.Current.Response.Clear();
@@ -373,6 +373,35 @@ namespace Voodoo
 
         #endregion
 
+        #region TreeNode节点全选
+        /// <summary>
+        /// TreeNode节点全选
+        /// </summary>
+        /// <param name="tn"></param>
+        public static void CheckAll(this TreeNode tn)
+        {
+            tn.Checked = true;
+            if (tn.ChildNodes.Count > 0)
+            {
+                foreach (TreeNode ctn in tn.ChildNodes)
+                {
+                    ctn.CheckAll();
+                }
+            }
+        }
+
+        public static void CheckAll(this System.Windows.Forms.TreeNode tn)
+        {
+            tn.Checked = true;
+            if (tn.Nodes.Count > 0)
+            {
+                foreach (TreeNode ctn in tn.Nodes)
+                {
+                    ctn.CheckAll();
+                }
+            }
+        }
+        #endregion
 
     }
 }

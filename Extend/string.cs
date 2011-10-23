@@ -1025,6 +1025,18 @@ namespace Voodoo
         }
         #endregion
 
+        /// <summary>
+        /// 字符串编码转换
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="oldCoding">原编码</param>
+        /// <param name="newEncoding">新编码</param>
+        /// <returns></returns>
+        public static string ConvertEnCoding(this string str, Encoding oldCoding, Encoding newEncoding)
+        {
+            return newEncoding.GetString(oldCoding.GetBytes(str));
+        }
+
         #region 点击访问WebInfo的某项内容
         /// <summary>
         /// 点击访问WebInfo的某项内容

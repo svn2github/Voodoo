@@ -48,5 +48,9 @@ namespace Voodoo.Net
         /// 文章地址
         /// </summary>
         public string Url { get; set; }
+
+        public string LCLass { get; set; }
+
+        public int RuleID { get; set; }
     }
 }

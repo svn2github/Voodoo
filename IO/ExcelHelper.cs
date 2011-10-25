@@ -1,10 +1,12 @@
 ﻿using System.Data;
 using Voodoo.Data;
 using Voodoo.Data.DbHelper;
+
 using NPOI.HSSF.UserModel;
 using NPOI.HPSF;
 using NPOI.POIFS.FileSystem;
 using NPOI.SS.UserModel;
+
 using System.IO;
 using System.Web;
 using System.Collections.Generic;
@@ -49,7 +51,7 @@ namespace Voodoo.IO
                 //下载到客户端 
                 dgExport.RenderControl(htmlWriter);
                 curContext.Response.Clear();
-                curContext.Response.Write("<meta http-equiv=Content-Type content=text/HTml;charset=UTF-8>"); 
+                curContext.Response.Write("<meta http-equiv=Content-Type content=text/HTml;charset=UTF-8>");
                 curContext.Response.Write(strWriter.ToString());
                 return true;
                 //curContext.Response.End();
@@ -66,7 +68,7 @@ namespace Voodoo.IO
         /// <param name="dtData"></param>
         /// <param name="sheetName"></param>
         /// <returns></returns>
-        private static List<Sheet> GetSheet(HSSFWorkbook workbook,System.Data.DataTable dtData,string sheetName)
+        private static List<Sheet> GetSheet(HSSFWorkbook workbook, System.Data.DataTable dtData, string sheetName)
         {
 
             List<Sheet> list = new List<Sheet>();
@@ -90,9 +92,9 @@ namespace Voodoo.IO
                 header.GetCell(column.Ordinal).CellStyle = headStyle;
             }
 
-           
 
- 
+
+
 
             //填充内容  
             DataTable dt = dtData.Copy();
@@ -111,7 +113,7 @@ namespace Voodoo.IO
                     }
                     dt.Rows.RemoveAt(0);
                     i++;
-                    
+
                 }
 
             }
@@ -119,7 +121,7 @@ namespace Voodoo.IO
             if (dt.Rows.Count > 0)
             {
                 List<Sheet> sheetLeft = GetSheet(workbook, dt, sheetName + " 剩余");
-                foreach(Sheet s in sheetLeft)
+                foreach (Sheet s in sheetLeft)
                 {
                     list.Add(s);
                 }
@@ -137,6 +139,13 @@ namespace Voodoo.IO
         /// <returns></returns>
         private static HSSFWorkbook GetWorkBook(System.Data.DataTable dtData, string FileName)
         {
+            List<DataTableAndString> dtDatas = new List<DataTableAndString>();
+            dtDatas.Add(new DataTableAndString { Table = dtData, TableName = FileName });
+            return GetWorkBook(dtDatas);
+        }
+
+        private static HSSFWorkbook GetWorkBook(List<DataTableAndString> dtDatas)
+        {
             HSSFWorkbook workbook = new HSSFWorkbook();
             DocumentSummaryInformation dsi = PropertySetFactory.CreateDocumentSummaryInformation();
             dsi.Company = "kuibono@163.com";
@@ -147,8 +156,10 @@ namespace Voodoo.IO
 
             //创建sheet
             //Sheet sheet = workbook.CreateSheet(dtData.TableName);
-
-            GetSheet(workbook, dtData, FileName);
+            foreach (DataTableAndString ts in dtDatas)
+            {
+                GetSheet(workbook, ts.Table, ts.TableName);
+            }
 
 
             return workbook;
@@ -161,9 +172,16 @@ namespace Voodoo.IO
         /// </summary>
         /// <param name="dtData">需要转换的DataTable</param>
         /// <param name="FileName">保存文件的绝对路径</param>
-        public static void Export(System.Data.DataTable dtData,string path, string FileName)
+        public static void Export(System.Data.DataTable dtData, string path, string FileName)
         {
-            HSSFWorkbook workbook = GetWorkBook(dtData,FileName);
+            List<DataTableAndString> dtDatas = new List<DataTableAndString>();
+            dtDatas.Add(new DataTableAndString { Table = dtData, TableName = FileName });
+            Export(dtDatas, path);
+        }
+
+        public static void Export(List<DataTableAndString> dtData, string path)
+        {
+            HSSFWorkbook workbook = GetWorkBook(dtData);
             //保存  
 
             FileInfo file = new FileInfo(path);
@@ -186,7 +204,7 @@ namespace Voodoo.IO
         /// 将DataTable转换成Excel并输出到页面
         /// </summary>
         /// <param name="dtData"></param>
-        public static void ResponseExcel(System.Data.DataTable dtData,string FileName)
+        public static void ResponseExcel(System.Data.DataTable dtData, string FileName)
         {
             string fileName = FileName;
             HttpContext.Current.Response.ContentType = "application/vnd.ms-excel";

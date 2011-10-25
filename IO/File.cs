@@ -125,8 +125,8 @@ namespace Voodoo.IO
             if (Exists(OldFile))
             {
                 Delete(NewFile);
-                FileInfo file = new FileInfo(System.Web.HttpContext.Current.Server.MapPath(OldFile));
-                file.MoveTo(System.Web.HttpContext.Current.Server.MapPath(NewFile));
+                FileInfo file = new FileInfo(OldFile);
+                file.MoveTo(NewFile);
                 //File.Move(System.Web.HttpContext.Current.Server.MapPath(OldFile), System.Web.HttpContext.Current.Server.MapPath(NewFile));
             }
         }
@@ -144,11 +144,11 @@ namespace Voodoo.IO
             {
                 Delete(newFilePath);
             }
-            FileInfo file = new FileInfo(System.Web.HttpContext.Current.Server.MapPath(srcFilePath));
-            file.CopyTo(System.Web.HttpContext.Current.Server.MapPath(newFilePath), true);
+            FileInfo file = new FileInfo(srcFilePath);
+            file.CopyTo(newFilePath, true);
 
             //设置属性
-            FileInfo newF = new FileInfo(System.Web.HttpContext.Current.Server.MapPath(newFilePath));
+            FileInfo newF = new FileInfo(newFilePath);
             newF.Attributes = FileAttributes.Normal;
             newF.Refresh();
         }

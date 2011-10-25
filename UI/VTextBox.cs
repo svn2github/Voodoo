@@ -167,7 +167,7 @@ namespace Voodoo.UI
         {
             get
             {
-                return (bool)this.ViewState["EnableNull"];
+                return this.ViewState["EnableNull"].ToBoolean();
             }
             set
             {

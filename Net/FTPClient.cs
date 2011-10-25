@@ -87,7 +87,7 @@ namespace Voodoo.Net
             {
                 //System.Windows.Forms.MessageBox.Show(ex.Message);
                 downloadFiles = null;
-                return downloadFiles;
+                return new string[] { "530" };
             }
         }
         public string[] GetFileList(string path)//上面的代码示例了如何从ftp服务器上获得文件列表

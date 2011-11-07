@@ -20,9 +20,9 @@ namespace Voodoo
         {
             if (b)
             {
-                return "是";
+                return "<span style='color:green'>是</span>";
             }
-            return "否";
+            return "<span style='color:red'>否</span>";
         }
         #endregion
 

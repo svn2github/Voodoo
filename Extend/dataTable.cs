@@ -19,9 +19,14 @@ namespace Voodoo
 
             for (int i = 0; i < sourceTable.Columns.Count; i++)
             {
-                columns[i] = sourceTable.Columns[i].ColumnName;
+                columns[i] = sourceTable.Columns[i].ColumnName.Trim();
             }
             return columns;
+        }
+
+        public static DataColumn GetLastColumn(this DataTable SourceTable)
+        {
+            return SourceTable.Columns[SourceTable.Columns.Count - 1];
         }
 
         /// <summary>
@@ -30,12 +35,12 @@ namespace Voodoo
         /// <param name="sourceTable"></param>
         /// <param name="colomns"></param>
         /// <returns></returns>
-        public static DataTable NewTable(this DataTable sourceTable, params string[] colomns)
+        public static DataTable NewTable(this DataTable sourceTable, params DataColumn[] colomns)
         {
             DataTable newTable = new DataTable();
 
             var oldColumns = sourceTable.GetColumnNames();
-            foreach (string name in colomns)
+            foreach (DataColumn name in colomns)
             {
                 newTable.Columns.Add(name);
             }
@@ -43,47 +48,57 @@ namespace Voodoo
             {
                 DataRow r = newTable.NewRow();
 
-                foreach (string name in colomns)
+                foreach (DataColumn name in colomns)
                 {
-                    if (oldColumns.Contains(name))
+                    if (oldColumns.Contains(name.ColumnName))
                     {
-                        r[name] = row[name];
+                        try
+                        {
+                            r[name.ColumnName] = row[name.ColumnName];
+                        }
+                        catch
+                        {
+                            r[name.ColumnName] = GetDefaultValue(name.DataType);
+                        }
                     }
                     else
                     {
-                        r[name] = null;
+                        r[name.ColumnName] = GetDefaultValue(name.DataType);
                     }
 
                 }
                 newTable.Rows.Add(r);
             }
 
-            ////交集
-            //var leftColumns = (from l in colomns where oldColumns.Contains(l) select l).ToList();
 
-            //var nonColumns = (from l in colomns where leftColumns.Contains(l) == false select l).ToList();
-
-            //foreach(string str in leftColumns)
-            //{
-            //    newTable.Columns.Add(str);
-            //}
-
-            //foreach (DataRow row in sourceTable.Rows)
-            //{
-            //    DataRow newRow = newTable.NewRow();
-            //    foreach (string str in leftColumns)
-            //    {
-            //        newRow[str] = row[str];
-            //    }
-            //    newTable.Rows.Add(newRow);
-            //}
-
-            //foreach (string str in nonColumns)
-            //{
-            //    newTable.Columns.Add(str);
-            //}
 
             return newTable;
+        }
+
+        public static object GetDefaultValue(Type type)
+        {
+            switch (type.Name)
+            {
+                case "Int32":
+                    return  0;
+                    break;
+                case "String":
+                    return  "";
+                    break;
+                case "DateTime":
+                    return  new DateTime(2000, 1, 1);
+                    break;
+                case "Boolean":
+                    return  false;
+                    break;
+                case "Single":
+                    return 0.00;
+                    break;
+                default:
+                    return null;
+                    break;
+
+            }
         }
     }
 }

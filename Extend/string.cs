@@ -1025,6 +1025,7 @@ namespace Voodoo
         }
         #endregion
 
+        #region 字符串编码转换
         /// <summary>
         /// 字符串编码转换
         /// </summary>
@@ -1036,6 +1037,7 @@ namespace Voodoo
         {
             return newEncoding.GetString(oldCoding.GetBytes(str));
         }
+        #endregion
 
         #region 点击访问WebInfo的某项内容
         /// <summary>
@@ -1070,6 +1072,46 @@ namespace Voodoo
             else
             {
                 return new Voodoo.Net.WebInfo();
+            }
+        }
+        #endregion
+
+        #region 替换关键字为红色
+        /// <summary>
+        /// 替换关键字为红色
+        /// </summary>
+        /// <param name="keycontent">原始内容</param>
+        /// <param name="k">关键字，支持多关键字</param>
+        /// <returns>String</returns>
+        public static string Highlightkeywords(this string keycontent, string k)
+        {
+            return keycontent.Highlightkeywords(k, "#F00");
+        }
+        #endregion
+
+        #region 关键字高亮
+        /// <summary>
+        /// 关键字高亮
+        /// </summary>
+        /// <param name="keycontent">原始内容</param>
+        /// <param name="k">关键字，支持多关键字</param>
+        /// <param name="Color">高亮颜色 如:Red, #F00</param>
+        /// <returns></returns>
+        public static string Highlightkeywords(this string keycontent, string k,string Color)
+        {
+            string resultstr = keycontent;
+            if (k.Trim().IndexOf(' ') > 0)
+            {
+                string[] myArray = k.Split(' ');
+                for (int i = 0; i < myArray.Length; i++)
+                {
+                    resultstr = resultstr.Replace(myArray[i].ToString(), "<font color=\"" + Color + "\">" + myArray[i].ToString() + "</font>");
+                }
+                return resultstr;
+            }
+            else
+            {
+                return resultstr.Replace(k, "<font color=\"" + Color + "\">" + k + "</font>");
             }
         }
         #endregion

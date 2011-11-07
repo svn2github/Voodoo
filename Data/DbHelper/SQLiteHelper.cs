@@ -32,6 +32,10 @@ namespace Voodoo.Data.DbHelper
         public SQLiteHelper(string connStr)
         {
             this.Conn = new SQLiteConnection(connStr);
+            //Conn.Open();
+            //Conn.ChangePassword("");
+            //Conn.Close();
+
             this.Cmd = new SQLiteCommand();
         }
 
@@ -140,7 +144,9 @@ namespace Voodoo.Data.DbHelper
         private void CreateCmd(CommandType CmdType, string CmdText, DbParameter[] CmdParameters, SQLiteTransaction Transaction)
         {
             this.Cmd.Connection = this.Conn;
-            this.Cmd.Connection.SetPassword("password");
+
+
+            this.Cmd.Connection.SetPassword("");
             this.Cmd.CommandText = CmdText;
             //this.Cmd.CommandTimeout = 20;
             if (Transaction != null)

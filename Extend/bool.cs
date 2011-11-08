@@ -26,6 +26,11 @@ namespace Voodoo
         }
         #endregion
 
+        public static string ToS(this bool b)
+        {
+            return b ? "1" : "0";
+        }
+
         /// <summary>
         /// BOOL类型转换为short
         /// </summary>

@@ -162,11 +162,16 @@ namespace Voodoo.IO
         /// <param name="fileContent">文件内容</param>
         public static void Write(string Path, string fileContent)
         {
-            Write(Path, fileContent, "UTF-8");
+            Write(Path, fileContent, "UTF-8",FileMode.Create);
+
+        }
+        public static void Write(string Path, string fileContent,FileMode fm)
+        {
+            Write(Path, fileContent, "UTF-8",fm);
 
         }
 
-        public static void Write(string Path, string fileContent, string Encode)
+        public static void Write(string Path, string fileContent, string Encode, FileMode fm)
         {
             FileInfo file = new FileInfo(Path);
 
@@ -178,7 +183,7 @@ namespace Voodoo.IO
 
 
             FileStream stream = null;
-            stream = new FileStream(Path, FileMode.Append, FileAccess.Write, FileShare.Write);
+            stream = new FileStream(Path, fm, FileAccess.Write, FileShare.Write);
             StreamWriter writer = new StreamWriter(stream, Encoding.GetEncoding(Encode));
             writer.Write(fileContent);
             writer.Close();

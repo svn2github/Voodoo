@@ -124,5 +124,22 @@ namespace Voodoo
 
         }
 
+        /// <summary>
+        /// 页面跳转
+        /// </summary>
+        /// <param name="Url"></param>
+        public static void Jump(string Url)
+        {
+            HttpContext.Current.Response.Write(@"<script>window.location='" + Url + "';</script>");
+        }
+
+        /// <summary>
+        /// 后退
+        /// </summary>
+        public static void GoBack()
+        {
+            HttpContext.Current.Response.Write(@"<script>history.go(-1);;</script>");
+        }
+
     }
 }

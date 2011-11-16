@@ -44,5 +44,10 @@ namespace Voodoo
             }
             return 0;
         }
+
+        public static int ToInt32(this bool b)
+        {
+            return b ? 1 : 2;
+        }
     }
 }

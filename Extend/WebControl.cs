@@ -234,6 +234,15 @@ namespace Voodoo
             rbl.DataBind();
         }
 
+        public static void Bind(this System.Web.UI.WebControls.ListControl rbl, ListItemCollection li)
+        {
+            rbl.Items.Clear();
+            foreach (ListItem l in li)
+            {
+                rbl.Items.Add(new ListItem(l.Text, l.Value));
+            }
+        }
+
         #region 输出AjaxForm的结果
         /// <summary>
         /// 输出AjaxForm的结果

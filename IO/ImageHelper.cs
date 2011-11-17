@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
 namespace Voodoo.IO
@@ -85,6 +86,12 @@ namespace Voodoo.IO
 
             try
             {
+                DirectoryInfo dir = new FileInfo(thumbnailPath).Directory;
+                if (dir.Exists == false)
+                {
+                    dir.Create();
+                }
+
                 //以jpg格式保存缩略图
                 bitmap.Save(thumbnailPath, System.Drawing.Imaging.ImageFormat.Jpeg);
             }

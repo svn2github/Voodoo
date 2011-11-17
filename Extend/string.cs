@@ -271,7 +271,7 @@ namespace Voodoo
             System.Text.RegularExpressions.Regex regex3 = new System.Text.RegularExpressions.Regex(@" on[\s\S]*=", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             System.Text.RegularExpressions.Regex regex4 = new System.Text.RegularExpressions.Regex(@"<iframe[\s\S]+</iframe *>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             System.Text.RegularExpressions.Regex regex5 = new System.Text.RegularExpressions.Regex(@"<frameset[\s\S]+</frameset *>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            self.Replace("'", "''");
+            self=self.Replace("'", "''");
             self = regex1.Replace(self, ""); //过滤<script></script>标记 
             self = regex2.Replace(self, ""); //过滤href=javascript: (<A>) 属性 
             self = regex3.Replace(self, " _disibledevent="); //过滤其它控件的on...事件 
@@ -1113,6 +1113,28 @@ namespace Voodoo
             {
                 return resultstr.Replace(k, "<font color=\"" + Color + "\">" + k + "</font>");
             }
+        }
+        #endregion
+
+        #region 获取文件名
+        /// <summary>
+        /// 根据文件路径获取文件名
+        /// </summary>
+        /// <param name="str">路径</param>
+        /// <returns></returns>
+        public static string GetFileNameFromPath(this string str)
+        {
+            return System.IO.Path.GetFileName(str);
+        }
+
+        /// <summary>
+        /// 根据文件路径获取文件扩展名
+        /// </summary>
+        /// <param name="str">路径</param>
+        /// <returns></returns>
+        public static string GetFileExtNameFromPath(this string str)
+        {
+            return System.IO.Path.GetExtension(str);
         }
         #endregion
     }

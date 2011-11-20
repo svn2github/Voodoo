@@ -76,6 +76,25 @@ namespace Voodoo
 
         #endregion
 
+        #region 获取大概
+        /// <summary>
+        /// 获取大概
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static int YueShu(this double db)
+        {
+            if (db > Convert.ToDouble(db.ToInt32()))
+            {
+                return db.ToInt32() + 1;
+            }
+            else
+            {
+                return db.ToInt32();
+            }
+        }
+        #endregion 
+
 
     }
 }

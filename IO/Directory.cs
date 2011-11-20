@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Voodoo.IO
 {
-    public static class myDirectory
+    public class myDirectory
     {
         #region 设定一个目录（本身及其内文件及子目录中所有内容）为普通文件
         /// <summary>
@@ -71,6 +71,31 @@ namespace Voodoo.IO
             return true;
         }
         #endregion
+
+        public static bool DeleteDir(string path)
+        {
+            //DirectoryInfo dir = new DirectoryInfo(path);
+            //if (dir.Exists == false)
+            //{
+            //    return false;
+            //}
+            //foreach (FileInfo file in dir.GetFiles())
+            //{
+            //    file.Attributes = FileAttributes.Normal;
+            //    file.Delete();
+            //}
+            //foreach (DirectoryInfo dir1 in dir.GetDirectories())
+            //{
+
+            //    DeleteDir(dir1.FullName);
+            //    SetDirAttrNormal(dir1.FullName);
+            //    dir1.Delete();
+
+            //}
+            Directory.Delete(path, true);
+            return true;
+
+        }
 
         /// <summary>
         /// 获取目录中的所有文件（包含子目录）

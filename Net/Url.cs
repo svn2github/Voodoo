@@ -35,6 +35,11 @@ namespace Voodoo.Net
                 request = (HttpWebRequest)WebRequest.Create(url);
                 request.UserAgent = "www.svnhost.cn";
 
+                //WebProxy proxy = new WebProxy();                                      //定義一個網關對象
+                //proxy.Address = new Uri("http://120.203.214.148:80");              //網關服務器:端口
+                ////proxy.Credentials = new NetworkCredential("f3210316", "6978233");      //用戶名,密碼
+                //request.Proxy = proxy;
+
                 request.Timeout = 20000;
                 request.AllowAutoRedirect = true;
                 response = (HttpWebResponse)request.GetResponse();

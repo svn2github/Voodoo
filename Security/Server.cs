@@ -239,7 +239,7 @@ namespace Voodoo.Security
         #region .NET版本
         public static string GetDotNetVersion()
         {
-            return ".NET CLR " + Environment.Version.ToString();
+            return Environment.Version.ToString();
         }
         #endregion
 

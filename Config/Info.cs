@@ -36,7 +36,7 @@ namespace Voodoo.Config
            string XPath = "/configuration/appSettings/add[@key='?']";
            XmlDocument domWebConfig = new XmlDocument();
 
-           domWebConfig.Load((HttpContext.Current.Server.MapPath("web.config")));
+           domWebConfig.Load((HttpContext.Current.Server.MapPath("~/web.config")));
            XmlNode addKey = domWebConfig.SelectSingleNode((XPath.Replace("?", key)));
            if (addKey == null)
            {
@@ -44,7 +44,7 @@ namespace Voodoo.Config
                return;
            }
            addKey.Attributes["value"].InnerText = value;
-           domWebConfig.Save((HttpContext.Current.Server.MapPath("web.config")));
+           domWebConfig.Save((HttpContext.Current.Server.MapPath("~/web.config")));
        }
         #endregion
 

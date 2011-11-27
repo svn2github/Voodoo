@@ -251,6 +251,10 @@ namespace Voodoo
         /// <returns></returns>
         public static string ToS(this object str)
         {
+            if (str == null)
+            {
+                return "";
+            }
             try
             {
                 return Convert.ToString(str);

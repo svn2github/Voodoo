@@ -12,7 +12,7 @@ namespace Voodoo.Data.DbHelper
     /// <summary>
     /// Sql数据库操作类
     /// </summary>
-    public class SqlHelper:Voodoo.Data.IDbHelper
+    public class SqlHelper : Voodoo.Data.IDbHelper
     {
         #region 预定义对象
         /// <summary>
@@ -215,7 +215,10 @@ namespace Voodoo.Data.DbHelper
             {
                 this.Add((SqlParameter[])CmdParameters);
             }
-            this.Cmd.Connection.Open();
+            if (this.Cmd.Connection.State == ConnectionState.Closed)
+            {
+                this.Cmd.Connection.Open();
+            }
         }
         #endregion
 
@@ -680,9 +683,9 @@ namespace Voodoo.Data.DbHelper
         /// <param name="Filter">where语句，不需要带“where”</param>
         /// <param name="group">Group表达式 不需要“group”</param>
         /// <returns></returns>
-        public DataTable PageListViewSort(string Tables,string PrimaryKey,string Sort,int CurrentPage,int PageSize,string Fields,string Filter,string group)
+        public DataTable PageListViewSort(string Tables, string PrimaryKey, string Sort, int CurrentPage, int PageSize, string Fields, string Filter, string group)
         {
-            if (CurrentPage<=0)
+            if (CurrentPage <= 0)
             {
                 CurrentPage = 1;
             }
@@ -691,7 +694,7 @@ namespace Voodoo.Data.DbHelper
 
             if (!Filter.IsNullOrEmpty())
             {
-                Filter = " where " + Filter+" ";
+                Filter = " where " + Filter + " ";
             }
             else
             {
@@ -707,14 +710,30 @@ namespace Voodoo.Data.DbHelper
                 group = "";
             }
 
-            string str_sql = "select * from (Select "+ Fields +",ROW_NUMBER() OVER(Order By "+ Sort +") as row FROM "+ Tables+ Filter+ group +") a where row between "+ strStartRow +" and "+strEndRow;
+            string str_sql = "select * from (Select " + Fields + ",ROW_NUMBER() OVER(Order By " + Sort + ") as row FROM " + Tables + Filter + group + ") a where row between " + strStartRow + " and " + strEndRow;
 
-            DataTable dt = ExecuteDataTable(CommandType.Text, str_sql);
+            DataTable dt = new DataTable();
+            try
+            {
+                dt = ExecuteDataTable(CommandType.Text, str_sql);
+            }
+            catch
+            {
+                //sql2000提供支持
+
+                str_sql = "SELECT TOP " + PageSize + " * FROM " + Tables + " WHERE " + PrimaryKey + " not in (SELECT TOP " + PageSize * (CurrentPage - 1) + " " + PrimaryKey + "  FROM " + Tables + Filter + "  ORDER BY " + Sort + ") " + Filter.Replace("where","and") + " ORDER BY  " + Sort;
+
+                if (this.Conn.State == ConnectionState.Closed)
+                {
+                    this.Conn.Open();
+                }
+                dt = ExecuteDataTable(CommandType.Text, str_sql);
+            }
 
             dt.Columns.Add(new DataColumn("rownumber", Type.GetType("System.Int32")));
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                dt.Rows[i]["rownumber"] = PageSize * (CurrentPage-1) + i+1;
+                dt.Rows[i]["rownumber"] = PageSize * (CurrentPage - 1) + i + 1;
             }
 
             return dt;
@@ -730,11 +749,11 @@ namespace Voodoo.Data.DbHelper
         /// <param name="Filter">where语句</param>
         /// <param name="group">group语句</param>
         /// <returns></returns>
-        public int PageCountSort(string Tables,string Filter,string group)
+        public int PageCountSort(string Tables, string Filter, string group)
         {
-            if(!Filter.IsNullOrEmpty())
+            if (!Filter.IsNullOrEmpty())
             {
-                Filter = " where " + Filter+" ";
+                Filter = " where " + Filter + " ";
             }
             else
             {
@@ -743,8 +762,8 @@ namespace Voodoo.Data.DbHelper
 
             if (!group.IsNullOrEmpty())
             {
-                group = " GROUP BY " + group+" ";
-            } 
+                group = " GROUP BY " + group + " ";
+            }
             else
             {
                 group = "";

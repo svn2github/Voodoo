@@ -100,5 +100,42 @@ namespace Voodoo
 
             }
         }
+
+        /// <summary>
+        /// 跳过记录
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static DataTable Skip(this DataTable dt, int number)
+        {
+            DataTable newDt = dt.Clone();
+
+            int i = number+1;
+            while (dt.Rows.Count >= i)
+            {
+                DataRow row = newDt.NewRow();
+                newDt.Rows.Add(dt.Rows[i]);
+                i++;
+            }
+            return newDt;
+        }
+
+        /// <summary>
+        /// 提取记录
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static DataTable Take(this DataTable dt, int number)
+        {
+            DataTable newDt = dt.Clone();
+            int tkRows=dt.Rows.Count>number?number:dt.Rows.Count;
+            for (int i = 0; i < tkRows; i++)
+            {
+                newDt.Rows.Add(dt.Rows[i]);
+            }
+            return newDt;
+        }
     }
 }

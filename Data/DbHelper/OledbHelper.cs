@@ -714,7 +714,8 @@ namespace Voodoo.Data.DbHelper
                 Sort = "";
             }
 
-            string str_sql = "SELECT " + Fields + " FROM " + Tables + Filter + Sort + " LIMIT " + strStartRow + "," + PageSize;
+            //string str_sql = "SELECT " + Fields + " FROM " + Tables + Filter + Sort + " LIMIT " + strStartRow + "," + PageSize;
+            string str_sql = "SELECT " + Fields + " FROM " + Tables + Filter + Sort ;
             DataTable dt= ExecuteDataTable(CommandType.Text, str_sql);
 
             dt.Columns.Add(new DataColumn("rownumber", Type.GetType("System.Int32")));

@@ -179,6 +179,7 @@
     <Compile Include="other\PinyinHelper.cs" />
     <Compile Include="other\Reflection.cs" />
     <Compile Include="other\Result.cs" />
+    <Compile Include="other\SEO\SiteMap.cs" />
     <Compile Include="Pay\AliPay\alipay_function.cs" />
     <Compile Include="Pay\AliPay\alipay_notify.cs" />
     <Compile Include="Pay\AliPay\alipay_service.cs" />

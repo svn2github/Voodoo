@@ -271,7 +271,7 @@ namespace Voodoo
             System.Text.RegularExpressions.Regex regex3 = new System.Text.RegularExpressions.Regex(@" on[\s\S]*=", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             System.Text.RegularExpressions.Regex regex4 = new System.Text.RegularExpressions.Regex(@"<iframe[\s\S]+</iframe *>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             System.Text.RegularExpressions.Regex regex5 = new System.Text.RegularExpressions.Regex(@"<frameset[\s\S]+</frameset *>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            self=self.Replace("'", "''");
+            self = self.Replace("'", "''");
             self = regex1.Replace(self, ""); //过滤<script></script>标记 
             self = regex2.Replace(self, ""); //过滤href=javascript: (<A>) 属性 
             self = regex3.Replace(self, " _disibledevent="); //过滤其它控件的on...事件 
@@ -1097,7 +1097,7 @@ namespace Voodoo
         /// <param name="k">关键字，支持多关键字</param>
         /// <param name="Color">高亮颜色 如:Red, #F00</param>
         /// <returns></returns>
-        public static string Highlightkeywords(this string keycontent, string k,string Color)
+        public static string Highlightkeywords(this string keycontent, string k, string Color)
         {
             string resultstr = keycontent;
             if (k.Trim().IndexOf(' ') > 0)
@@ -1137,5 +1137,8 @@ namespace Voodoo
             return System.IO.Path.GetExtension(str);
         }
         #endregion
+
+
+
     }
 }

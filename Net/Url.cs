@@ -85,10 +85,10 @@ namespace Voodoo.Net
             try
             {
                 request = (HttpWebRequest)WebRequest.Create(url);
-                request.UserAgent = "www.svnhost.cn";
+                request.UserAgent = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.2 Safari/535.11";
 
 
-                request.Timeout = 20000;
+                request.Timeout = 60000;
                 request.AllowAutoRedirect = true;
                 response = (HttpWebResponse)request.GetResponse();
                 if (response.StatusCode == HttpStatusCode.OK && response.ContentLength < 1024 * 1024)
@@ -401,7 +401,7 @@ namespace Voodoo.Net
                 request.ContentLength = bs.Length;
 
 
-                request.Timeout = 20000;
+                request.Timeout = 60000;
                 request.AllowAutoRedirect = true;
                 using (Stream reqStream = request.GetRequestStream())
                 {

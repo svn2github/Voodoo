@@ -1138,7 +1138,56 @@ namespace Voodoo
         }
         #endregion
 
+        #region Url参数转换为POST所用的NameValueCollection
+        /// <summary>
+        /// Url参数转换为POST所用的NameValueCollection
+        /// </summary>
+        /// <param name="param">参数，如：name=张三&sex=男</param>
+        /// <returns></returns>
+        public static System.Collections.Specialized.NameValueCollection ParamToNameValueCollection(this string param)
+        {
+            System.Collections.Specialized.NameValueCollection nv = new System.Collections.Specialized.NameValueCollection();
+            string[] pars = param.Split('&');
+            foreach (string str in pars)
+            {
+                string[] pas = str.Split('=');
+                if (pas.Length > 1)
+                {
+                    nv.Add(pas[0], pas[1]);
+                }
+                else
+                {
+                    nv.Add(pas[0], "");
+                }
+            }
 
+            return nv;
+        }
+        #endregion
+
+        #region 页面地址和域名合并
+        /// <summary>
+        /// 页面地址和域名合并
+        /// </summary>
+        /// <param name="page">页面地址，如：/news/22.html</param>
+        /// <param name="domain">网站地址，如：http://www.aizr.net</param>
+        /// <returns></returns>
+        public static string AppendToDomain(this string page,string domain)
+        {
+            if (domain.ToLower().Contains("http")==false)
+            {
+                domain = "http://" + domain;
+            }
+            if(page[0]=='/')
+            {
+                return domain + page;
+            }
+            else
+            {
+                return page;
+            }
+        }
+        #endregion
 
     }
 }

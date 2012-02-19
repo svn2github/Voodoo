@@ -105,11 +105,12 @@ namespace Voodoo.IO
         /// <param name="FilePath">相对地址，例如"~/files.xml"</param>
         public static void SaveSerialize(Type Types, object Info, string FilePath)
         {
-            //FilePath = System.Web.HttpContext.Current.Server.MapPath(FilePath);
-            Stream stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-            new XmlSerializer(Types).Serialize(stream, Info);
-            stream.Flush();
-            stream.Close();
+            ////FilePath = System.Web.HttpContext.Current.Server.MapPath(FilePath);
+            //Stream stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            //new XmlSerializer(Types).Serialize(stream, Info);
+            //stream.Flush();
+            //stream.Close();
+            File.Write(FilePath, Serialize(Info));
         }
         #endregion
 

@@ -44,6 +44,11 @@ namespace Voodoo
             return Regex.Match(s, pattern).Value;
         }
 
+        public static System.Text.RegularExpressions.Match GetMatchGroup(this string s, string pattern)
+        {
+            return new Regex(pattern).Match(s);
+        }
+
         public static int GetNumberFromTitle(this string title)
         {
             Match mc = new Regex("第[一二三四五六七八九〇零十百千万1234567890]+章|引子", RegexOptions.None).Match(title);

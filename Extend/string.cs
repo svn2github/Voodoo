@@ -1174,6 +1174,10 @@ namespace Voodoo
         /// <returns></returns>
         public static string AppendToDomain(this string page,string domain)
         {
+            if (page.IsNullOrEmpty())
+            {
+                return domain;
+            }
             if (domain.ToLower().Contains("http")==false)
             {
                 domain = "http://" + domain;

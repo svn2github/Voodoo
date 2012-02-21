@@ -1193,5 +1193,76 @@ namespace Voodoo
         }
         #endregion
 
+        #region  替换同义词
+        /// <summary>
+        /// 替换同义词
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string ReplaceSynonyms(this string str)
+        {
+
+            string[][] Synonyms = { 
+                                  
+                                      new string[]{"的","地"},
+                                      new string[]{"一","1"},
+                                      new string[]{"二","2"},
+                                      new string[]{"三","3"},
+                                      new string[]{"四","4"},
+                                      new string[]{"五","5"},
+                                      new string[]{"六","6"},
+                                      new string[]{"七","7"},
+                                      new string[]{"八","8"},
+                                      new string[]{"九","9"},
+                                      new string[]{"零","0"},
+                                      new string[]{"。","."},
+                                      new string[]{"，",","},
+                                      new string[]{" ",""},
+                                  };
+
+            str = str.ToLower();
+            foreach (string[] ss in Synonyms)
+            {
+                str = str.Replace(ss[0], ss[1]);
+            }
+
+            return str;
+        }
+        #endregion 
+
+        #region 获取两个字符串的相似度
+        /// <summary>
+        /// 获取两个字符串的相似度
+        /// </summary>
+        /// <param name="sourceString">第一个字符串</param>
+        /// <param name="str">第二个字符串</param>
+        /// <returns></returns>
+        public static decimal GetSimilarityWith(this string sourceString, string str)
+        {
+            //参考：http://www.cnblogs.com/eaglet/articles/854804.html
+            //公式：相似度=Kq*q/(Kq*q+Kr*r+Ks*s) (Kq > 0 , Kr>=0,Ka>=0) 公式2
+            //设置Kq = 2 ,Kr=Ks=1 Kq Kr Ks 为 q r s 的权重
+            //设q是字符串1和字符串2中都存在的单词的总数，s是字符串1中存在，字符串2中不存在的单词总数，r是字符串2中存在，字符串1中不存在的单词总数
+
+            //处理同义词
+            sourceString = sourceString.ReplaceSynonyms();
+            str = str.ReplaceSynonyms();
+
+            decimal Kq = 2;
+            decimal Kr = 1;
+            decimal Ks = 1;
+
+            char[] ss = sourceString.ToCharArray();
+            char[] st = str.ToCharArray();
+
+            //获取交集数量
+            int q = ss.Intersect(st).Count();
+            int s = ss.Length - q;
+            int r = st.Length - q;
+
+            return Kq * q / (Kq * q + Kr * r + Ks * s);
+        }
+        #endregion 获取两个字符串的相似度
+
     }
 }

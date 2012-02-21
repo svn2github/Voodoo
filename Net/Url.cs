@@ -381,7 +381,7 @@ namespace Voodoo.Net
                 request.Referer = Referer;
                 request.CookieContainer = cc;
                 request.Method = "post";
-
+                //request.Expect = null;
 
 
                 string param = "";

@@ -1201,6 +1201,10 @@ namespace Voodoo
         /// <returns></returns>
         public static string ReplaceSynonyms(this string str)
         {
+            if (str.IsNullOrEmpty())
+            {
+                return "";
+            }
 
             string[][] Synonyms = { 
                                   

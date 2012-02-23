@@ -220,7 +220,8 @@ namespace Voodoo.Net
                 //下载文件的URI
                 Uri u = new Uri("ftp://" + ftpfilepath + fileName);
                 //设定下载文件的保存路径
-                string downFile = filePath + fileName;
+                string downFile = filePath + fileName+".vddowning"; //下载中的文件有一个临时文件扩展名
+                string FinalFileName = filePath + fileName;
 
                 //FtpWebRequest的作成
                 System.Net.FtpWebRequest ftpReq = (System.Net.FtpWebRequest)
@@ -269,6 +270,9 @@ namespace Voodoo.Net
                 }
                 fs.Close();
                 resStrm.Close();
+
+                FileInfo file = new FileInfo(downFile);
+                file.MoveTo(FinalFileName);//下载完成后，文件临时扩展名去掉
 
                 //表示从FTP服务器被送信的状态
                 Console.WriteLine("{0}: {1}", ftpRes.StatusCode, ftpRes.StatusDescription);

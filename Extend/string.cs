@@ -1178,6 +1178,10 @@ namespace Voodoo
             {
                 return domain;
             }
+            if(page.ToLower().Contains("http://"))
+            {
+                return page;
+            }
             if (domain.ToLower().Contains("http")==false)
             {
                 domain = "http://" + domain;

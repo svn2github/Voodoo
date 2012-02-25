@@ -1269,22 +1269,36 @@ namespace Voodoo
             //设q是字符串1和字符串2中都存在的单词的总数，s是字符串1中存在，字符串2中不存在的单词总数，r是字符串2中存在，字符串1中不存在的单词总数
 
             //处理同义词
-            sourceString = sourceString.ReplaceSynonyms();
-            str = str.ReplaceSynonyms();
+            //同义词当成近义词，如“我的”和“我地” 相似度并不是100%
+            string _sourceString = sourceString.ReplaceSynonyms();
+            string _str = str.ReplaceSynonyms();
 
             decimal Kq = 2;
             decimal Kr = 1;
             decimal Ks = 1;
 
+            char[] _ss = _sourceString.ToCharArray();
+            char[] _st = _str.ToCharArray();
+
             char[] ss = sourceString.ToCharArray();
             char[] st = str.ToCharArray();
 
             //获取交集数量
+
+            int _q = _ss.Intersect(_st).Count();
+            int _s = _ss.Length - _q;
+            int _r = _st.Length - _q;
+
             int q = ss.Intersect(st).Count();
             int s = ss.Length - q;
             int r = st.Length - q;
 
-            return Kq * q / (Kq * q + Kr * r + Ks * s);
+            //原字符串相似度
+            decimal sourWeight = Kq * q / (Kq * q + Kr * r + Ks * s);
+
+            decimal simWeight = Kq * _q / (Kq * _q + Kr * _r + Ks * _s);
+
+            return (sourWeight+simWeight)/2;
         }
         #endregion 获取两个字符串的相似度
 

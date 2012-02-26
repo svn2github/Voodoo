@@ -1172,27 +1172,27 @@ namespace Voodoo
         /// <param name="page">页面地址，如：/news/22.html</param>
         /// <param name="domain">网站地址，如：http://www.aizr.net</param>
         /// <returns></returns>
-        public static string AppendToDomain(this string page,string domain)
+        public static string AppendToDomain(this string page, string domain)
         {
             if (page.IsNullOrEmpty())
             {
                 return domain;
             }
-            if(page.ToLower().Contains("http://"))
+            if (page.ToLower().Contains("http://"))
             {
                 return page;
             }
-            if (domain.ToLower().Contains("http")==false)
+            if (domain.ToLower().Contains("http") == false)
             {
                 domain = "http://" + domain;
             }
-            if(page[0]=='/')
+            if (page[0] == '/')
             {
-                return domain + page;
+                return "http://" + new Uri(domain).Host + page;
             }
             else
             {
-                return page;
+                return domain + page;
             }
         }
         #endregion
@@ -1252,7 +1252,7 @@ namespace Voodoo
 
             return str;
         }
-        #endregion 
+        #endregion
 
         #region 获取两个字符串的相似度
         /// <summary>
@@ -1298,7 +1298,7 @@ namespace Voodoo
 
             decimal simWeight = Kq * _q / (Kq * _q + Kr * _r + Ks * _s);
 
-            return (sourWeight+simWeight)/2;
+            return (sourWeight + simWeight) / 2;
         }
         #endregion 获取两个字符串的相似度
 

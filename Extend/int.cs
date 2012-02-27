@@ -129,7 +129,9 @@ namespace Voodoo
         /// <returns></returns>
         public static int GetRandomNumber(int min, int max)
         {
-            Random random = new Random();
+            Guid randSeedGuid = Guid.NewGuid();
+
+            Random random = new Random(BitConverter.ToInt32(randSeedGuid.ToByteArray(), 0));
             return random.Next(min, max);
         }
        #endregion

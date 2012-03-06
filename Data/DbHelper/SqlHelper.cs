@@ -205,7 +205,7 @@ namespace Voodoo.Data.DbHelper
         {
             this.Cmd.Connection = this.Conn;
             this.Cmd.CommandText = CmdText;
-            this.Cmd.CommandTimeout = 180;
+            this.Cmd.CommandTimeout = 1800;
             //this.Cmd.CommandTimeout = 20;
             if (Transaction != null)
             {

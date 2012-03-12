@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.VisualBasic;
+using System.Collections.Specialized;
 
 namespace Voodoo
 {
@@ -934,7 +935,7 @@ namespace Voodoo
             }
             else
             {
-                return m.Groups[0].Value;
+                return m.Groups[1].Value;
             }
         }
         #endregion
@@ -1301,6 +1302,61 @@ namespace Voodoo
             return (sourWeight + simWeight) / 2;
         }
         #endregion 获取两个字符串的相似度
+
+        /// <summary>
+        /// 获取html字符串控件的属性
+        /// </summary>
+        /// <param name="ele"></param>
+        /// <param name="AttrName"></param>
+        /// <returns></returns>
+        public static string GetHtmlElementAttribute(this string ele,string AttrName)
+        {
+            return ele.FindString(string.Format("{0}=\"(?<key>.*?)\"|{0}=(?<key>.*?)", AttrName));
+        }
+
+        /// <summary>
+        /// 序列化HTML表单
+        /// </summary>
+        /// <param name="html"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static NameValueCollection SerializeForm(this string html, string id)
+        {
+            string strForm = "";
+            if (id[0] == '#')
+            {
+                strForm = html.GetMatch(string.Format("<form.*?id=\"{0}\".*?>(?<key>[\\s\\S]*?)</form>", id.Replace("#", "")))[0];
+            }
+            else if (id[0] == '.')
+            {
+                strForm = html.GetMatch(string.Format("<form.*?class=\"{0}\".*?>(?<key>[\\s\\S]*?)</form>", id.Replace(".", "")))[0];
+            }
+            else
+            {
+                strForm = html.GetMatch(string.Format("<form.*?id=\"{0}\".*?>(?<key>[\\s\\S]*?)</form>", id.Replace("#", "")))[0];
+            }
+
+            Match match_Input = new Regex("<input .*?>|<textarea[\\w\\W]*?</textarea>").Match(strForm);
+
+            NameValueCollection nv = new NameValueCollection();
+            while (match_Input.Success)
+            {
+                string ele = match_Input.Groups[0].Value.ToS();
+                if ((ele.GetHtmlElementAttribute("type") == "checkbox" || ele.GetHtmlElementAttribute("type") == "radio") && ele.GetHtmlElementAttribute("checked") != "checked")
+                {
+                    match_Input = match_Input.NextMatch();
+                    continue;
+                }
+                else
+                {
+                    nv.Add(ele.GetHtmlElementAttribute("name"), ele.GetHtmlElementAttribute("value"));
+                }
+                match_Input = match_Input.NextMatch();
+
+            }
+
+            return nv;
+        }
 
     }
 }

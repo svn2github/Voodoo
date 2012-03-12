@@ -213,7 +213,7 @@ namespace Voodoo.Security
         public static string SHA1(string Str)
         {
             SHA1CryptoServiceProvider provider = new SHA1CryptoServiceProvider();
-            return BitConverter.ToString(provider.ComputeHash(Encoding.Default.GetBytes(Str)));
+            return BitConverter.ToString(provider.ComputeHash(Encoding.Default.GetBytes(Str))).Replace("-","").ToLower();
         }
         #endregion
 

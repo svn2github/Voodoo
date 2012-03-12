@@ -717,9 +717,20 @@ namespace Voodoo.Net
                         web.url = response.Headers["location"];
                     }
 
+                    CookieCollection cookieCollection = new CookieCollection();
+                    CookieCollection newCC = response.Cookies;
+                    foreach (System.Net.Cookie c in newCC)
+                    {
+
+                        if (!cookieCollection.Exist(c))
+                        {
+                            cookieCollection.Add(c);
+                        }
+                    }
 
                     cookieContainer.Add(response.Cookies);
-
+                    web.cookieContainer = cookieContainer;
+                    web.cookieCollection = cookieCollection;
                     web.Html = html;
 
                     return web;

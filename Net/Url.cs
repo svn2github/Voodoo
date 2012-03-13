@@ -660,6 +660,11 @@ namespace Voodoo.Net
 
         public static WebInfo PostGetCookieAndHtml(System.Collections.Specialized.NameValueCollection postVars, string Url, Encoding encode, CookieContainer cookieContainer, string Refer)
         {
+            return PostGetCookieAndHtml(postVars, Url, encode, cookieContainer, Refer, true);
+        }
+
+        public static WebInfo PostGetCookieAndHtml(System.Collections.Specialized.NameValueCollection postVars, string Url, Encoding encode, CookieContainer cookieContainer, string Refer,bool AllowRedirect)
+        {
             HttpWebRequest request = null;
             HttpWebResponse response = null;
             StreamReader reader = null;
@@ -671,7 +676,7 @@ namespace Voodoo.Net
                 request.CookieContainer = cookieContainer;
 
                 request.Method = "post";
-                request.AllowAutoRedirect = true;
+                request.AllowAutoRedirect = AllowRedirect;
                 //request.KeepAlive = false;
                 request.ProtocolVersion = HttpVersion.Version10;
 
@@ -693,7 +698,7 @@ namespace Voodoo.Net
                 request.ContentLength = bs.Length;
 
 
-                request.Timeout = 20000;
+                request.Timeout = 60000;
                 //request.AllowAutoRedirect = true;
                 using (Stream reqStream = request.GetRequestStream())
                 {
@@ -708,7 +713,7 @@ namespace Voodoo.Net
 
                     reader = new StreamReader(response.GetResponseStream(), encode);
                     string html = reader.ReadToEnd();
-                    
+
 
                     WebInfo web = new WebInfo();
                     web.statusCode = response.StatusCode;

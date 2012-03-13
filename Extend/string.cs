@@ -1331,6 +1331,10 @@ namespace Voodoo
             {
                 strForm = html.GetMatch(string.Format("<form.*?class=\"{0}\".*?>(?<key>[\\s\\S]*?)</form>", id.Replace(".", "")))[0];
             }
+            else if (id[0] == '@')
+            {
+                strForm = html.GetMatch(string.Format("<form.*?name=\"{0}\".*?>(?<key>[\\s\\S]*?)</form>", id.Replace("@", "")))[0];
+            }
             else
             {
                 strForm = html.GetMatch(string.Format("<form.*?id=\"{0}\".*?>(?<key>[\\s\\S]*?)</form>", id.Replace("#", "")))[0];

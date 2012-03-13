@@ -63,6 +63,14 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CookComputing.XmlRpcV2, Version=2.3.2.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ref\CookComputing.XmlRpcV2.dll</HintPath>
+    </Reference>
+    <Reference Include="JoeBlogs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ref\JoeBlogs.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MySql.Data, Version=6.2.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
@@ -151,6 +159,7 @@
     <Compile Include="Net\BlogHelper\Neasy.cs" />
     <Compile Include="Net\BlogHelper\Sina.cs" />
     <Compile Include="Net\BlogHelper\Sohu.cs" />
+    <Compile Include="Net\BlogHelper\WordPress.cs" />
     <Compile Include="Net\Collect.cs" />
     <Compile Include="Net\CollectionRules.cs" />
     <Compile Include="Net\CollectionRulesView.cs" />

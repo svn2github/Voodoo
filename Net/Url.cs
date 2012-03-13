@@ -671,7 +671,7 @@ namespace Voodoo.Net
                 request.CookieContainer = cookieContainer;
 
                 request.Method = "post";
-                request.AllowAutoRedirect = false;
+                request.AllowAutoRedirect = true;
                 //request.KeepAlive = false;
                 request.ProtocolVersion = HttpVersion.Version10;
 

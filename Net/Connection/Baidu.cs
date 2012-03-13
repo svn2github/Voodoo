@@ -80,6 +80,8 @@ namespace Voodoo.Net.Connection
             return r;
         }
 
+
+
         public Contact GetUserInfo()
         {
             WebInfo web = userCookie.Click("酷站</a>&nbsp;&nbsp;<a href=\"(?<key>.*?)\">更多</a><br/>", Encoding.UTF8);

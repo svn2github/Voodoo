@@ -148,6 +148,9 @@
     <Compile Include="LinqExt\ExpressionVisitor.cs" />
     <Compile Include="LinqExt\PartialEvaluator.cs" />
     <Compile Include="LinqExt\TableExtensions.cs" />
+    <Compile Include="Net\BlogHelper\Neasy.cs" />
+    <Compile Include="Net\BlogHelper\Sina.cs" />
+    <Compile Include="Net\BlogHelper\Sohu.cs" />
     <Compile Include="Net\Collect.cs" />
     <Compile Include="Net\CollectionRules.cs" />
     <Compile Include="Net\CollectionRulesView.cs" />

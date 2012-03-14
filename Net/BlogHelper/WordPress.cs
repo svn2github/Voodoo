@@ -45,6 +45,32 @@ namespace Voodoo.Net.BlogHelper
         #endregion
 
         #region  提交
+
+        /// <summary>
+        /// 提交
+        /// </summary>
+        /// <param name="p">帖子</param>
+        /// <returns></returns>
+        public bool Post(Post p)
+        {
+            try
+            {
+                wp.NewPost(new AlexJamesBrown.JoeBlogs.Structs.Post()
+                {
+                    categories = p.Tags,
+                    dateCreated = DateTime.Now,
+                    description = p.Content,
+                    title = p.Title
+                }, true);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// 提交
         /// </summary>
@@ -75,7 +101,7 @@ namespace Voodoo.Net.BlogHelper
                     description = Content,
                     title = Title
                 }, true);
-
+                
                 return true;
             }
             catch

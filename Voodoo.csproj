@@ -156,7 +156,9 @@
     <Compile Include="LinqExt\ExpressionVisitor.cs" />
     <Compile Include="LinqExt\PartialEvaluator.cs" />
     <Compile Include="LinqExt\TableExtensions.cs" />
+    <Compile Include="Net\BlogHelper\Model\Post.cs" />
     <Compile Include="Net\BlogHelper\Neasy.cs" />
+    <Compile Include="Net\BlogHelper\Renren.cs" />
     <Compile Include="Net\BlogHelper\Sina.cs" />
     <Compile Include="Net\BlogHelper\Sohu.cs" />
     <Compile Include="Net\BlogHelper\WordPress.cs" />

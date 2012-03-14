@@ -18,11 +18,11 @@ namespace Voodoo.Net.BlogHelper
         protected string Url { get; set; }
 
         protected AlexJamesBrown.JoeBlogs.WordPressWrapper wp;
-        
+
         #region 实例化
 
 
-        public WordPress(string url,string Username, string password)
+        public WordPress(string url, string Username, string password)
         {
             this.Url = url;
             this.UserName = Username;
@@ -90,7 +90,7 @@ namespace Voodoo.Net.BlogHelper
         /// <param name="Tag">标签</param>
         /// <param name="Class">分类</param>
         /// <returns></returns>
-        public bool Post(string Title, string Content,string Tag,string Class)
+        public bool Post(string Title, string Content, string Tag, string Class)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace Voodoo.Net.BlogHelper
                     description = Content,
                     title = Title
                 }, true);
-                
+
                 return true;
             }
             catch
@@ -112,5 +112,64 @@ namespace Voodoo.Net.BlogHelper
 
         }
         #endregion
+
+        #region 获取最近发布的帖子
+        /// <summary>
+        /// 获取最近发布的帖子
+        /// </summary>
+        /// <param name="TopNum">最新的多少条</param>
+        /// <returns></returns>
+        public List<Post> GetRecentPosts(int TopNum)
+        {
+            var Result = new List<Post>();
+            var posts = wp.GetRecentPosts(TopNum);
+            foreach (var p in posts)
+            {
+                Result.Add(new Post()
+                {
+                    Title = p.title,
+                    Tags = p.categories,
+                    Content = p.description,
+                    CreateTime = p.dateCreated,
+                    id = p.postid
+                });
+            }
+            return Result;
+        }
+        #endregion
+
+        #region 根据ID获取帖子
+        /// <summary>
+        /// 根据ID获取帖子
+        /// </summary>
+        /// <param name="id">帖子id</param>
+        /// <returns></returns>
+        public Post GetPost(string id)
+        {
+            var post = wp.GetPost(id);
+            return new Post()
+            {
+                Tags = post.categories,
+                Content = post.description,
+                id = post.postid,
+                CreateTime = post.dateCreated,
+                Title = post.title
+            };
+        }
+        #endregion
+
+        #region 删除帖子
+        /// <summary>
+        /// 删除帖子
+        /// </summary>
+        /// <param name="id">帖子ID</param>
+        /// <returns></returns>
+        public bool DeletePost(string id)
+        {
+            return wp.DeletePost(id);
+        }
+        #endregion
+
+
     }
 }

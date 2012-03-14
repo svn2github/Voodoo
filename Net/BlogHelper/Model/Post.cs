@@ -13,7 +13,7 @@ namespace Voodoo.Net.BlogHelper
         /// <summary>
         /// ID
         /// </summary>
-        public int id { get; set; }
+        public string id { get; set; }
 
         /// <summary>
         /// 标题

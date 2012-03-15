@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections.Specialized;
 
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Voodoo.Net.BlogHelper
 {
@@ -16,6 +17,8 @@ namespace Voodoo.Net.BlogHelper
         protected string UserName { get; set; }
 
         protected string Password { get; set; }
+
+        protected string Url { get; set; }
 
         #endregion
 
@@ -29,6 +32,13 @@ namespace Voodoo.Net.BlogHelper
         {
             this.UserName = Username;
             this.Password = password;
+        }
+
+        public Sina(string Username, string password, string url)
+        {
+            this.UserName = Username;
+            this.Password = password;
+            this.Url = url;
         }
         #endregion
 
@@ -90,6 +100,16 @@ namespace Voodoo.Net.BlogHelper
         #endregion
 
         #region  提交
+
+        /// <summary>
+        /// 提交
+        /// </summary>
+        /// <param name="p">文章</param>
+        /// <returns></returns>
+        public bool Post(Post p)
+        {
+            return Post(p.Title, p.Content, p.Tags.ToS(), p.Class);
+        }
         /// <summary>
         /// 提交
         /// </summary>
@@ -109,7 +129,7 @@ namespace Voodoo.Net.BlogHelper
         /// <param name="Tag">标签</param>
         /// <param name="Class">分类</param>
         /// <returns></returns>
-        public bool Post(string Title, string Content,string Tag,string Class)
+        public bool Post(string Title, string Content, string Tag, string Class)
         {
             try
             {
@@ -144,5 +164,102 @@ namespace Voodoo.Net.BlogHelper
         }
         #endregion
 
+        #region 获取最近发布的帖子
+        /// <summary>
+        /// 获取最近发布的帖子
+        /// </summary>
+        /// <param name="TopNum">最新的多少条</param>
+        /// <returns></returns>
+        public List<Post> GetRecentPosts(int TopNum)
+        {
+            var Result = new List<Post>();
+            var pResult = Voodoo.Net.Url.PostGetCookieAndHtml(new NameValueCollection(),
+                this.Url,
+                Encoding.UTF8,
+                this.cookieContainer);
+            string listUrl = pResult.Html.FindString("<a class=\"CP_a_fuc\" title=\"管理\" href=\"(?<key>.*?)\" target=\"_blank\">\\[<cite>管理</cite>\\]</a>");
+
+            var listHtml = Voodoo.Net.Url.PostGetCookieAndHtml(new NameValueCollection(),
+                listUrl,
+                Encoding.UTF8,
+                this.cookieContainer);
+
+            Match m_list = listHtml.Html.GetMatchGroup("<div class=\"articleCell[\\s\\S]*?<span class=\"atc_title\">[\\s\\S]*?<a title=\"(?<title>.*?)\" target=\"_blank\"[\\s\\S]*?<span class=\"atc_tm SG_txtc\">(?<time>[\\s\\S]*?)</span>[\\s\\S]*?href=\"http://control.blog.sina.com.cn/admin/article/article_edit.php\\?blog_id=(?<id>.*?)\"");
+
+            int i = 0;
+            while (m_list.Success && i < TopNum)
+            {
+                Result.Add(new Post()
+                {
+                    Title = m_list.Groups["title"].Value.TrimHTML(),
+                    id = m_list.Groups["id"].Value,
+                    CreateTime = m_list.Groups["time"].Value.ToDateTime()
+
+                });
+                m_list = m_list.NextMatch();
+                i++;
+            }
+            while (i < TopNum && listHtml.Html.IsMatch("<li class=\"SG_pgnext\"><a href=\"(?<key>.*?)\".*?>下一页&nbsp;&gt;</a></li>"))
+            {
+                listUrl = listHtml.Html.FindString("<li class=\"SG_pgnext\"><a href=\"(?<key>.*?)\".*?>下一页&nbsp;&gt;</a></li>");
+                listHtml = Voodoo.Net.Url.PostGetCookieAndHtml(new NameValueCollection(),
+                    listUrl,
+                    Encoding.UTF8,
+                    this.cookieContainer);
+                m_list = listHtml.Html.GetMatchGroup("<div class=\"articleCell[\\s\\S]*?<span class=\"atc_title\">[\\s\\S]*?<a title=\"(?<title>.*?)\" target=\"_blank\"[\\s\\S]*?<span class=\"atc_tm SG_txtc\">(?<time>[\\s\\S]*?)</span>[\\s\\S]*?href=\"http://control.blog.sina.com.cn/admin/article/article_edit.php\\?blog_id=(?<id>.*?)\"");
+                while (m_list.Success && i < TopNum)
+                {
+                    Result.Add(new Post()
+                    {
+                        Title = m_list.Groups["title"].Value.TrimHTML(),
+                        id = m_list.Groups["id"].Value,
+                        CreateTime = m_list.Groups["time"].Value.ToDateTime()
+
+                    });
+                    m_list = m_list.NextMatch();
+                    i++;
+                }
+            }
+
+            return Result;
+        }
+        #endregion
+
+        #region 根据ID获取帖子
+        /// <summary>
+        /// 根据ID获取帖子
+        /// </summary>
+        /// <param name="id">帖子id</param>
+        /// <returns></returns>
+        public Post GetPost(string id)
+        {
+            var Result = new Post();
+            string url = "http://control.blog.sina.com.cn/admin/article/article_edit.php?blog_id=" + id;
+
+            var fResult = Voodoo.Net.Url.PostGetCookieAndHtml(new NameValueCollection(),
+                url,
+                Encoding.UTF8,
+                this.cookieContainer);
+
+            Result.id = id;
+            Result.Title = fResult.Html.FindString("<input[\\s\\S]*?id=\"articleTitle\"[\\s\\S]*?value=\"(?<key>.*?)\"/>");
+            Result.Content = fResult.Html.FindString("<textarea name=\"blog_body\"[\\s\\S]*?>(?<key>[\\s\\S]*?)</textarea>");
+            Result.Class = fResult.Html.FindString("<select id=\"componentSelect\"[\\s\\S]*?<option value=\"00\">[\\s\\S]*?<option value=\"(?<key>.*?)\" selected=\"selected\">.*?</option>");
+            Result.Tags = fResult.Html.FindString("<input name=\"tag\".*?value=\"(?<key>.*?)\".*?/>").Split(',',' ',';');
+            return Result;
+        }
+        #endregion
+
+        #region 删除帖子
+        /// <summary>
+        /// 删除帖子
+        /// </summary>
+        /// <param name="id">帖子ID</param>
+        /// <returns></returns>
+        public bool DeletePost(string id)
+        {
+            return false;
+        }
+        #endregion
     }
 }

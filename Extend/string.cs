@@ -153,6 +153,7 @@ namespace Voodoo
         {
             string StrNohtml = html;
             StrNohtml = StrNohtml.TrimScript();
+            StrNohtml = Regex.Replace(StrNohtml, "&.{1,6};", "", RegexOptions.IgnoreCase);
             StrNohtml = Regex.Replace(StrNohtml, "<script[\\w\\W].*?</script>", "", RegexOptions.IgnoreCase);
             StrNohtml = System.Text.RegularExpressions.Regex.Replace(StrNohtml, "<[^>]+>", "");
             StrNohtml = System.Text.RegularExpressions.Regex.Replace(StrNohtml, "&[^;]+;", "");
@@ -1325,19 +1326,19 @@ namespace Voodoo
             string strForm = "";
             if (id[0] == '#')
             {
-                strForm = html.GetMatch(string.Format("<form.*?id=\"{0}\".*?>(?<key>[\\s\\S]*?)</form>", id.Replace("#", "")))[0];
+                strForm = html.GetMatch(string.Format("<form[\\s\\S]*?id=\"{0}\"[\\s\\S]*?>(?<key>[\\s\\S]*?)</form>", id.Replace("#", "")))[0];
             }
             else if (id[0] == '.')
             {
-                strForm = html.GetMatch(string.Format("<form.*?class=\"{0}\".*?>(?<key>[\\s\\S]*?)</form>", id.Replace(".", "")))[0];
+                strForm = html.GetMatch(string.Format("<form[\\s\\S]*?class=\"{0}\"[\\s\\S]*?>(?<key>[\\s\\S]*?)</form>", id.Replace(".", "")))[0];
             }
             else if (id[0] == '@')
             {
-                strForm = html.GetMatch(string.Format("<form.*?name=\"{0}\".*?>(?<key>[\\s\\S]*?)</form>", id.Replace("@", "")))[0];
+                strForm = html.GetMatch(string.Format("<form[\\s\\S]*?name=\"{0}\"[\\s\\S]*?>(?<key>[\\s\\S]*?)</form>", id.Replace("@", "")))[0];
             }
             else
             {
-                strForm = html.GetMatch(string.Format("<form.*?id=\"{0}\".*?>(?<key>[\\s\\S]*?)</form>", id.Replace("#", "")))[0];
+                strForm = html.GetMatch(string.Format("<form[\\s\\S]*?id=\"{0}\"[\\s\\S]*?>(?<key>[\\s\\S]*?)</form>", id.Replace("#", "")))[0];
             }
 
             Match match_Input = new Regex("<input .*?>|<textarea[\\w\\W]*?</textarea>").Match(strForm);

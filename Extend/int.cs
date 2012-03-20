@@ -14,7 +14,7 @@ namespace Voodoo
         /// <param name="grade">要转换的级别</param>
         /// <param name="step">进制，如：4（即四个星星为一个月亮）</param>
         /// <returns>返回3,3,2这种形式的字符串，意为：两个太阳一个月亮</returns>
-        public static string GradeToSymbol(this int grade,int step)
+        public static string GradeToSymbol(this int grade, int step)
         {
             string sun = "3,";
             string mon = "2,";
@@ -57,7 +57,7 @@ namespace Voodoo
 
             return gradeStr;
         }
- #endregion
+        #endregion
 
         #region 通过字节数取得文件大小
         /// <summary>
@@ -134,7 +134,7 @@ namespace Voodoo
             Random random = new Random(BitConverter.ToInt32(randSeedGuid.ToByteArray(), 0));
             return random.Next(min, max);
         }
-       #endregion
+        #endregion
 
         #region 获取页数
         /// <summary>
@@ -143,9 +143,26 @@ namespace Voodoo
         /// <param name="itemCount"></param>
         /// <param name="PageSize"></param>
         /// <returns></returns>
-        public static int GetPageCount(this int itemCount,int PageSize)
+        public static int GetPageCount(this int itemCount, int PageSize)
         {
             return itemCount % PageSize > 0 ? itemCount / PageSize + 1 : itemCount / PageSize;
+        }
+        #endregion
+
+        #region 为空数字赋值
+        /// <summary>
+        /// 为空数字赋值
+        /// </summary>
+        /// <param name="str">数字</param>
+        /// <param name="Value">值</param>
+        /// <returns></returns>
+        public static int IsNull(this int num, int Value)
+        {
+            if (num < 0)
+            {
+                num = Value;
+            }
+            return num;
         }
         #endregion
     }

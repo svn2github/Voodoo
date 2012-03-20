@@ -154,6 +154,8 @@ namespace Voodoo
             string StrNohtml = html;
             StrNohtml = StrNohtml.TrimScript();
             StrNohtml = Regex.Replace(StrNohtml, "&.{1,6};", "", RegexOptions.IgnoreCase);
+            StrNohtml = Regex.Replace(StrNohtml, "<p.*?>", Environment.NewLine, RegexOptions.IgnoreCase);
+            StrNohtml = Regex.Replace(StrNohtml, "<br.*?>", Environment.NewLine, RegexOptions.IgnoreCase);
             StrNohtml = Regex.Replace(StrNohtml, "<script[\\w\\W].*?</script>", "", RegexOptions.IgnoreCase);
             StrNohtml = System.Text.RegularExpressions.Regex.Replace(StrNohtml, "<[^>]+>", "");
             StrNohtml = System.Text.RegularExpressions.Regex.Replace(StrNohtml, "&[^;]+;", "");
@@ -380,7 +382,7 @@ namespace Voodoo
         /// <returns></returns>
         public static bool ToBoolean(this object self)
         {
-            if (self == null)
+            if (self == null||self.ToS().IsNullOrEmpty())
             {
                 return false;
             }
@@ -458,6 +460,17 @@ namespace Voodoo
         public static byte[] ToByteArray(this string str)
         {
             return Encoding.ASCII.GetBytes(str);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="str">要转换的字符串</param>
+        /// <param name="Encode">编码格式</param>
+        /// <returns>返回一个二进制数据流</returns>
+        public static byte[] ToByteArray(this string str,Encoding Encode)
+        {
+            return Encode.GetBytes(str);
         }
         #endregion
 
@@ -1188,6 +1201,10 @@ namespace Voodoo
             {
                 domain = "http://" + domain;
             }
+            if (page.Contains("/") == false)
+            {
+                return domain.Substring(0, domain.LastIndexOf('/')+1) + page;
+            }
             if (page[0] == '/')
             {
                 return "http://" + new Uri(domain).Host + page;
@@ -1304,6 +1321,7 @@ namespace Voodoo
         }
         #endregion 获取两个字符串的相似度
 
+        #region  获取html字符串控件的属性
         /// <summary>
         /// 获取html字符串控件的属性
         /// </summary>
@@ -1314,7 +1332,9 @@ namespace Voodoo
         {
             return ele.FindString(string.Format("{0}=\"(?<key>.*?)\"|{0}=(?<key>.*?)", AttrName));
         }
+        #endregion 
 
+        #region 序列化HTML表单
         /// <summary>
         /// 序列化HTML表单
         /// </summary>
@@ -1362,6 +1382,23 @@ namespace Voodoo
 
             return nv;
         }
+        #endregion
 
+        #region 为空字符串赋值
+        /// <summary>
+        /// 为空字符串赋值
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="Value">值</param>
+        /// <returns></returns>
+        public static string IsNull(this string str, string Value)
+        {
+            if (str.IsNullOrEmpty())
+            {
+                str = Value;
+            }
+            return str;
+        }
+        #endregion
     }
 }

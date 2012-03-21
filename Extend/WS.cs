@@ -204,11 +204,11 @@ namespace Voodoo
         /// <returns></returns>
         public static bool IsFromMobile()
         {
-            if (HttpContext.Current.Request.UrlReferrer == null)
+            if (HttpContext.Current.Request.UserAgent == null)
                 return false;
 
-            string[] SearchEngine = { "android", "nokia", "symbian", "ios", "ucweb", "wap", "up.browser", "sonyericsson" };
-            string tmpReferrer = HttpContext.Current.Request.UrlReferrer.ToString().ToLower();
+            string[] SearchEngine = { "android", "nokia", "symbian", "ios", "ucweb", "wap", "up.browser", "sonyericsson","mobile" };
+            string tmpReferrer = HttpContext.Current.Request.UserAgent.ToString().ToLower();
             for (int i = 0; i < SearchEngine.Length; i++)
             {
                 if (tmpReferrer.IndexOf(SearchEngine[i]) >= 0)

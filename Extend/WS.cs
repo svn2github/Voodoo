@@ -196,5 +196,26 @@ namespace Voodoo
             return sb.ToString();
         }
         #endregion
+
+        #region 判断请求是否来自移动终端
+        /// <summary>
+        /// 判断请求是否来自移动终端
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsFromMobile()
+        {
+            if (HttpContext.Current.Request.UrlReferrer == null)
+                return false;
+
+            string[] SearchEngine = { "android", "nokia", "symbian", "ios", "ucweb", "wap", "up.browser", "sonyericsson" };
+            string tmpReferrer = HttpContext.Current.Request.UrlReferrer.ToString().ToLower();
+            for (int i = 0; i < SearchEngine.Length; i++)
+            {
+                if (tmpReferrer.IndexOf(SearchEngine[i]) >= 0)
+                    return true;
+            }
+            return false;
+        }
+        #endregion
     }
 }

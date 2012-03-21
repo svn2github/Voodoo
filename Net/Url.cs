@@ -1176,14 +1176,8 @@ namespace Voodoo.Net
         /// <param name="path">下载到本地的路径</param>
         public static void DownFile(string url, string path)
         {
-            string str = GetHtml(url);
-            using (FileStream fs = new FileStream(path, FileMode.Create))
-            {
-                fs.Write(str.ToByteArray(), 0, str.Length);
-                fs.Close();
-                fs.Dispose();
-            }
-            str = null;
+            WebClient wc = new WebClient();
+            wc.DownloadFile(url, path);
 
         }
         #endregion
@@ -1197,62 +1191,9 @@ namespace Voodoo.Net
         /// <param name="IsAutoRename">是否自动按照时间重命名</param>
         public static void UpLoadFile(string fileNamePath, string uriString, bool IsAutoRename)
         {
-            string fileName = fileNamePath.Substring(fileNamePath.LastIndexOf("\\") + 1);
-            string NewFileName = fileName;
-            if (IsAutoRename)
-            {
-                NewFileName = DateTime.Now.ToString("yyMMddhhmmss") + DateTime.Now.Millisecond.ToString() + fileNamePath.Substring(fileNamePath.LastIndexOf("."));
-            }
+            WebClient wc = new WebClient();
+            wc.UploadFile(uriString, fileNamePath);
 
-            string fileNameExt = fileName.Substring(fileName.LastIndexOf(".") + 1);
-            if (uriString.EndsWith("/") == false) uriString = uriString + "/";
-
-            uriString = uriString + NewFileName;
-            //log.AddLog(uriString, "Log");
-            //log.AddLog(fileNamePath, "Log");
-            /**/
-            /// 创建WebClient实例
-            WebClient myWebClient = new WebClient();
-            myWebClient.Credentials = CredentialCache.DefaultCredentials;
-            // 要上传的文件
-            FileStream fs = new FileStream(fileNamePath, FileMode.Open, FileAccess.Read);
-            //FileStream fs = OpenFile();
-            BinaryReader r = new BinaryReader(fs);
-            byte[] postArray = r.ReadBytes((int)fs.Length);
-            Stream postStream = myWebClient.OpenWrite(uriString, "PUT");
-
-
-            try
-            {
-
-                //使用UploadFile方法可以用下面的格式
-                //myWebClient.UploadFile(uriString,"PUT",fileNamePath);
-
-
-                if (postStream.CanWrite)
-                {
-                    postStream.Write(postArray, 0, postArray.Length);
-                    postStream.Close();
-                    fs.Dispose();
-                }
-                else
-                {
-                    postStream.Close();
-                    fs.Dispose();
-                }
-
-            }
-            catch (Exception err)
-            {
-                postStream.Close();
-                fs.Dispose();
-                throw err;
-            }
-            finally
-            {
-                postStream.Close();
-                fs.Dispose();
-            }
         }
         #endregion
 

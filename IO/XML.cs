@@ -171,7 +171,7 @@ namespace Voodoo.IO
             }
             catch (Exception ex)
             {
-                throw ex;
+                return null;
             }
         }
 

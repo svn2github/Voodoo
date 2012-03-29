@@ -137,5 +137,27 @@ namespace Voodoo
             }
             return newDt;
         }
+
+        /// <summary>
+        /// 表内容的替换
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="oldStr">OLDSTR</param>
+        /// <param name="newStr">NEWSTR</param>
+        /// <returns></returns>
+        public static DataTable Replace(this DataTable dt, string oldStr, string newStr)
+        {
+            foreach (DataColumn col in dt.Columns)
+            {
+                if (col.DataType.ToS().ToLower().Contains("char") || col.DataType.ToS().ToLower().Contains("string"))
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        row[col] = row[col].ToS().Replace(oldStr, newStr);
+                    }
+                }
+            }
+            return dt;
+        }
     }
 }

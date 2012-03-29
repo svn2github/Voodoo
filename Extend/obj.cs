@@ -326,17 +326,17 @@ namespace Voodoo
         }
 
 
-        public static DataTable Replace(this DataTable dt, string OldString, string NewString)
-        {
-            foreach(DataRow row in dt.Rows)
-            {
-                for (int i = 0; i < dt.Columns.Count; i++)
-                {
-                    row[i] = row[i].ToString().Replace(OldString, NewString);
-                }
-            }
-            return dt;
-        }
+        //public static DataTable Replace(this DataTable dt, string OldString, string NewString)
+        //{
+        //    foreach(DataRow row in dt.Rows)
+        //    {
+        //        for (int i = 0; i < dt.Columns.Count; i++)
+        //        {
+        //            row[i] = row[i].ToString().Replace(OldString, NewString);
+        //        }
+        //    }
+        //    return dt;
+        //}
 
         /// <summary>
         /// DataTable 转换为List 集合

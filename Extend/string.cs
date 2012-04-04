@@ -1187,32 +1187,63 @@ namespace Voodoo
         /// <param name="page">页面地址，如：/news/22.html</param>
         /// <param name="domain">网站地址，如：http://www.aizr.net</param>
         /// <returns></returns>
-        public static string AppendToDomain(this string page, string domain)
+        public static string AppendToDomain(this string relaURL, string baseURL)
         {
-            if (page.IsNullOrEmpty())
+            Uri u = new Uri(baseURL);
+            try
             {
-                return domain;
+                Uri ur = new Uri(relaURL);
+                if (ur.IsAbsoluteUri) return relaURL;
             }
-            if (page.ToLower().Contains("http://"))
+            catch { }
+            if (!u.IsAbsoluteUri) return "";
+            if (baseURL.LastIndexOf(".") > baseURL.LastIndexOf("/"))    //是文件
+                baseURL = baseURL.Substring(0, baseURL.LastIndexOf("/"));
+            if (!baseURL.EndsWith("/"))
+                baseURL += "/";
+            if (relaURL.StartsWith("/")) //是绝对路径
             {
-                return page;
+                int p = baseURL.IndexOf("/", 7);
+                baseURL = baseURL.Substring(0, p);
+                if (!baseURL.EndsWith("/"))
+                    baseURL += "/";
+                relaURL = relaURL.Remove(0, 1);
             }
-            if (domain.ToLower().Contains("http") == false)
+            if (relaURL.StartsWith("../")) //多余的相对路径
             {
-                domain = "http://" + domain;
+                string finalUrl = baseURL + relaURL;
+                while (Regex.IsMatch(finalUrl, "/[^/]*?/../"))
+                {
+                    finalUrl = Regex.Replace(finalUrl, "/[^/]*?/../", "/");
+                }
+
+                return finalUrl;
             }
-            if (page.Contains("/") == false)
-            {
-                return domain.Substring(0, domain.LastIndexOf('/')+1) + page;
-            }
-            if (page[0] == '/')
-            {
-                return "http://" + new Uri(domain).Host + page;
-            }
-            else
-            {
-                return domain + page;
-            }
+            return baseURL + relaURL;
+            //if (page.IsNullOrEmpty())
+            //{
+            //    return domain;
+            //}
+            //if (page.ToLower().Contains("http://"))
+            //{
+            //    return page;
+            //}
+            //if (domain.ToLower().Contains("http") == false)
+            //{
+            //    domain = "http://" + domain;
+            //}
+            //if (page.Contains("/") == false)
+            //{
+            //    return domain.Substring(0, domain.LastIndexOf('/')+1) + page;
+            //}
+            //if (page[0] == '/')
+            //{
+            //    return "http://" + new Uri(domain).Host + page;
+            //}
+            //else
+            //{
+            //    return domain + page;
+            //}
         }
         #endregion
 

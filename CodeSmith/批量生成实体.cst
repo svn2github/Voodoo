@@ -1,0 +1,55 @@
+﻿<%-- 
+Name:
+Author: 
+Description: 
+--%>
+<%@ CodeTemplate Language="C#" ResponseEncoding="UTF-8" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="System.Collections" %>
+<%@ Register Name="Model" Template="实体类.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Property Name="TDB" Type="SchemaExplorer.TableSchemaCollection" Default="" Optional="False" Category=""%>
+<%@ Property Name="NameSpace" Type="System.String" Default="Voodoo.Model" Optional="False" Category="表" Description="选择表的集合" %>
+<%@ Property Name="opuser" Type="System.String" Default="" Optional="False" Category="用户" Description="请输入您的名字" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+
+<%
+foreach(TableSchema ts in TDB)
+{
+   Model m=new Model();
+   m.NameSpace=this.NameSpace;
+   m.opuser=this.opuser;
+
+   string folder="";
+	string[] fs=this.TargetFileName.Split('\\');
+	for(int i=0;i<fs.Length-1;i++)
+	{
+		folder+=fs[i]+"\\";
+	}
+   m.SaveFile=folder +"\\"+StringUtil.ToPascalCase(ts.Name)+".cs";
+   m.SourceTable=ts;
+   m.Render(this.Response);
+
+}
+
+
+%>
+
+<script runat="template">
+   private string _filename;
+  [Editor(typeof(FileNameEditor),typeof(System.Drawing.Design.UITypeEditor)),FileDialogAttribute(FileDialogType.Save,Title="save as",Filter="C# File|(*.cs)")]
+   public string TargetFileName
+   {
+    get
+    {
+     return _filename;
+    }
+    set
+    {
+     _filename = value;
+    }
+   }
+</script>

@@ -1,0 +1,584 @@
+﻿<%-- 
+Name:
+Author: 
+Description: 
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" ResponseEncoding="UTF-8" Src="" Inherits="" Debug="False" Description="Template description here." %>
+<%@ Property Name="TableName" Type="SchemaExplorer.TableSchema" Default="" Optional="False" Category="" Description="" OnChanged="" Editor="" EditorBase="" Serializer="" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="Voodoo.DAL" Optional="False" Category="" Description="" OnChanged="" Editor="" EditorBase="" Serializer="" %>
+<%@ Property Name="opuser" Type="System.String" Default="" Optional="False" Category="" Description="请输入您的名字" %>
+<%@ Property Name="InsertReturnPK" Type="System.Boolean" Default="false" Optional="False" Category="" Description="Insert方法是否返回主键" %>
+<%@ Property Name="UpdateReturnRows" Type="System.Boolean" Default="false" Optional="False" Category="" Description="Update方法是否返回响应行数" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Map Name="CSharpAlias" Src="System-CSharpAlias" Description="System to C# Type Map" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Property Name="_savefile" Type="System.String" Default="C:\CodeSmith.cs" Optional="False" Category="Custom" Description="Test the CodeSmith.CustomProperty.FileNameEditor" Editor="CodeSmith.CustomProperties.FileNameEditor" EditorBase="System.Drawing.Design.UITypeEditor" %>
+/*
+*本代码由代码生成器自动生成，请不要更改此文件的任何代码，如需要添加方法，请创建同名类，并在该类中添加新的方法。
+*生成时间：<%= DateTime.Now.ToLocalTime() %>
+*生成者：<%= opuser %>
+*/
+using System;
+using System.Text;
+using System.Data;
+using System.Linq;
+using System.Data.Common;
+using System.Collections.Generic;
+using Voodoo;
+using Voodoo.Model;
+using Voodoo.Data;
+using Voodoo.Data.DbHelper;
+using Voodoo.Setting;
+
+namespace <%=NameSpace%>
+{
+	
+	///<summary>
+	///表<%=StringUtil.ToPascalCase(TableName.Name)%>的数据操作类
+	///</summary>
+    public partial class <%=StringUtil.ToPascalCase(TableName.Name)%>View
+    {
+		
+		#region 创建DbHelper
+        /// <summary>
+        /// 创建DbHelper
+        /// </summary>
+        /// <returns></returns>
+        protected static IDbHelper GetHelper()
+        {
+            return Voodoo.Setting.DataBase.GetHelper();
+        }
+        #endregion
+		
+		#region DataTable转换为list
+        /// <summary>
+        /// DataTable转换为list
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        protected static List<<%=StringUtil.ToPascalCase(TableName.Name)%>> DataTableToList(DataTable dt)
+        {
+            List<<%=StringUtil.ToPascalCase(TableName.Name)%>> Ms = new List<<%=StringUtil.ToPascalCase(TableName.Name)%>>();
+			
+			for (int i = 0; i < dt.Rows.Count; i++)
+            {
+				<%=StringUtil.ToPascalCase(TableName.Name)%> M = new <%=StringUtil.ToPascalCase(TableName.Name)%>();
+				<% for(int i = 0; i < TableName.Columns.Count; i++){ %>
+				M.<%= StringUtil.ToPascalCase(TableName.Columns[i].Name) %>=dt.Rows[i]["<%= TableName.Columns[i].Name %>"].<%=GetCSharpVariableType(TableName.Columns[i])%>;
+				<%}%>
+				
+				Ms.Add(M);
+			}
+            return Ms;            
+        }
+        #endregion
+		
+		#region 将数据插入表
+		/// <summary>
+        /// 将数据插入表
+        /// </summary>
+        /// <param name="M">赋值后的实体</param>
+        /// <returns></returns>
+		public static void Insert(<%=StringUtil.ToPascalCase(TableName.Name)%> M)
+        {
+            IDbHelper Sql = GetHelper();
+            StringBuilder sb = new StringBuilder();			
+			
+			sb.Append("insert into [<%=TableName.Name%>](<%= getColunmsExpIntPk() %>) values(");
+			<% for(int i = 0; i < TableName.Columns.Count; i++){
+				
+				if(TableName.Columns[i].IsPrimaryKeyMember)
+				{
+					continue;	
+				}
+				if(IsIntType(TableName.Columns[i]))
+				{
+					%>
+			sb.Append(M.<%=StringUtil.ToPascalCase(TableName.Columns[i].Name)%>.ToS());
+					<%	
+				}
+				else
+				{
+					%>
+			sb.Append("N'"+M.<%=StringUtil.ToPascalCase(TableName.Columns[i].Name)%>+"'");
+					<%		
+				}
+				if(i!=TableName.Columns.Count-1)
+				{
+					%>
+			sb.Append(",");	
+					<%
+				}
+			
+			}%>
+			sb.Append(")");
+			
+			if(DataBase.CmsDbType==DataBase.DbType.SqlServer)
+			{
+				sb.Append(";select @@Identity");	
+			}
+			if(DataBase.CmsDbType==DataBase.DbType.SQLite)
+			{
+				sb.Append(";select last_insert_rowid()");	
+			}
+			if(DataBase.CmsDbType==DataBase.DbType.MySql)
+			{
+				sb.Append(";select LAST_INSERT_ID()");	
+			}
+			if(DataBase.CmsDbType==DataBase.DbType.Access)
+			{
+				sb.Append(";select max(<%=TableName.PrimaryKey.MemberColumns[0].Name%>) from <%=TableName.Name%>");	
+			}
+			if(DataBase.CmsDbType==DataBase.DbType.Oracle)
+			{
+				sb.Append(";select LAST_INSERT_ID()");	
+			}
+			
+
+            M.<%=StringUtil.ToPascalCase(TableName.PrimaryKey.MemberColumns[0].Name)%>=Sql.ExecuteScalar(CommandType.Text, sb.ToString()).ToInt32();
+        }
+		
+		#endregion			
+		
+		#region Update将修改过的实体修改到数据库
+		/// <summary>
+        /// 将修改过的实体修改到数据库
+        /// </summary>
+        /// <param name="M">赋值后的实体</param>
+        /// <returns></returns>
+		public static int Update(<%=StringUtil.ToPascalCase(TableName.Name)%> M)
+        {
+            IDbHelper Sql = GetHelper();
+			StringBuilder sb = new StringBuilder();
+            sb.Append("update [<%=TableName.Name%>] set ");
+			
+			<% for(int i = 0; i < TableName.Columns.Count; i++){
+				if(TableName.Columns[i].IsPrimaryKeyMember)
+				{
+					continue;	
+				}
+				if(IsIntType(TableName.Columns[i]))
+				{
+					%>
+			sb.Append("[<%=TableName.Columns[i].Name%>]="+M.<%=StringUtil.ToPascalCase(TableName.Columns[i].Name)%>.ToS());
+					<%
+				}
+				else
+				{
+					%>
+			sb.Append("[<%=TableName.Columns[i].Name%>]=N'"+M.<%=StringUtil.ToPascalCase(TableName.Columns[i].Name)%>+"'");
+					<%
+				}
+				if(i!=TableName.Columns.Count-1)
+				{
+					%>
+			sb.Append(",");
+					<%
+				}
+			}%>
+			
+			sb.Append(" where <%=StringUtil.ToPascalCase(TableName.PrimaryKey.MemberColumns[0].Name)%>='" + M.<%=StringUtil.ToPascalCase(TableName.PrimaryKey.MemberColumns[0].Name)%> + "'");
+			sb.Append("");
+			
+			if(DataBase.CmsDbType==DataBase.DbType.SqlServer)
+			{
+				sb.Append(";select @@ROWCOUNT");	
+			}
+			if(DataBase.CmsDbType==DataBase.DbType.SQLite)
+			{
+				sb.Append(";select 0");	
+			}
+			if(DataBase.CmsDbType==DataBase.DbType.MySql)
+			{
+				sb.Append(";SELECT ROW_COUNT()");	
+			}
+			if(DataBase.CmsDbType==DataBase.DbType.Access)
+			{
+				sb.Append(";select 0");	
+			}
+			if(DataBase.CmsDbType==DataBase.DbType.Oracle)
+			{
+				sb.Append(";select SQL%ROWCOUNT");	
+			}
+			
+			
+			return Sql.ExecuteScalar(CommandType.Text, sb.ToString()).ToInt32();
+        }
+		
+		/// <summary>
+        /// 批量更新
+        /// </summary>
+        /// <param name="Ms"></param>
+        public static void Update(List<<%=StringUtil.ToPascalCase(TableName.Name)%>> Ms)
+        {
+            foreach (<%=StringUtil.ToPascalCase(TableName.Name)%> M in Ms)
+            {
+                Update(M);
+            }
+        }
+		#endregion
+		
+		#region 根据ID取得实体
+		/// <summary>
+        /// 根据ID取得实体
+        /// </summary>
+        /// <param name="id">id,即编号主键</param>
+        /// <returns></returns>
+		public static <%=StringUtil.ToPascalCase(TableName.Name)%> GetModelByID(string id)
+		{
+			IDbHelper Sql = GetHelper();
+			<%=StringUtil.ToPascalCase(TableName.Name)%> M = new <%=StringUtil.ToPascalCase(TableName.Name)%>();
+			DbDataReader Rs = Sql.ExecuteReader(CommandType.Text, "select <%= getColunms() %> from [<%=TableName.Name%>] where <%=StringUtil.ToPascalCase(TableName.Columns[0].Name)%>='" + id.ToString()+"'", true);
+			if (!Rs.Read())
+			{
+				<% if(TableName.Columns[0].DataType==DbType.Int32){ %>
+					M.<%=StringUtil.ToPascalCase(TableName.Columns[0].Name)%>=0;
+				<%}else{%>
+					M.<%=StringUtil.ToPascalCase(TableName.Columns[0].Name)%>="";
+				<%}%>
+			}
+			else
+			{
+				<% for(int i=0;i<TableName.Columns.Count;i++){ %>
+				M.<%= StringUtil.ToPascalCase(TableName.Columns[i].Name) %>=Rs["<%= TableName.Columns[i].Name %>"].<%=GetCSharpVariableType(TableName.Columns[i])%>;
+				<%}%>
+			}
+			Rs.Close();
+			Rs = null;
+			return M;
+			
+		}
+		#endregion
+		
+		#region 根据条件语句取得第一个实体
+		/// <summary>
+        /// 根据条件语句取得第一个实体
+        /// </summary>
+        /// <param name="m_where">条件语句，不包含“where”</param>
+        /// <returns></returns>
+		public static <%=StringUtil.ToPascalCase(TableName.Name)%> Find(string m_where)
+		{
+			IDbHelper Sql = GetHelper();
+            <%=StringUtil.ToPascalCase(TableName.Name)%> M = new <%=StringUtil.ToPascalCase(TableName.Name)%>();
+            DbDataReader Rs = Sql.ExecuteReader(CommandType.Text, "select <%= getColunms() %> from [<%=TableName.Name%>] where " + m_where, true);
+			if (!Rs.Read())
+            {
+               <% if(TableName.Columns[0].DataType==DbType.Int32){ %>
+					M.<%=StringUtil.ToPascalCase(TableName.Columns[0].Name)%>=0;
+				<%}else{%>
+					M.<%=StringUtil.ToPascalCase(TableName.Columns[0].Name)%>="";
+				<%}%>
+            }
+			else
+			{
+			<% for(int i=0;i<TableName.Columns.Count;i++){ %>
+				M.<%= StringUtil.ToPascalCase(TableName.Columns[i].Name) %>=Rs["<%= TableName.Columns[i].Name %>"].<%=GetCSharpVariableType(TableName.Columns[i])%>;
+			<%}%>
+			}
+			Rs.Close();
+            Rs = null;
+            return M;
+		}
+		#endregion
+		
+		#region 根据条件语句取得符合条件的数据表
+		/// <summary>
+        /// 根据条件语句取得符合条件的数据表,慎用！！！！
+        /// </summary>
+        /// <param name="m_where">条件语句，不包含“where”</param>
+        /// <returns></returns>
+		public static DataTable getTable(string m_where)
+		{
+			IDbHelper Sql = GetHelper();
+            return Sql.ExecuteDataTable(CommandType.Text, "select <%= getColunms() %> from [<%= TableName.Name %>] where "+ m_where);
+		}
+		
+		/// <summary>
+        /// 根据条件语句取得符合条件的数据表,慎用！！！！
+        /// </summary>
+        /// <returns></returns>
+		public static DataTable getTable()
+        {   
+            return getTable("1=1");
+        }
+		
+		/// <summary>
+        /// 根据条件语句取得符合条件的数据表,慎用！！！！
+        /// </summary>
+		/// <param name="top">前多少条数据</param>
+		/// <param name="m_where">条件语句，不包含“where”</param>
+        /// <returns></returns>
+		public static DataTable getTable(string m_where,int top)
+        {   
+            IDbHelper Sql = GetHelper();
+            DataTable dt = Sql.ExecuteDataTable(CommandType.Text, "select top "+ top.ToString() +"  <%= getColunms() %> from [<%= TableName.Name %>] where "+ m_where);
+            return dt;
+        }
+		#endregion
+		
+		#region 根据条件语句取得符合条件的数据集数据集
+		/// <summary>
+        /// 根据条件语句取得符合条件的数据集数据集,慎用！！！！
+        /// </summary>
+        /// <param name="m_where">条件语句，不包含“where”</param>
+        /// <returns></returns>
+		public static DataSet getDs(string m_where)
+		{
+			return getTable(m_where).DataSet;
+		}
+		
+		/// <summary>
+        /// 根据条件语句取得符合条件的数据集数据集,慎用！！！！
+        /// </summary>
+        /// <param name="m_where">条件语句，不包含“where”</param>
+        /// <returns></returns>
+		public static DataSet getDs()
+		{
+			return getTable().DataSet;
+		}
+		#endregion
+		
+		#region 获取符合条件记录的条数
+		/// <summary>
+        /// 获取符合条件记录的条数
+        /// </summary>
+        /// <param name="m_where">条件语句，不包含“where”</param>
+        /// <returns></returns>
+		public static int Count(string m_where)
+		{
+			IDbHelper Sql = GetHelper();
+			return Convert.ToInt32(Sql.ExecuteScalar(CommandType.Text,"select count(0) from [<%=TableName.Name%>] where "+m_where));
+		}
+		#endregion
+		
+		#region 验证符合条件的记录是否存在
+		/// <summary>
+        /// 验证符合条件的记录是否存在
+        /// </summary>
+        /// <param name="m_where">条件语句，不包含“where”</param>
+        /// <returns></returns>
+		public static bool Exist(string m_where)
+		{
+			bool returnValue = false;
+            IDbHelper Sql = GetHelper();
+            DbDataReader sd = null;
+            sd = Sql.ExecuteReader(CommandType.Text, "select 1 from [<%=TableName.Name%>] where " + m_where, true);
+            if (sd.Read())
+            {
+                returnValue = true;
+            }
+            sd.Close();
+            sd.Dispose();
+            return returnValue;
+			
+			
+		}
+		#endregion
+		
+		#region List<<%=StringUtil.ToPascalCase(TableName.Name)%>>获取符合条件记录的实体列表,慎用！！！！
+		/// <summary>
+        /// List<<%=StringUtil.ToPascalCase(TableName.Name)%>>获取符合条件记录的实体列表,慎用！！！！
+        /// </summary>
+        /// <param name="m_where">条件语句，不包含“where”</param>
+        /// <returns></returns>
+		public static List<<%=StringUtil.ToPascalCase(TableName.Name)%>> GetModelList(string m_where)
+		{	
+			return DataTableToList(getTable(m_where));
+		}
+		public static List<<%=StringUtil.ToPascalCase(TableName.Name)%>> GetModelList(string m_where,int top)
+		{	
+			return DataTableToList(getTable(m_where, top));
+		}
+		public static List<<%=StringUtil.ToPascalCase(TableName.Name)%>> GetModelList()
+        {
+            return DataTableToList(getTable());
+        }
+		#endregion
+		
+		#region 删除符合条件记录
+		/// <summary>
+        /// 删除符合条件记录
+        /// </summary>
+        /// <param name="m_where">条件语句，不包含“where”</param>
+        /// <returns></returns>
+		public static bool Del(string m_where)
+		{
+			IDbHelper Sql = GetHelper();
+			try
+			{
+				Sql.ExecuteNonQuery(CommandType.Text, "delete from [<%=TableName.Name%>] where "+ m_where);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+		
+		/// <summary>
+        /// 删除符合条件记录
+        /// </summary>
+        /// <param name="ID">ID</param>
+        /// <returns></returns>
+		public static bool DelByID(int ID)
+		{
+			return Del("<%=StringUtil.ToPascalCase(TableName.Columns[0].Name)%>="+ID.ToString());
+		}
+		#endregion
+		
+		
+	}
+	
+	
+}
+<script runat="template">
+// My methods here.
+
+public string getColunms()
+{
+	string returnValue="";
+	for(int i=0;i<TableName.Columns.Count;i++)
+	{
+		returnValue+="["+TableName.Columns[i].Name+"],";
+	}
+	returnValue=returnValue.TrimEnd(',');
+	return returnValue;
+}
+
+public string getColunmsExpIntPk()
+{
+	string returnValue="";
+	  
+	for(int i=0;i<TableName.Columns.Count;i++)
+	{
+		if(TableName.Columns[i].DataType==DbType.Int32&&TableName.Columns[i].Name==TableName.PrimaryKey .MemberColumns[0].Name)
+		{
+		}
+		else
+		{
+		returnValue+="["+TableName.Columns[i].Name+"],";
+			}
+	}
+	returnValue=returnValue.TrimEnd(',');
+	return returnValue;
+}
+
+
+public string GetSqlDBType(string type)
+{
+	switch(type)
+	{
+		case "int": return ".ToString()";
+		case "tinyint": return ".ToInt16()";
+		case "nvarchar": return "SqlDbType.NVarChar,";
+		case "datetime": return "SqlDbType.DateTime,";
+		case "char": return "SqlDbType.Char,";
+		case "decimal": return "SqlDbType.Decimal,";
+		case "float": return "SqlDbType.Float,";
+		case "image": return "SqlDbType.Image,";
+		case "money": return "SqlDbType.Money,";
+		case "nchar": return "SqlDbType.NChar,";
+		case "ntext": return "SqlDbType.NText,";
+		case "real": return "SqlDbType.Real,";
+		case "smalldatetime": return "SqlDbType.SmallDateTime,";
+		case "smallint": return "SqlDbType.SmallInt,";
+		case "smallmoney": return "SqlDbType.SmallMoney,";
+		case "text": return "SqlDbType.Text,";
+		case "timestamp": return "SqlDbType.Timestamp,";
+		case "udt": return "SqlDbType.Udt,";
+		case "uniqueidentifier": return "SqlDbType.UniqueIdentifier,";
+		case "varbinary": return "SqlDbType.VarBinary,";
+		case "varchar": return "SqlDbType.VarChar,";
+		case "variant": return "SqlDbType.Variant,";
+		case "xml": return "SqlDbType.Xml,";
+		default : return "";
+	}
+	
+}
+public string GetSqlParameterStatement(ColumnSchema column)
+{
+	return column.Name;
+}
+public bool IsIntType(ColumnSchema column)
+{
+	switch (column.DataType)
+	{
+		//case DbType.AnsiString: return "ToString()";
+		//case DbType.AnsiStringFixedLength: return "ToString()";
+		//case DbType.Binary: return "byte[]";
+		case DbType.Binary: return true;
+		case DbType.Boolean: return true;
+		case DbType.Byte: return true;
+		case DbType.Currency: return true;
+	//	case DbType.Date: return "ToDateTime()";
+	//	case DbType.DateTime: return "ToDateTime()";
+		case DbType.Decimal: return true;
+		case DbType.Double: return true;
+	//	case DbType.Guid: return "Guid";
+		case DbType.Int16: return true;
+		case DbType.Int32: return true;
+		case DbType.Int64: return true;
+		//case DbType.Object: return "object";
+		case DbType.SByte: return true;
+		case DbType.Single: return true;
+		//case DbType.String: return "ToString()";
+		//case DbType.StringFixedLength: return "ToString()";
+		//case DbType.Time: return "ToDateTime()";
+		case DbType.UInt16: return true;
+		case DbType.UInt32: return true;
+		case DbType.UInt64: return true;
+		case DbType.VarNumeric: return true;
+		default:
+		
+			return false;
+		
+	}
+}
+public string GetCSharpVariableType(ColumnSchema column)
+{
+	if (column.Name.EndsWith("TypeCode")) return column.Name;
+	
+	switch (column.DataType)
+	{
+		case DbType.AnsiString: return "ToString()";
+		case DbType.AnsiStringFixedLength: return "ToString()";
+		//case DbType.Binary: return "byte[]";
+		case DbType.Binary: return "ObjectToBytes()";
+		case DbType.Boolean: return "ToBoolean()";
+		case DbType.Byte: return "ToByte()";
+		case DbType.Currency: return "ToDecimal()";
+		case DbType.Date: return "ToDateTime()";
+		case DbType.DateTime: return "ToDateTime()";
+		case DbType.Decimal: return "ToDecimal()";
+		case DbType.Double: return "ToDouble()";
+		case DbType.Guid: return "Guid";
+		case DbType.Int16: return "ToInt16()";
+		case DbType.Int32: return "ToInt32()";
+		case DbType.Int64: return "ToInt64()";
+		case DbType.Object: return "object";
+		case DbType.SByte: return "ToSByte()";
+		case DbType.Single: return "ToDecimal()";
+		case DbType.String: return "ToString()";
+		case DbType.StringFixedLength: return "ToString()";
+		case DbType.Time: return "ToDateTime()";
+		case DbType.UInt16: return "ToUInt16()";
+		case DbType.UInt32: return "ToUInt32()";
+		case DbType.UInt64: return "ToUInt64()";
+		case DbType.VarNumeric: return "ToDecimal()";
+		default:
+		{
+			return "__UNKNOWN__" + column.NativeType;
+		}
+	}
+}
+public override void Render(TextWriter tw)
+{
+   StreamWriter fs1 = new StreamWriter(_savefile,true);
+   this.Response.AddTextWriter(fs1);
+   base.Render(tw);
+   fs1.Close();
+}
+</script>

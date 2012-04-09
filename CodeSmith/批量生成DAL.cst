@@ -1,0 +1,54 @@
+﻿<%-- 
+Name:
+Author: 
+Description: 
+--%>
+<%@ CodeTemplate Language="C#" ResponseEncoding="UTF-8" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." %>
+<%@ Assembly Name="System.Data" %>
+<%@ Property Name="TDB" Type="SchemaExplorer.TableSchemaCollection" Default="" Optional="False" Category=""%>
+<%@ Import Namespace="System.Data" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Register Name="DAL" Template="newDAL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="Voodoo.DAL" Optional="False" Category="" Description="" OnChanged="" Editor="" EditorBase="" Serializer="" %>
+<%@ Property Name="opuser" Type="System.String" Default="" Optional="False" Category="" Description="请输入您的名字" %>
+<%@ Property Name="InsertReturnPK" Type="System.Boolean" Default="false" Optional="False" Category="" Description="Insert方法是否返回主键" %>
+<%@ Property Name="UpdateReturnRows" Type="System.Boolean" Default="false" Optional="False" Category="" Description="Update方法是否返回响应行数" %>
+
+<%
+foreach(TableSchema ts in TDB)
+{
+
+	DAL d=new DAL();
+	d.NameSpace=this.NameSpace;
+	d.opuser=this.opuser;
+	d.InsertReturnPK=this.InsertReturnPK;
+	d.UpdateReturnRows=this.UpdateReturnRows;
+	d.TableName=ts;
+	string folder="";
+	string[] fs=this._filename.Split('\\');
+	for(int i=0;i<fs.Length-1;i++)
+	{
+		folder+=fs[i]+"\\";
+	}
+	d._savefile=folder+"\\"+StringUtil.ToPascalCase(ts.Name)+"View.cs";
+	d.Render(this.Response);
+
+
+}
+%>
+<script runat="template">
+   private string _filename;
+  [Editor(typeof(FileNameEditor),typeof(System.Drawing.Design.UITypeEditor)),FileDialogAttribute(FileDialogType.Save,Title="save as",Filter="C# File|(*.cs)")]
+   public string TargetFileName
+   {
+    get
+    {
+     return _filename;
+    }
+    set
+    {
+     _filename = value;
+    }
+   }
+</script>

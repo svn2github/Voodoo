@@ -1,0 +1,67 @@
+﻿<%-- 
+Name: 数据库实体类
+Author: B哥
+Description: 数据库实体类
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" ResponseEncoding="UTF-8" Debug="False" Description="生成数据库实体" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="属性" Description="要生成实体的数据表" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="WanerSoft.Model" Optional="False" Category="属性" Description="实体类所在的命名空间" %>
+<%@ Property Name="opuser" Type="System.String" Default="" Optional="False" Category="属性" Description="请输入您的名字" %>
+<%@ Map Name="CSharpAlias" Src="System-CSharpAlias" Description="System to C# Type Map" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+/*
+*本代码由代码生成器自动生成，请不要更改此文件的任何代码。
+*生成时间：<%= DateTime.Now.ToLocalTime() %>
+*生成者：<%= opuser %>
+*/
+using System;
+namespace <%= this.NameSpace %>
+{
+	///<summary>
+	///表<%= this.SourceTable.Name %>的实体类
+	///</summary>
+	public partial class <%= StringUtil.ToPascalCase(this.SourceTable.Name) %>
+	{
+		<% foreach (ColumnSchema column in this.SourceTable.Columns) {  %>
+		/// <summary>
+		/// <%= column.Description.Trim('\n').Trim('\r') %>
+		/// </summary>
+		public <%= CSharpAlias[column.SystemType.FullName] %> <%= StringUtil.ToPascalCase(column.Name) %>{get ; set; }
+		
+		<% } %>
+		///实体复制
+		public <%= StringUtil.ToPascalCase(this.SourceTable.Name) %> Clone()
+        {
+            return (<%= StringUtil.ToPascalCase(this.SourceTable.Name) %>)this.MemberwiseClone();
+        }
+	}
+	 
+}
+
+
+<script runat="template">
+private string _savefile;
+[Editor(typeof(FileNameEditor),typeof(System.Drawing.Design.UITypeEditor)),FileDialogAttribute(FileDialogType.Save,Title="save as",Filter="C# File|(*.cs)")]
+public string SaveFile
+{
+   get
+   {
+    return _savefile;
+   }
+   set
+   {
+    _savefile = value;
+   }
+}
+public override void Render(TextWriter tw)
+{
+   StreamWriter fs1 = new StreamWriter(_savefile,true);
+   this.Response.AddTextWriter(fs1);
+   base.Render(tw);
+   fs1.Close();
+}
+</script>

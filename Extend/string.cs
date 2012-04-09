@@ -1189,6 +1189,18 @@ namespace Voodoo
         /// <returns></returns>
         public static string AppendToDomain(this string relaURL, string baseURL)
         {
+            if (relaURL.IsNullOrEmpty())
+            {
+                return baseURL;
+            }
+            if (baseURL.IsNullOrEmpty())
+            {
+                return relaURL;
+            }
+            if(relaURL.ToLower().StartsWith("http"))
+            {
+                return relaURL;
+            }
             Uri u = new Uri(baseURL);
             try
             {

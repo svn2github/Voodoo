@@ -157,6 +157,23 @@ namespace Voodoo.IO
         }
         #endregion
 
+        /// <summary>
+        /// 为图片添加文字
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="text"></param>
+        public static void AddTextToImg(string fileName, string text,string newPath)
+        {
+            System.Drawing.Image image = System.Drawing.Image.FromFile(fileName);
+            System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(image);
+            g.DrawImage(image, 0, 0, image.Width, image.Height);
+            System.Drawing.Font f = new System.Drawing.Font("微软雅黑", 12,FontStyle.Bold);
+            System.Drawing.Brush b = new System.Drawing.SolidBrush(System.Drawing.Color.GreenYellow);
+            g.DrawString(text, f, b, 5, 120);
+            g.Dispose();
+            image.Save(newPath);
+            image.Dispose();
+        } 
 
 
     }

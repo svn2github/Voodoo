@@ -181,6 +181,8 @@
     <Compile Include="Net\WebServiceHelper.cs" />
     <Compile Include="Net\WebSite.cs" />
     <Compile Include="Extend\obj.cs" />
+    <Compile Include="Net\XmlRpc\methodCall.cs" />
+    <Compile Include="Net\XmlRpc\methodResponse.cs" />
     <Compile Include="other\Address.cs" />
     <Compile Include="other\BeianInfo.cs" />
     <Compile Include="other\City.cs" />

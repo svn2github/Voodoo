@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Voodoo.Net.XmlRpc;
+using System.IO;
 
 namespace Voodoo
 {
@@ -32,7 +34,7 @@ namespace Voodoo
         /// <returns>如果获取不到，返回默认值</returns>
         public static int RequestInt(string parName, int defaultValue)
         {
-           
+
             try
             {
                 return int.Parse(RequestString(parName));
@@ -52,7 +54,7 @@ namespace Voodoo
         /// <returns>键值</returns>
         public static string RequestString(object key)
         {
-            return RequestString(key,"");
+            return RequestString(key, "");
         }
         /// <summary>
         /// 取得Request的string值，Form优先于QueryString被取出
@@ -152,9 +154,9 @@ namespace Voodoo
             {
                 return "";
             }
-            
+
         }
-       #endregion
+        #endregion
 
         #region 获得当前页面客户端的IP
         /// <summary>
@@ -207,7 +209,7 @@ namespace Voodoo
             if (HttpContext.Current.Request.UserAgent == null)
                 return false;
 
-            string[] SearchEngine = { "android", "nokia", "symbian", "ios", "ucweb", "wap", "up.browser", "sonyericsson","mobile" };
+            string[] SearchEngine = { "android", "nokia", "symbian", "ios", "ucweb", "wap", "up.browser", "sonyericsson", "mobile" };
             string tmpReferrer = HttpContext.Current.Request.UserAgent.ToString().ToLower();
             for (int i = 0; i < SearchEngine.Length; i++)
             {
@@ -215,6 +217,25 @@ namespace Voodoo
                     return true;
             }
             return false;
+        }
+        #endregion
+
+        #region 获取XML-RPC的ping请求
+        /// <summary>
+        /// 获取XML-RPC的ping请求
+        /// </summary>
+        /// <returns>方法调用</returns>
+        public static methodCall RequestPing()
+        {
+            string request = "";
+            using (Stream MyStream = HttpContext.Current.Request.InputStream)
+            {
+                byte[] _tmpData = new byte[MyStream.Length];
+                MyStream.Read(_tmpData, 0, _tmpData.Length);
+                request = Encoding.UTF8.GetString(_tmpData);
+            }
+
+            return (methodCall)Voodoo.IO.XML.DeSerialize(typeof(methodCall), request);
         }
         #endregion
     }

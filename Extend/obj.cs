@@ -367,5 +367,30 @@ namespace Voodoo
             return oblist;
         }
 
+        #region 序列化为xml字符串
+        /// <summary>
+        /// 序列化为xml字符串
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string SerializeToXML(this object obj)
+        {
+            return Voodoo.IO.XML.Serialize(obj);
+        }
+        #endregion
+
+        #region 反序列化字符串为对象
+        /// <summary>
+        /// 反序列化字符串为对象
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="type">类型</param>
+        /// <returns></returns>
+        public static object DeSerializeTo(this string str,Type type)
+        {
+            return Voodoo.IO.XML.DeSerialize(type, str);
+        }
+        #endregion
+
     }
 }

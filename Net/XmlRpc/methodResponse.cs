@@ -7,6 +7,8 @@ namespace Voodoo.Net.XmlRpc
 {
     public class methodResponse
     {
-        public List<param> @params { get; set; }
+        public string result { get; set; }
+
+        public string type { get; set; }
     }
 }

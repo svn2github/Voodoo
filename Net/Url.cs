@@ -722,6 +722,9 @@ namespace Voodoo.Net
                         web.url = response.Headers["location"];
                     }
 
+                    web.WebUrl = Url;
+                    web.url = response.ResponseUri.AbsoluteUri;
+
                     CookieCollection cookieCollection = new CookieCollection();
                     CookieCollection newCC = response.Cookies;
                     foreach (System.Net.Cookie c in newCC)

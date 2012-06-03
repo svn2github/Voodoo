@@ -185,5 +185,81 @@ namespace Voodoo
             return " ";
         }
         #endregion
+
+        #region 识别Js中的Ascii 字符串为中文
+        /// <summary>
+        /// 识别Js中的Ascii 字符串为中文
+        /// </summary>
+        /// <param name="AsciiString"></param>
+        /// <returns></returns>
+        public static string AsciiToNative(this string AsciiString)
+        {
+            string result = AsciiString;
+            Match m = new Regex("(\\\\u([\\w]{4}))").Match(AsciiString);
+            while (m.Success)
+            {
+                string v = m.Value;
+                string word = v.Substring(2);
+                byte[] codes = new byte[2];
+                int code = Convert.ToInt32(word.Substring(0, 2), 16);
+                int code2 = Convert.ToInt32(word.Substring(2), 16);
+                codes[0] = (byte)code2;
+                codes[1] = (byte)code;
+                result = result.Replace(v, Encoding.Unicode.GetString(codes));
+
+                m = m.NextMatch();
+            }
+            return result;
+
+            //MatchCollection mc = Regex.Matches(AsciiString, "(\\\\u([\\w]{4}))");
+            //if (mc != null && mc.Count > 0)
+            //{
+            //    StringBuilder sb = new StringBuilder();
+            //    foreach (Match m2 in mc)
+            //    {
+            //        string v = m2.Value;
+            //        string word = v.Substring(2);
+            //        byte[] codes = new byte[2];
+            //        int code = Convert.ToInt32(word.Substring(0, 2), 16);
+            //        int code2 = Convert.ToInt32(word.Substring(2), 16);
+            //        codes[0] = (byte)code2;
+            //        codes[1] = (byte)code;
+            //        sb.Append(Encoding.Unicode.GetString(codes));
+            //    }
+            //    return sb.ToString();
+            //}
+            //else
+            //{
+            //    return AsciiString;
+            //}
+        }
+        #endregion
+
+        #region 转换汉字为js中使用的Ascii字符串
+        /// <summary>
+        /// 转换汉字为js中使用的Ascii字符串
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string NativeToAscii(this string text)
+        {
+            byte[] bytes = System.Text.Encoding.Unicode.GetBytes(text);
+            string lowCode = "", temp = "";
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    temp = System.Convert.ToString(bytes[i], 16);//取出元素4编码内容（两位16进制）
+                    if (temp.Length < 2) temp = "0" + temp;
+                }
+                else
+                {
+                    string mytemp = Convert.ToString(bytes[i], 16);
+                    if (mytemp.Length < 2) mytemp = "0" + mytemp; lowCode = lowCode + @"\u" + mytemp + temp;//取出元素4编码内容（两位16进制）
+                }
+            }
+            return lowCode;
+        }
+        #endregion
     }
 }

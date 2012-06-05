@@ -81,6 +81,18 @@ namespace Voodoo
                 return int.MinValue;
             }
         }
+
+        public static long ToInt64(this object self,long DefaultValue)
+        {
+            try
+            {
+                return Convert.ToInt64(self);
+            }
+            catch
+            {
+                return DefaultValue;
+            }
+        }
         #endregion
 
         #region IP地址转换为秘密的IP地址

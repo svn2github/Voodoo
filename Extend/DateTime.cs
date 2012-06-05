@@ -115,6 +115,10 @@ namespace Voodoo
         {
             return System.DateTime.Now.AddDays(Convert.ToDouble((6 - Convert.ToInt16(System.DateTime.Now.DayOfWeek))) - 7);
         }
+        public static System.DateTime LastWeekLastDay(this System.DateTime dt)
+        {
+            return System.DateTime.Now.AddDays(Convert.ToDouble((6 - Convert.ToInt16(dt.DayOfWeek))) - 7);
+        }
         #endregion
 
         #region 本周第一天
@@ -200,6 +204,10 @@ namespace Voodoo
         public static System.DateTime LastMonthLastDay()
         {
             return System.DateTime.Parse(System.DateTime.Now.ToString("yyyy-MM-01")).AddDays(-1);//这个月1号的前一天
+        }
+        public static System.DateTime LastMonthLastDay(this System.DateTime dt)
+        {
+            return System.DateTime.Parse(dt.ToString("yyyy-MM-01")).AddDays(-1);//这个月1号的前一天
         }
         #endregion
 

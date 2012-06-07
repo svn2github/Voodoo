@@ -82,7 +82,7 @@ namespace Voodoo
             }
         }
 
-        public static long ToInt64(this object self,long DefaultValue)
+        public static long ToInt64(this object self, long DefaultValue)
         {
             try
             {
@@ -394,7 +394,7 @@ namespace Voodoo
         /// <returns></returns>
         public static bool ToBoolean(this object self)
         {
-            if (self == null||self.ToS().IsNullOrEmpty())
+            if (self == null || self.ToS().IsNullOrEmpty())
             {
                 return false;
             }
@@ -443,6 +443,17 @@ namespace Voodoo
             sb.Append(s);
             return sb;
         }
+        public static string TrimEnd(this string str, string needtrim)
+        {
+            if (str.EndsWith(needtrim))
+            {
+                str = str.Substring(0, str.LastIndexOf(needtrim));
+
+            }
+
+            return str;
+
+        }
         #endregion
 
         #region 转换为char[]数组
@@ -480,7 +491,7 @@ namespace Voodoo
         /// <param name="str">要转换的字符串</param>
         /// <param name="Encode">编码格式</param>
         /// <returns>返回一个二进制数据流</returns>
-        public static byte[] ToByteArray(this string str,Encoding Encode)
+        public static byte[] ToByteArray(this string str, Encoding Encode)
         {
             return Encode.GetBytes(str);
         }
@@ -1209,7 +1220,7 @@ namespace Voodoo
             {
                 return relaURL;
             }
-            if(relaURL.ToLower().StartsWith("http"))
+            if (relaURL.ToLower().StartsWith("http"))
             {
                 return relaURL;
             }
@@ -1383,11 +1394,11 @@ namespace Voodoo
         /// <param name="ele"></param>
         /// <param name="AttrName"></param>
         /// <returns></returns>
-        public static string GetHtmlElementAttribute(this string ele,string AttrName)
+        public static string GetHtmlElementAttribute(this string ele, string AttrName)
         {
             return ele.FindString(string.Format("{0}=\"(?<key>.*?)\"|{0}=(?<key>.*?)", AttrName));
         }
-        #endregion 
+        #endregion
 
         #region 序列化HTML表单
         /// <summary>

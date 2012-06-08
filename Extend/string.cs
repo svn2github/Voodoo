@@ -443,6 +443,12 @@ namespace Voodoo
             sb.Append(s);
             return sb;
         }
+        public static StringBuilder TrimEnd(this StringBuilder sb, string needtrim)
+        {
+
+            return new StringBuilder(sb.ToString().TrimEnd(needtrim));
+
+        }
         public static string TrimEnd(this string str, string needtrim)
         {
             if (str.EndsWith(needtrim))

@@ -91,7 +91,7 @@ namespace Voodoo.Net
                 request.Timeout = 60000;
                 request.AllowAutoRedirect = true;
                 response = (HttpWebResponse)request.GetResponse();
-                if (response.StatusCode == HttpStatusCode.OK && response.ContentLength < 1024 * 1024)
+                if (response.StatusCode == HttpStatusCode.OK)// && response.ContentLength < 1024 * 1024)
                 {
                     string c = ucoid;
                     string html = "";

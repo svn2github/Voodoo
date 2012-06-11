@@ -169,8 +169,8 @@ namespace Voodoo
             StrNohtml = Regex.Replace(StrNohtml, "<p.*?>", Environment.NewLine, RegexOptions.IgnoreCase);
             StrNohtml = Regex.Replace(StrNohtml, "<br.*?>", Environment.NewLine, RegexOptions.IgnoreCase);
             StrNohtml = Regex.Replace(StrNohtml, "<script[\\w\\W].*?</script>", "", RegexOptions.IgnoreCase);
-            StrNohtml = System.Text.RegularExpressions.Regex.Replace(StrNohtml, "<[^>]+>", "");
-            StrNohtml = System.Text.RegularExpressions.Regex.Replace(StrNohtml, "&[^;]+;", "");
+            StrNohtml = System.Text.RegularExpressions.Regex.Replace(StrNohtml, "<[^>]+>", " ");
+            StrNohtml = System.Text.RegularExpressions.Regex.Replace(StrNohtml, "&[^;]+;", " ");
             return StrNohtml;
 
         }
@@ -1229,6 +1229,10 @@ namespace Voodoo
             if (relaURL.ToLower().StartsWith("http"))
             {
                 return relaURL;
+            }
+            if (relaURL.StartsWith("?"))
+            {
+                return baseURL.Split('?')[0] + relaURL;
             }
             Uri u = new Uri(baseURL);
             try

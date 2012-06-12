@@ -218,6 +218,20 @@ namespace Voodoo
                 }
             }
         }
+        public static void SetText(this  System.Web.UI.WebControls.ListControl ctrl, string[] texts)
+        {
+            foreach (string text in texts)
+            {
+                foreach (ListItem item in ctrl.Items)
+                {
+                    if (item.Text == text)
+                    {
+                        item.Selected = true;
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// radioButtonList绑定数据

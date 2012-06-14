@@ -218,6 +218,21 @@ namespace Voodoo
                 }
             }
         }
+        public static void SetValue(this  System.Web.UI.WebControls.ListControl ctrl, string value)
+        {
+            foreach (ListItem item in ctrl.Items)
+            {
+                if (item.Value == value)
+                {
+                    item.Selected = true;
+                    break;
+                }
+                else
+                {
+                    item.Selected = false;
+                }
+            }
+        }
         public static void SetText(this  System.Web.UI.WebControls.ListControl ctrl, string[] texts)
         {
             foreach (string text in texts)
@@ -228,6 +243,22 @@ namespace Voodoo
                     {
                         item.Selected = true;
                     }
+                }
+            }
+        }
+
+        public static void SetText(this  System.Web.UI.WebControls.ListControl ctrl, string text)
+        {
+            foreach (ListItem item in ctrl.Items)
+            {
+                if (item.Text == text)
+                {
+                    item.Selected = true;
+                    break;
+                }
+                else
+                {
+                    item.Selected = false;
                 }
             }
         }

@@ -225,7 +225,6 @@ namespace Voodoo
                 if (item.Value == value)
                 {
                     item.Selected = true;
-                    break;
                 }
                 else
                 {
@@ -254,7 +253,6 @@ namespace Voodoo
                 if (item.Text == text)
                 {
                     item.Selected = true;
-                    break;
                 }
                 else
                 {

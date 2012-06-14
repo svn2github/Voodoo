@@ -189,6 +189,7 @@
     <Compile Include="other\DataTableStringCollection.cs" />
     <Compile Include="other\enum.cs" />
     <Compile Include="other\FileAttribute.cs" />
+    <Compile Include="other\Intelligent\SentenceAnalysis.cs" />
     <Compile Include="other\Messanger.cs" />
     <Compile Include="other\PhoneNumber.cs" />
     <Compile Include="other\PinyinHelper.cs" />

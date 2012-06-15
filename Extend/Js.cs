@@ -121,7 +121,7 @@ namespace Voodoo
 
         public static void RegScript(string ResourceName, string Key)
         {
-
+            
         }
 
         /// <summary>

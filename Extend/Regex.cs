@@ -49,6 +49,33 @@ namespace Voodoo
             return new Regex(pattern).Match(s);
         }
 
+        public static int GetNumberFromText(this string text)
+        {
+            string clearNumberStr = text.GetMatchGroup("(?<key>[一二三四五六七八九十百千万亿兆零壹贰叁肆伍陆柒捌玖0123456789]+)").Groups["key"].Value.IsNull("0");
+            int result = 0;
+            Match m = new Regex("[一二三四五六七八九]?十|[一二三四五六七八九]+百|[一二三四五六七八九]+千|[一二三四五六七八九]+万|[一二三四五六七八九]+", RegexOptions.None).Match(clearNumberStr);
+            while (m.Success)
+            {
+                result += m.Groups[0].Value.Replace("一", "1")
+                    .Replace("二", "2")
+                    .Replace("三", "3")
+                    .Replace("四", "4")
+                    .Replace("五", "5")
+                    .Replace("六", "6")
+                    .Replace("七", "7")
+                    .Replace("八", "8")
+                    .Replace("九", "9")
+                    .Replace("十", "0")
+                    .Replace("百", "00")
+                    .Replace("千", "000")
+                    .Replace("万", "0000")
+                    .ToInt32()
+                    ;
+                m = m.NextMatch();
+            }
+            return result;
+        }
+
         public static int GetNumberFromTitle(this string title)
         {
             Match mc = new Regex("第[一二三四五六七八九〇零十百千万1234567890]+章|引子", RegexOptions.None).Match(title);

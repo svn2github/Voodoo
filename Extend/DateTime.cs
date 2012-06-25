@@ -571,6 +571,158 @@ namespace Voodoo
             return new DateTime(date.Substring(0, 4).ToInt32(), date.Substring(4, 2).ToInt32(), date.Substring(6, 2).ToInt32());
         }
         #endregion
+
+        #region 天干地支相关
+        public static string TianGanOfYear(this DateTime tm)
+        {
+            string Arr = "甲乙丙丁戊己庚辛壬癸";
+            return Arr[(tm.Year - 4) % 10].ToS();
+        }
+
+        public static string TianGanOfMonth(this DateTime tm)
+        {
+            string Arr = "甲乙丙丁戊己庚辛壬癸";
+            return Arr[((tm.Year - 4) * 2 + tm.Month) % 10].ToS();
+        }
+
+        public static string TianGanOfDay(this DateTime tm)
+        {
+            string Arr = "癸甲乙丙丁戊己庚辛壬";
+            return Arr[(4 * (tm.Year / 100) + tm.Year / 100 / 4 + 5 * (tm.Year % 100) + tm.Year % 100 / 4 + 3 * (tm.Month + 1) / 5 + tm.Day - 3) % 10].ToS();
+
+        }
+
+        public static string DiZhiOfYear(this DateTime tm)
+        {
+            string Arr = "子丑寅卯辰巳午未申酉戌亥";
+            if (tm.Year < 2000)
+            {
+                return Arr[(tm.Year % 100) % 12].ToS();
+            }
+            else
+            {
+                return Arr[(tm.Year % 100 + 4) % 12].ToS();
+            }
+        }
+        public static string DizhiOfMonth(this DateTime tm)
+        {
+            string Arr = "丑寅卯辰巳午未申酉戌亥子";
+            return Arr[tm.Month - 1].ToS();
+        }
+        public static string DizhiOfDay(this DateTime tm)
+        {
+            string Arr = "亥子丑寅卯辰巳午未申酉戌";
+
+            int C = tm.Year / 100;
+            int y = tm.Year % 100;
+            int M = tm.Month;
+            int d = tm.Day;
+            int i = tm.Month % 2 == 0 ? 6 : 0;
+
+            int Z = 8 * C + (C / 4) + 5 * y + (y / 4) + (3 * (M + 1) / 5) + d + 7 + i;
+
+            return Arr[Z % 12].ToS();
+        }
+
+        public static string ShuXiangOfYear(this DateTime tm)
+        {
+            string Arr = "鼠牛虎兔龙蛇马羊猴鸡狗猪";
+            if (tm.Year < 2000)
+            {
+                return Arr[(tm.Year % 100) % 12].ToS();
+            }
+            else
+            {
+                return Arr[(tm.Year % 100 + 4) % 12].ToS();
+            }
+        }
+        #endregion
+
+        #region 获取星座
+        /// <summary>
+        /// 获取星座
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static string GetConstellations(this DateTime dt)
+        {
+            string[] Constellations = new string[] { "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "摩羯座", "水瓶座", "双鱼座" };
+            int i = Convert.ToInt32(dt.ToString("MMdd"));
+            int j;
+            if (i >= 321 && i <= 419)
+                j = 0;
+            else if (i >= 420 && i <= 520)
+                j = 1;
+            else if (i >= 521 && i <= 621)
+                j = 2;
+            else if (i >= 622 && i <= 722)
+                j = 3;
+            else if (i >= 723 && i <= 822)
+                j = 4;
+            else if (i >= 823 && i <= 922)
+                j = 5;
+            else if (i >= 923 && i <= 1023)
+                j = 6;
+            else if (i >= 1024 && i <= 1121)
+                j = 7;
+            else if (i >= 1122 && i <= 1221)
+                j = 8;
+            else if (i >= 1222 || i <= 119)
+                j = 9;
+            else if (i >= 120 && i <= 218)
+                j = 10;
+            else if (i >= 219 && i <= 320)
+                j = 11;
+            else
+            {
+                return "未知星座";
+            }
+            return Constellations[j];
+        }
+        #endregion
+
+        #region 获取幸运石
+        /// <summary>
+        /// 获取幸运石
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static string GetBirthStone(this DateTime dt)
+        {
+            string[] BirthStones  = new string[] { "钻石", "蓝宝石", "玛瑙", "珍珠", "红宝石", "红条纹玛瑙", "蓝宝石", "猫眼石", "黄宝石", "土耳其玉", "紫水晶", "月长石，血石" };
+            int i = Convert.ToInt32(dt.ToString("MMdd"));
+            int j;
+            if (i >= 321 && i <= 419)
+                j = 0;
+            else if (i >= 420 && i <= 520)
+                j = 1;
+            else if (i >= 521 && i <= 621)
+                j = 2;
+            else if (i >= 622 && i <= 722)
+                j = 3;
+            else if (i >= 723 && i <= 822)
+                j = 4;
+            else if (i >= 823 && i <= 922)
+                j = 5;
+            else if (i >= 923 && i <= 1023)
+                j = 6;
+            else if (i >= 1024 && i <= 1121)
+                j = 7;
+            else if (i >= 1122 && i <= 1221)
+                j = 8;
+            else if (i >= 1222 || i <= 119)
+                j = 9;
+            else if (i >= 120 && i <= 218)
+                j = 10;
+            else if (i >= 219 && i <= 320)
+                j = 11;
+            else
+            {
+                return "未知幸运石";
+            }
+            return BirthStones[j];
+        }
+        #endregion
     }
 
 }

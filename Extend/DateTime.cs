@@ -592,6 +592,21 @@ namespace Voodoo
 
         }
 
+        public static string TianGanOfHour(this DateTime tm)
+        {
+            string Arr = "甲乙丙丁戊己庚辛壬癸";
+            int G = (4 * (tm.Year / 100) + tm.Year / 100 / 4 + 5 * (tm.Year % 100) + tm.Year % 100 / 4 + 3 * (tm.Month + 1) / 5 + tm.Day - 3) % 10;
+            int C = tm.Year / 100;
+            int y = tm.Year % 100;
+            int M = tm.Month;
+            int d = tm.Day;
+            int i = tm.Month % 2 == 0 ? 6 : 0;
+
+            int Z = (8 * C + (C / 4) + 5 * y + (y / 4) + (3 * (M + 1) / 5) + d + 7 + i)%12;
+            //日干序数*2+日支序数—2
+            return Arr[(G * 2 + Z - 2)%12].ToS();
+        }
+
         public static string DiZhiOfYear(this DateTime tm)
         {
             string Arr = "子丑寅卯辰巳午未申酉戌亥";
@@ -622,6 +637,12 @@ namespace Voodoo
             int Z = 8 * C + (C / 4) + 5 * y + (y / 4) + (3 * (M + 1) / 5) + d + 7 + i;
 
             return Arr[Z % 12].ToS();
+        }
+        public static string DiZhiOfHour(this DateTime tm)
+        {
+            string Arr = "子丑寅卯辰巳午未申酉戌亥";
+            int i = tm.Hour / 2;
+            return Arr[i].ToS();
         }
 
         public static string ShuXiangOfYear(this DateTime tm)

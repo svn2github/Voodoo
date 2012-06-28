@@ -641,7 +641,7 @@ namespace Voodoo
         public static string DiZhiOfHour(this DateTime tm)
         {
             string Arr = "子丑寅卯辰巳午未申酉戌亥";
-            int i = tm.Hour / 2;
+            int i = tm.AddHours(1).Hour / 2;
             return Arr[i].ToS();
         }
 

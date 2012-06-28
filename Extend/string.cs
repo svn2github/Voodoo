@@ -1476,5 +1476,29 @@ namespace Voodoo
             return str;
         }
         #endregion
+
+        #region 去掉URL无法是别的字符 ChinaseUrlEncode
+        /// <summary>
+        /// 去掉URL无法是别的字符
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static string ChinaseUrlEncode(this string url)
+        {
+            string result = url;
+            result = result.Replace("/", "_").Replace(" ", "").Replace("~", "");
+            result = result.Replace(":", "_");
+            result = result.Replace("：", "_");
+            result = result.Replace(">", "");
+            result = result.Replace("<", "");
+            result = result.Replace("*", "");
+            result = result.Replace("?", "");
+            result = result.Replace("|", "_");
+            result = result.Replace("·", "");
+            result = result.Replace("．", "");
+            result = result.Replace("●", "");
+            return result;
+        }
+        #endregion
     }
 }

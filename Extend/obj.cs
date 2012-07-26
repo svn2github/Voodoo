@@ -17,6 +17,47 @@ namespace Voodoo
     /// </summary>
     public static class obj
     {
+
+        public static string ListToJsonStr(this IEnumerable<object> lst)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(WS.RequestString("jsoncallback") + "([");
+            foreach (object o in lst)
+            {
+                ArrayList list = new ArrayList();
+
+                PropertyInfo[] fieldinfo = o.GetType().GetProperties();
+
+                foreach (PropertyInfo info in fieldinfo)
+                {
+                    ListItem listitem = new ListItem(info.Name, info.GetValue(o, null).ToS());
+                    list.Add(listitem);
+                }
+                sb.Append("{");
+
+                for (int i = 0; i < list.Count; i++)
+                {
+
+                    ListItem li = (ListItem)list[i];
+
+                    sb.Append("\"" + li.Text.Replace("\"", "\\\"").Replace("'", "\\'") + "\":");
+                    sb.Append("\"" + li.Value.Replace("\"", "\\\"").Replace("'", "\\'") + "\"");
+
+                    if (i != list.Count - 1)
+                    {
+                        sb.Append(",");
+                    }
+
+                }
+                sb.Append("},");
+
+            }
+            sb = sb.TrimEnd(',');
+
+            sb.Append("])");
+            return sb.ToS();
+        }
+
         #region 实体转换为JSON
         /// <summary>
         /// 实体转换为JSON,带jsoncallback参数

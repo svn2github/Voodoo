@@ -866,7 +866,7 @@ namespace Voodoo
         /// <returns></returns>
         public static string UrlDecode(this string str)
         {
-            return System.Web.HttpContext.Current.Server.UrlDecode(str);
+            return System.Web.HttpUtility.UrlDecode(str);
         }
 
         public static string UrlDecode(this string str, System.Text.Encoding encode)

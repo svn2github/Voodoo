@@ -46,6 +46,23 @@ namespace Voodoo
         }
         #endregion
 
+        public static long RequestLong(string parName)
+        {
+            return RequestLong(parName, long.MinValue);
+        }
+        public static long RequestLong(string parName, long defaultValue)
+        {
+
+            try
+            {
+                return long.Parse(RequestString(parName));
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+
         #region 取得Request的string值，任何错误均返回""，Form优先于QueryString被取出
         /// <summary>
         /// 取得Request的string值，任何错误均返回""，Form优先于QueryString被取出

@@ -232,6 +232,37 @@ namespace Voodoo
                 }
             }
         }
+        /// <summary>
+        /// 强制设置选择项
+        /// </summary>
+        /// <param name="ctrl"></param>
+        /// <param name="value"></param>
+        /// <param name="text"></param>
+        public static void ForceSetValue(this  System.Web.UI.WebControls.ListControl ctrl, string value, string text)
+        {
+            bool In = false;
+
+            foreach (ListItem item in ctrl.Items)
+            {
+                if (item.Value == value)
+                {
+                    item.Selected = true;
+                    In = true;
+                }
+                else
+                {
+                    item.Selected = false;
+                }
+            }
+
+            if (In == false)
+            {
+                ctrl.Items.Add(new ListItem(text, value));
+                ctrl.SelectedValue = value;
+            }
+
+        }
+
         public static void SetText(this  System.Web.UI.WebControls.ListControl ctrl, string[] texts)
         {
             foreach (string text in texts)
@@ -283,6 +314,15 @@ namespace Voodoo
             foreach (ListItem l in li)
             {
                 rbl.Items.Add(new ListItem(l.Text, l.Value));
+            }
+        }
+
+        public static void Bind(this System.Web.UI.WebControls.ListControl rbl, Dictionary<int, string> li)
+        {
+            rbl.Items.Clear();
+            foreach (var l in li)
+            {
+                rbl.Items.Add(new ListItem(l.Value, l.Key.ToS()));
             }
         }
 

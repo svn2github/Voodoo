@@ -328,7 +328,6 @@ namespace Voodoo
 
         public static void BindNumbers(this System.Web.UI.WebControls.ListControl rbl, int min, int max)
         {
-            rbl.Items.Add("");
             for (int i = max; i >=min; i--)
             {
                 rbl.Items.Add(i.ToS());

@@ -148,6 +148,12 @@ namespace Voodoo
 
             return sb.ToString();
         }
+
+        public static void ResponseJson(this object model)
+        {
+            System.Web.HttpContext.Current.Response.Clear();
+            System.Web.HttpContext.Current.Response.Write(model.ToJson());
+        }
         #endregion
 
         #region 将数据表转换成JSON类型串
@@ -433,5 +439,55 @@ namespace Voodoo
         }
         #endregion
 
+        #region 缓存LIST<>
+        /// <summary>
+        /// 缓存LIST<>
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static List<TResult> AsCache<TResult>(this IQueryable<TResult> dt) where TResult : class, new()
+        {
+            string catch_Name = "LIST_" + typeof(TResult).ToS();
+
+            if (Voodoo.Cache.Cache.GetCache(catch_Name) == null)
+            {
+                Voodoo.Cache.Cache.SetCache(catch_Name,dt.ToList());
+            }
+            return (List<TResult>)Voodoo.Cache.Cache.GetCache(catch_Name);
+        }
+
+        public static List<TResult> AsCache<TResult>(this IQueryable<TResult> dt,string Key) where TResult : class, new()
+        {
+            string catch_Name = Key;
+
+            if (Voodoo.Cache.Cache.GetCache(catch_Name) == null)
+            {
+                Voodoo.Cache.Cache.SetCache(catch_Name, dt.ToList());
+            }
+            return (List<TResult>)Voodoo.Cache.Cache.GetCache(catch_Name);
+        }
+        #endregion
+
+        public static List<int> ToInt32(this List<string> list)
+        {
+            List<int> result = new List<int>();
+            foreach (string str in list)
+            {
+                result.Add(str.ToInt32());
+            }
+            return result;
+        }
+        public static List<long> ToInt64(this List<string> list)
+        {
+            List<long> result = new List<long>();
+            foreach (string str in list)
+            {
+                result.Add(str.ToInt64());
+            }
+            return result;
+        }
+
+        
     }
 }

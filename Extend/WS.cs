@@ -46,6 +46,18 @@ namespace Voodoo
         }
         #endregion
 
+        public static int? RequestNullInt32(string parName)
+        {
+            try
+            {
+                return int.Parse(RequestString(parName));
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public static long RequestLong(string parName)
         {
             return RequestLong(parName, long.MinValue);

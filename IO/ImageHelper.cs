@@ -22,7 +22,7 @@ namespace Voodoo.IO
         /// <param name="width">缩略图宽度</param>
         /// <param name="height">缩略图高度</param>
         /// <param name="mode">生成缩略图的方式 HW指定宽高 W指定宽 H指定高 Cut按宽高裁剪</param>    
-        public static void MakeThumbnail(string originalImagePath, string thumbnailPath, int width, int height, string mode)
+        public static void MakeThumbnail(string originalImagePath, string thumbnailPath, int width, int height, string mode="Cut")
         {
             Image originalImage = Image.FromFile(originalImagePath);
 

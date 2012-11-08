@@ -23,7 +23,7 @@ namespace Voodoo
             Type type = typeof(TResult);
             DataTable dt = new DataTable();
             //把所有的public属性加入到集合 并添加DataTable的列
-            Array.ForEach<PropertyInfo>(type.GetProperties(), p => { pList.Add(p); dt.Columns.Add(p.Name, p.PropertyType); });
+            Array.ForEach<PropertyInfo>(type.GetProperties(), p => { pList.Add(p); dt.Columns.Add(p.Name, p.PropertyType.BaseType); });
             foreach (var item in value)
             {
                 //创建一个DataRow实例

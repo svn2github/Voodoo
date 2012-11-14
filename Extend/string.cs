@@ -854,7 +854,19 @@ namespace Voodoo
         #region HtmlDeCode
         public static string HtmlDeCode(this string str)
         {
-            return System.Web.HttpContext.Current.Server.HtmlDecode(System.Web.HttpContext.Current.Server.UrlDecode(str)).Replace("''''", "''");
+            str = RegexReplace(str, "<br[\\s/]{0,2}>", "\r\n");
+            str = RegexReplace(str, "&nbsp;", " ");
+
+            return System.Web.HttpUtility.HtmlDecode(System.Web.HttpUtility.UrlDecode(str)).Replace("''''", "''");
+        }
+
+        private static string RegexReplace(string Content, string parrten, string newvalue)
+        {
+            while (Regex.IsMatch(Content, parrten))
+            {
+                Content = Regex.Replace(Content, parrten, newvalue, RegexOptions.IgnoreCase);
+            }
+            return Content;
         }
         #endregion
 
@@ -942,7 +954,8 @@ namespace Voodoo
             path = path.Replace("<", "《");
             path = path.Replace("*", "※");
             path = path.Replace("|", "‖");
-            path = path.Replace("\"", "");
+            path = path.Replace("\"", "“");
+            path = path.Replace("\\", "、");
 
             return path;
         }

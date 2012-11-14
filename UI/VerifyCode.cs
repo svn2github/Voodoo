@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Data;
 using System.Configuration;
 using System.Web;
@@ -70,7 +72,7 @@ namespace Voodoo.UI
         #endregion
 
         #region 自定义背景色(默认白色)
-        Color backgroundColor = Color.White;
+        Color backgroundColor = Color.Transparent;
         public Color BackgroundColor
         {
             get { return backgroundColor; }
@@ -88,7 +90,7 @@ namespace Voodoo.UI
         #endregion
 
         #region 自定义字体数组
-        string[] fonts = { "Arial", "Georgia", "courier  new  " };
+        string[] fonts = { "Arial", "courier  new  ", "微软雅黑", "幼圆" };
         public string[] Fonts
         {
             get { return fonts; }
@@ -153,8 +155,8 @@ namespace Voodoo.UI
         {
             int fSize = FontSize;
             int fWidth = fSize + Padding;
-            int imageWidth = (int)(code.Length * fWidth) + 4 + Padding * 2;
-            int imageHeight = fSize * 2 + Padding;
+            int imageWidth = (int)(code.Length * fWidth) + 4 + Padding * code.Length;
+            int imageHeight = fSize * 2;
             System.Drawing.Bitmap image = new System.Drawing.Bitmap(imageWidth, imageHeight);
             Graphics g = Graphics.FromImage(image);
             g.Clear(BackgroundColor);
@@ -163,7 +165,7 @@ namespace Voodoo.UI
             if (this.Chaos)
             {
                 Pen pen = new Pen(ChaosColor, 0);
-                int c = Length * 10;
+                int c = Length * 5;
                 for (int i = 0; i < c; i++)
                 {
                     int x = rand.Next(image.Width);
@@ -182,9 +184,9 @@ namespace Voodoo.UI
             //随机字体和颜色的验证码字符
             for (int i = 0; i < code.Length; i++)
             {
-                cindex = rand.Next(Colors.Length - 1);
-                findex = rand.Next(Fonts.Length - 1);
-                f = new System.Drawing.Font(Fonts[findex], fSize, System.Drawing.FontStyle.Bold);
+                cindex = @int.GetRandomNumber(0, Colors.Length);
+                findex = @int.GetRandomNumber(0, Fonts.Length);
+                f = new System.Drawing.Font(Fonts[findex], fSize);
                 b = new System.Drawing.SolidBrush(Colors[cindex]);
                 if (i % 2 == 1)
                 {
@@ -195,13 +197,17 @@ namespace Voodoo.UI
                     top = top1;
                 }
                 left = i * fWidth;
-                g.DrawString(code.Substring(i, 1), f, b, left, top);
+                if (i > 0)
+                {
+                    left += i * Padding;
+                }
+                g.DrawString(code.Substring(i, 1), f, b, left, Padding);
             }
             //画一个边框边框颜色为Color.Gainsboro
-            g.DrawRectangle(new Pen(Color.Gainsboro, 0), 0, 0, image.Width - 1, image.Height - 1);
+            //g.DrawRectangle(new Pen(Color.Transparent, 0), 0, 0, image.Width - 1, image.Height - 1);
             g.Dispose();
             //产生波形（Add By 51aspx.com）
-            image = TwistImage(image, true, 5, 4);
+            //image = TwistImage(image, true, 3, 0);
             return image;
         }
         #endregion
@@ -209,11 +215,17 @@ namespace Voodoo.UI
         #region 将创建好的图片输出到页面
         public void CreateImageOnPage(string code, HttpContext context)
         {
+            if (code.IsNullOrEmpty())
+            {
+                code = CreateVerifyCode(3);
+            }
+            //this.backgroundColor = Color.Transparent;
+            //this.FontSize = 11;
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             Bitmap image = this.CreateImageCode(code);
-            image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             context.Response.ClearContent();
-            context.Response.ContentType = "image/Jpeg";
+            context.Response.ContentType = "image/Png";
             context.Response.BinaryWrite(ms.GetBuffer());
             ms.Close();
             ms = null;
@@ -222,7 +234,7 @@ namespace Voodoo.UI
         }
         #endregion
 
-        #region 生成随机字符码
+        #region 生成随机加减法字符码
         public string CreateVerifyCode(int codeLen)
         {
             //if (codeLen == 0)
@@ -249,38 +261,193 @@ namespace Voodoo.UI
             int num2 = 0;
             int result = 0;
 
-            if (index==0)//加法
+            if (index == 0)//加法
             {
                 num = @int.GetRandomNumber(0, 9);
                 System.Threading.Thread.Sleep(13);
                 num2 = @int.GetRandomNumber(10, 99);
                 result = num + num2;
             }
-            else if (index==1)//乘法 
+            else if (index == 1)//乘法 
             {
                 num = @int.GetRandomNumber(1, 10);
                 System.Threading.Thread.Sleep(13);
                 num2 = @int.GetRandomNumber(1, 10);
                 result = num * num2;
             }
-            else if (index==2) //减法
+            else if (index == 2) //减法
             {
                 num = @int.GetRandomNumber(10, 100);
                 System.Threading.Thread.Sleep(13);
                 num2 = @int.GetRandomNumber(0, 10);
-                result = num -num2;
+                result = num - num2;
             }
 
-            
 
-            HttpContext.Current.Session["ver"] = result;
+
+            HttpContext.Current.Session["SafeCode"] = result;
 
             return num.ToString() + sym[index] + num2 + "=?";
         }
+
         public string CreateVerifyCode()
         {
             return CreateVerifyCode(0);
         }
+
+        #region 生成随机成语字符串
+        /// <summary>
+        /// 生成随机成语字符串
+        /// </summary>
+        /// <returns></returns>
+        public string CreateForWordCode()
+        {
+            string[] xx = new string[] { 
+                "我是春哥",
+                "李毅大帝",
+                "屌丝男士",
+                "屌丝女士",
+                "和谐社会",
+                "油价下调",
+                "房价下调",
+                "人见人爱",
+                "花见花开",
+                "司法公正",
+                "言论自由",
+                "中央委员",
+                "人肉搜索",
+                "网络传闻",
+                "生命之环",
+                "造节运动",
+                "东方之门",
+                "长江大桥",
+                "肌肉萝莉",
+                "政局常委",
+                "北京条约",
+                "纪委产生",
+                "五星酒店",
+                "路易威登",
+                "犯罪心理",
+                "邪恶力量",
+                "乐不思蜀",
+                "网络管制",
+                "孕育希望",
+                "美国之声",
+                "为人父母",
+                "另类家庭",
+                "私人诊所",
+                "谍影迷情",
+                "不要考研",
+                "大连实德",
+                "美女野兽",
+                "洪水猛兽",
+                "刷卡消费",
+                "傲骨贤妻",
+                "妙警贼探",
+                "都市侠盗",
+                "无耻之徒",
+                "单身毒妈",
+                "死亡地带",
+                "舞林争霸",
+                "生活大爆炸",
+                "绯闻女孩",
+                "绝望主妇",
+                "破产姐妹",
+                "触摸未来",
+                "实习医生",
+                "国土安全",
+                "摩登家庭",
+                "终极审判",
+                "行尸走肉",
+                "广告狂人",
+                "逝者之证",
+                "疑犯追踪",
+                "福尔摩斯",
+                "侠胆雄狮",
+                "陨落星辰",
+                "鬼楼契约",
+                "外星邻居",
+                "妖女迷行",
+                "危机边缘",
+                "脱狱之王",
+                "替身姐妹",
+                "名媛望族",
+                "法证先锋",
+                "潜行阻击",
+                "倚天屠龙记",
+                "护花危情",
+                "天下第一",
+                "白发魔女",
+                "公主嫁到",
+                "阿旺新传",
+                "万凰之王",
+                "功夫足球",
+                "新不了情",
+                "圆月弯刀",
+                "通天干探",
+                "陀枪师姐",
+                "溏心风暴",
+                "谈判专家",
+                "耀舞长安",
+                "甜言蜜语",
+                "万家灯火",
+                "东方之珠",
+                "纵横天下",
+                "纵横四海",
+                "英雄本色",
+                "日月神剑",
+                "与敌同行",
+                "缺宅男女",
+                "如来神掌",
+                "酒店风云",
+                "美味情缘",
+                "天地男儿",
+                "天子寻龙",
+                "剑啸江湖",
+                "精武陈真",
+                "人龙传说",
+                "新楚留香",
+                "萧十一郎",
+                "隔世追凶",
+                "香帅传奇",
+                "非常岳母",
+                "疑情别恋",
+                "争分夺秒",
+                "老婆大人",
+                "突围行动",
+                "其乐无穷",
+                "盛世仁杰",
+                "别无选择",
+                "紫禁之巅",
+                "汇通天下",
+                "乱世佳人",
+                "野蛮奶奶",
+                "桌球天王",
+                "梅艳芳菲",
+                "功夫状元",
+                "恋爱女王",
+                "雷霆扫毒",
+                "回到三国",
+                "读心神探",
+                "怒火街头",
+                "雪山飞狐",
+                "天龙八部",
+                "射雕英雄传",
+                "笑傲江湖",
+                "书剑恩仇录",
+                "神雕侠侣",
+                "北京青年",
+                "爱情公寓",
+                "武林外传",
+                "康熙王朝",
+                "超级厉害"
+            };
+
+            string result = xx[@int.GetRandomNumber(0, xx.Length)];
+            HttpContext.Current.Session["SafeCode"] = result;
+            return result;
+        }
+        #endregion
         #endregion
 
         public bool IsReusable

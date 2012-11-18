@@ -267,5 +267,18 @@ namespace Voodoo
             return (methodCall)Voodoo.IO.XML.DeSerialize(typeof(methodCall), request);
         }
         #endregion
+
+        #region 获取当前app运行目录
+        /// <summary>
+        /// 获取当前app运行目录
+        /// </summary>
+        public static string BaseDirectory
+        {
+            get
+            {
+                return System.AppDomain.CurrentDomain.BaseDirectory;
+            }
+        }
+        #endregion
     }
 }

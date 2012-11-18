@@ -16,7 +16,7 @@ namespace Voodoo.Data.DbHelper
         /// <summary>
         /// 数据库连接
         /// </summary>
-        public SQLiteConnection Conn;
+        public SQLiteConnection Conn { get; set; }
 
         /// <summary>
         /// 命令对象
@@ -35,7 +35,15 @@ namespace Voodoo.Data.DbHelper
             //Conn.Open();
             //Conn.ChangePassword("");
             //Conn.Close();
+            this.Cmd = new SQLiteCommand();
+        }
 
+        public SQLiteHelper(string connStr,string Password)
+        {
+            this.Conn = new SQLiteConnection(connStr);
+            //Conn.Open();
+            Conn.SetPassword(Password);
+            //Conn.Close();
             this.Cmd = new SQLiteCommand();
         }
 

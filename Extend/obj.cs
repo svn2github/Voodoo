@@ -452,10 +452,17 @@ namespace Voodoo
 
             if (Voodoo.Cache.Cache.GetCache(catch_Name) == null)
             {
-                Voodoo.Cache.Cache.SetCache(catch_Name,dt.ToList());
+                Voodoo.Cache.Cache.SetCache(catch_Name,dt.ToList(),30);
             }
             return (List<TResult>)Voodoo.Cache.Cache.GetCache(catch_Name);
         }
+        public static void ClearListCache<TResult>(this TResult dt) where TResult : class, new()
+        {
+            string catch_Name = "LIST_" + typeof(TResult).ToS();
+            Voodoo.Cache.Cache.Clear(catch_Name);
+        }
+
+
 
         public static List<TResult> AsCache<TResult>(this IQueryable<TResult> dt,string Key) where TResult : class, new()
         {

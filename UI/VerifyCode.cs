@@ -153,6 +153,10 @@ namespace Voodoo.UI
         #region 生成校验码图片
         public Bitmap CreateImageCode(string code)
         {
+            if (code == null)
+            {
+                code = RndNum(5);
+            }
             int fSize = FontSize;
             int fWidth = fSize + Padding;
             int imageWidth = (int)(code.Length * fWidth) + 4 + Padding * code.Length;
@@ -217,7 +221,7 @@ namespace Voodoo.UI
         {
             if (code.IsNullOrEmpty())
             {
-                code = CreateVerifyCode(3);
+                code = RndNum(4);
             }
             //this.backgroundColor = Color.Transparent;
             //this.FontSize = 11;
@@ -449,6 +453,23 @@ namespace Voodoo.UI
         }
         #endregion
         #endregion
+
+        private string RndNum(int VcodeNum)
+        {
+            string[] strArray = "1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,g,h,i,j,k,m,n,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,J,K,L,M,N,P,Q,R,S,T,U,W,V,X,Y,Z".Split(new char[] { ',' });
+            string str3 = null;
+            short num2 = (short)VcodeNum;
+
+            for (short i = 1; i <= num2; i = (short)(i + 1))
+            {
+
+                Random rd = new Random(i * ((int)DateTime.Now.Ticks));
+
+                str3 = str3 + strArray[(int)Math.Round((double)((float)(56f * rd.NextDouble())).ToInt32())];
+            }
+            HttpContext.Current.Session["SafeCode"] = str3;
+            return str3;
+        }
 
         public bool IsReusable
         {

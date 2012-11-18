@@ -122,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\IniFileHelper.cs" />
+    <Compile Include="Data\DbHelper\SQLiteHelper.cs" />
     <Compile Include="Extend\bool.cs" />
     <Compile Include="Cache\Cache.cs" />
     <Compile Include="Config\Info.cs" />

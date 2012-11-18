@@ -164,13 +164,17 @@ namespace Voodoo
         public static string TrimHTML(this string html)
         {
             string StrNohtml = html;
+            StrNohtml = StrNohtml.HtmlDeCode();
             StrNohtml = StrNohtml.TrimScript();
             StrNohtml = Regex.Replace(StrNohtml, "&.{1,6};", "", RegexOptions.IgnoreCase);
+
             StrNohtml = Regex.Replace(StrNohtml, "<p.*?>", Environment.NewLine, RegexOptions.IgnoreCase);
             StrNohtml = Regex.Replace(StrNohtml, "<br.*?>", Environment.NewLine, RegexOptions.IgnoreCase);
+
             StrNohtml = Regex.Replace(StrNohtml, "<script[\\w\\W].*?</script>", "", RegexOptions.IgnoreCase);
             StrNohtml = System.Text.RegularExpressions.Regex.Replace(StrNohtml, "<[^>]+>", "");
             StrNohtml = System.Text.RegularExpressions.Regex.Replace(StrNohtml, "&[^;]+;", "");
+
             return StrNohtml;
 
         }
@@ -854,8 +858,8 @@ namespace Voodoo
         #region HtmlDeCode
         public static string HtmlDeCode(this string str)
         {
-            str = RegexReplace(str, "<br[\\s/]{0,2}>", "\r\n");
-            str = RegexReplace(str, "&nbsp;", " ");
+            //str = RegexReplace(str, "<br[\\s/]{0,2}>", "\r\n");
+            //str = RegexReplace(str, "&nbsp;", " ");
 
             return System.Web.HttpUtility.HtmlDecode(System.Web.HttpUtility.UrlDecode(str)).Replace("''''", "''");
         }

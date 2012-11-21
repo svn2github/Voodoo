@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 using System.Net;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
 
 namespace Voodoo
 {
@@ -66,47 +67,7 @@ namespace Voodoo
         /// <returns></returns>
         public static string ToJsonStr(this object model)
         {
-            ArrayList list = new ArrayList();
-
-            PropertyInfo[] fieldinfo = model.GetType().GetProperties();
-
-            foreach (PropertyInfo info in fieldinfo)
-            {
-                ListItem listitem = new ListItem(info.Name, info.GetValue(model, null).ToS());
-                list.Add(listitem);
-            }
-
-            StringBuilder sb = new StringBuilder();
-            if (System.Web.HttpContext.Current.Request.QueryString["jsoncallback"] != null)
-            {
-                sb.Append(System.Web.HttpContext.Current.Request.QueryString["jsoncallback"] + "(");
-            }
-
-            sb.Append("{");
-
-            for (int i = 0; i < list.Count; i++)
-            {
-
-                ListItem li = (ListItem)list[i];
-
-                sb.Append("\"" + li.Text.Replace("\"", "\\\"").Replace("'", "\\'") + "\":");
-                sb.Append("\"" + li.Value.Replace("\"", "\\\"").Replace("'", "\\'") + "\"");
-
-                if (i != list.Count - 1)
-                {
-                    sb.Append(",");
-                }
-
-            }
-            sb.Append("}");
-            if (System.Web.HttpContext.Current.Request.QueryString["jsoncallback"] != null)
-            {
-                sb.Append(")");
-            }
-
-
-            return sb.ToString();
-
+            return model.ToJson();
         }
 
         /// <summary>
@@ -115,44 +76,16 @@ namespace Voodoo
         /// <returns></returns>
         public static string ToJson(this object model)
         {
-            ArrayList list = new ArrayList();
-            
-            PropertyInfo[] fieldinfo = model.GetType().GetProperties();
-
-            foreach (PropertyInfo info in fieldinfo)
-            {
-                ListItem listitem = new ListItem(info.Name, info.GetValue(model, null).ToS());
-                list.Add(listitem);
-            }
-
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append("{");
-
-            for (int i = 0; i < list.Count; i++)
-            {
-
-                ListItem li = (ListItem)list[i];
-
-                sb.Append("\"" + li.Text.Replace("\"", "\\\"").Replace("'", "\\'") + "\":");
-                sb.Append("\"" + li.Value.Replace("\"", "\\\"").Replace("'", "\\'") + "\"");
-
-                if (i != list.Count - 1)
-                {
-                    sb.Append(",");
-                }
-
-            }
-            sb.Append("}");
-
-
-            return sb.ToString();
+            JavaScriptSerializer ss = new JavaScriptSerializer();
+            return ss.Serialize(model);
         }
 
         public static void ResponseJson(this object model)
         {
+            JavaScriptSerializer ss = new JavaScriptSerializer();
             System.Web.HttpContext.Current.Response.Clear();
-            System.Web.HttpContext.Current.Response.Write(model.ToJson());
+            System.Web.HttpContext.Current.Response.ContentType = "text/json";
+            System.Web.HttpContext.Current.Response.Write(ss.Serialize(model));
         }
         #endregion
 

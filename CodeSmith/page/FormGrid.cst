@@ -1,0 +1,562 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="System.Data" %>
+
+<%@ Import Namespace="System.Collections" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchemaCollection" Category="Context" Description="Table that the object is based on." %>
+<%@ Property Name="NameSpace" Type="String" Default="" Optional="False" Category="" Description="" OnChanged="" Editor="" EditorBase="" Serializer="" %>
+<%@ Property Name="EnableSort" Type="Boolean" Default="False" Optional="False" Category="" Description="" OnChanged="" Editor="" EditorBase="" Serializer="" %>
+
+
+<<%=""%>%@ Page Language="C#" AutoEventWireup="true" CodeBehind="List.aspx.cs" Inherits="<%=NameSpace+"."+ SourceTable[0].Name%>.List" %<%=""%>>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title><%=SourceTable[0].Name%>??</title>
+	<script type="text/javascript" src="../../data/script/management.js"></script>
+    <script type="text/javascript">
+        function afterEdit(e) {
+            server.AfterEdit(e.record.data);
+        }
+        function Act(action, value, form) {
+            if (action == "Delete") {
+                server.DeleteItem(value.data.ID);
+            }
+            else {
+                server.LoadForm(value.data.ID);
+            }
+        }
+        function SaveData() {
+            var values = FormPanel1.getForm().getValues();
+            if (values.Audit) {
+                values.Audit = true;
+            }
+            if (values.Tuijian) {
+                values.Tuijian = true;
+            }
+            server.AfterEdit(values);
+        }
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <ext:ResourceManager ID="ResourceManager1" runat="server" />
+	<ext:Window ID="advForm" runat="server" Height="220" Width="210" Title="????" Padding="5" AutoHeight="True" Hidden="true" Icon="DiskBlackMagnify">
+        <Items>
+            <ext:FormPanel ID="FormPanel2" Layout="FormLayout" HideLabels="true" Padding="5"
+                runat="server">
+                <Items>
+				    <%
+					string[] cols=getTableColumns(SourceTable[0],"<ext:{editorype} ID=\"s_{name}\" DataIndex=\"{name}\" runat=\"server\" EmptyText=\"{description}\" Margins=\"0 5 0 0\" />\n");
+					foreach(string item in cols)
+					{
+					%>
+					<%=item%>
+					<%
+					}
+					%>
+                    
+                </Items>
+                <Buttons>
+                    <ext:Button  runat="server" Text="??">
+                        <DirectEvents>
+                            <Click OnEvent="Search">
+                                <EventMask ShowMask="true" />
+                            </Click>
+                        </DirectEvents>
+                    </ext:Button>
+                    <ext:Button runat="server" Text="??">
+                        <Listeners>
+                            <Click Handler="#{advForm}.hide()" />
+                        </Listeners>
+                        <DirectEvents>
+                            <Click OnEvent="Cancel_Search">
+                                <EventMask ShowMask="true" />
+                            </Click>
+                        </DirectEvents>
+                    </ext:Button>
+                </Buttons>
+            </ext:FormPanel>
+        </Items>
+        <DirectEvents>
+            <Close OnEvent="Cancel_Search">
+                <EventMask ShowMask="true" />
+            </Close>
+        </DirectEvents>
+    </ext:Window>
+    <ext:Viewport ID="Main" runat="server" Layout="border">
+        <Items>
+            <ext:TabPanel ID="TabPanel1" runat="server" TabAlign="Right" Region="Center">
+                <Items>
+                    <ext:GridPanel ID="GridPanel1" runat="server" StripeRows="true" Title="????" AutoExpandColumn="Title"
+						<% if(EnableSort){%>
+						Draggable="true" DDGroup="DDGroup" EnableDragDrop="true"
+						<%}%>
+                        Margins="5 5 5 5">
+                        <Store>
+                            <ext:Store ID="Store1" runat="server" OnRefreshData="MyData_Refresh">
+                                <Reader>
+                                    <ext:JsonReader IDProperty="ID">
+                                        <Fields>
+                                            <%
+											string[] fields=getTableColumns(SourceTable[0],"<ext:RecordField Name=\"{name}\" Type=\"{recordtype}\" />");
+											foreach(string item in fields)
+											{
+											%>
+											<%=item%>
+											<%
+											}
+											%>
+                                        </Fields>
+                                    </ext:JsonReader>
+                                </Reader>
+                            </ext:Store>
+                        </Store>
+                        <ColumnModel ID="ColumnModel1" runat="server">
+							<Defaults>
+								<ext:Parameter Name="TrueText" Value="<span style='color:green;'>?</span>" />
+								<ext:Parameter Name="FalseText" Value="<span style='color:red;'>?</span>" />
+							</Defaults>
+                            <Columns>
+                                <ext:RowNumbererColumn />
+                                <%
+								string[] columns=getTableColumns(SourceTable[0],"<ext:{columntype} Header=\"{description}\" DataIndex=\"{name}\"><Editor><ext:{editorype} runat=\"server\" /></Editor></ext:{columntype}>");
+								foreach(string item in columns)
+								{
+								%>
+								<%=item%>
+								<%
+								}
+								%>
+                                <ext:CommandColumn Width="110">
+                                    <Commands>
+                                        <ext:GridCommand Icon="Delete" CommandName="Delete" Text="??" />
+                                        <ext:GridCommand Icon="NoteEdit" CommandName="Edit" Text="??" />
+                                    </Commands>
+                                </ext:CommandColumn>
+                            </Columns>
+                        </ColumnModel>
+                        <SelectionModel>
+                            <ext:CheckboxSelectionModel ID="CheckboxSelectionModel1" runat="server" />
+                        </SelectionModel>
+                        <LoadMask ShowMask="true" />
+                        <BottomBar>
+                            <ext:PagingToolbar ID="PagingToolbar1" runat="server" PageSize="10">
+                                <Items>
+                                    <ext:Label ID="Label1" runat="server" Text="????:" />
+                                    <ext:ToolbarSpacer ID="ToolbarSpacer1" runat="server" Width="10" />
+                                    <ext:ComboBox ID="ComboBox1" runat="server" Width="80">
+                                        <Items>
+                                            <ext:ListItem Text="10" />
+                                            <ext:ListItem Text="20" />
+                                            <ext:ListItem Text="30" />
+                                            <ext:ListItem Text="50" />
+                                        </Items>
+                                        <SelectedItem Value="10" />
+                                        <Listeners>
+                                            <Select Handler="#{PagingToolbar1}.pageSize = parseInt(this.getValue()); #{PagingToolbar1}.doLoad();" />
+                                        </Listeners>
+                                    </ext:ComboBox>
+                                </Items>
+                            </ext:PagingToolbar>
+                        </BottomBar>
+                        <TopBar>
+                            <ext:Toolbar ID="Toolbar1" runat="server">
+                                <Items>
+                                    <ext:Button ID="Button1" runat="server" Text="??" Icon="Add">
+										<Listeners>
+											<Click Handler="#{GridPanel1}.insertRecord();#{GridPanel1}.getRowEditor().startEditing(0);" />
+										</Listeners>
+									</ext:Button>
+									<ext:Button ID="Button2" runat="server" Text="??" Icon="Exclamation">
+										<DirectEvents>
+											<Click OnEvent="On_Remove" />
+										</DirectEvents>
+									</ext:Button>
+									<ext:ToolbarSeparator />
+									<ext:TriggerField ID="s_Key" runat="server" EmptyText="??????" EnableKeyEvents="true">
+										<Triggers>
+											<ext:FieldTrigger Icon="Clear" HideTrigger="true" />
+										</Triggers>
+										<Listeners>
+											<KeyUp Fn="keyUp" Buffer="100" />
+											<TriggerClick Fn="clearFilter" />
+											<SpecialKey Fn="filterSpecialKey" />
+										</Listeners>
+									</ext:TriggerField>
+									<ext:Button ID="btn_search" Text="??" runat="server" Icon="Zoom">
+										<DirectEvents>
+											<Click OnEvent="Search">
+												<EventMask ShowMask="true" />
+											</Click>
+										</DirectEvents>
+									</ext:Button>
+									<ext:ToolbarSeparator />
+									<ext:Button runat="server" ID="btn_Adv" Text="????" Icon="DiskBlackMagnify" EnableToggle="true">
+										<Listeners>
+											<Toggle Fn="AdvanceSearch" />
+										</Listeners>
+									</ext:Button>
+                                </Items>
+                            </ext:Toolbar>
+                        </TopBar>
+                        <Listeners>
+                            <Command Handler="Act(command, record,#{FormPanel1}.getForm());" />
+                        </Listeners>
+                    </ext:GridPanel>
+                    <ext:FormPanel ID="FormPanel1" runat="server" Title="??" Margins="5 5 5 5" Padding="5" Region="East" ButtonAlign="Right" AutoScroll="true">
+						<Defaults>
+							<ext:Parameter Name="AnchorHorizontal" Value="95%" />
+						</Defaults>
+                        <Items>
+							
+                            <ext:Hidden ID="ID" DataIndex="ID" Text="-1" runat="server">
+                            </ext:Hidden>
+							 <%
+							string[] editors=getTableColumns(SourceTable[0],"<ext:{editorype} ID=\"{name}\" DataIndex=\"{name}\" runat=\"server\" FieldLabel=\"{description}\" />\n");
+							foreach(string item in editors)
+							{
+							%>
+							<%=item%>
+							<%
+							}
+							%>
+                        </Items>
+                        <Buttons>
+                            <ext:Button runat="server" Text="??">
+                                <Listeners>
+                                    <Click Fn="SaveData" />
+                                </Listeners>
+                            </ext:Button>
+                            <ext:Button runat="server" Text="??">
+                                <DirectEvents>
+                                    <Click OnEvent="Form_Reset" />
+                                </DirectEvents>
+                            </ext:Button>
+                            <ext:Button runat="server" Text="??">
+                                <DirectEvents>
+                                    <Click OnEvent="Cancel_Click" />
+                                </DirectEvents>
+                            </ext:Button>
+                        </Buttons>
+                    </ext:FormPanel>
+                </Items>
+            </ext:TabPanel>
+        </Items>
+    </ext:Viewport>
+	<ext:KeyNav runat="server" Target="={document.body}">
+        <Enter Handler="server.BindData();" />
+    </ext:KeyNav>
+	<% if(EnableSort){%>
+    <ext:DropTarget ID="DropTarget1" runat="server" Target="={GridPanel1.getView().mainBody}"
+        Group="DDGroup">
+        <NotifyDrop Fn="notifyDrop" />
+    </ext:DropTarget>
+	<%}%>
+    </form>
+</body>
+</html>
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Ext.Net;
+using System.Reflection;
+using Newtonsoft.Json.Linq;
+using System.Text;
+using System.IO;
+using Voodoo;
+using Voodoo.Basement;
+
+namespace <%=NameSpace+"."+ SourceTable[0].Name%>
+{
+    public partial class List : AdminBase
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!X.IsAjaxRequest)
+            {
+                this.BindData();
+            }
+        }
+        protected void MyData_Refresh(object sender, StoreRefreshDataEventArgs e)
+        {
+            this.BindData();
+        }
+
+        [DirectMethod(Namespace = "server")]
+        public void AfterEdit(JObject obj)
+        {
+            DatasEntities ent = new DatasEntities();
+
+            <%=SourceTable[0].Name%> n = obj.ToObject<<%=SourceTable[0].Name%>>();
+            //n.Content = n.Content.AsciiToNative().HtmlDeCode();
+            if (n.ID <= 0)
+            {
+                ent.AddTo<%=SourceTable[0].Name%>(n);
+            }
+            else
+            {
+                <%=SourceTable[0].Name%> n_obj = (from l in ent.<%=SourceTable[0].Name%> where l.ID == n.ID select l).First();
+
+                PropertyInfo[] ps = n.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                foreach (PropertyInfo p in ps)
+                {
+                    object value = p.GetValue(n, null);
+                    if (value == null)
+                    {
+                        continue;
+                    }
+                    try
+                    {
+                        p.SetValue(n_obj, value, null);
+                    }
+                    catch { }
+
+                }
+
+            }
+            ent.SaveChanges();
+
+            StringBuilder sb = new StringBuilder();
+
+
+            this.GridPanel1.Store.Primary.CommitChanges();
+            this.BindData();
+            TabPanel1.SetActiveTab(0);
+            FormPanel1.Title = "??";
+            FormPanel1.Reset();
+			 X.Msg.Notify("??", "?????").Show();
+        }
+
+        [DirectMethod(Namespace = "server")]
+        public void LoadForm(int id)
+        {
+            DatasEntities ent = new DatasEntities();
+
+            <%=SourceTable[0].Name%> n = (from l in ent.<%=SourceTable[0].Name%> where l.ID == id select l).FirstOrDefault();
+            FormPanel1.SetValues(n);
+            ent.Dispose();
+            TabPanel1.SetActiveTab(1);
+            FormPanel1.Title = "??";
+        }
+
+        [DirectMethod(Namespace = "server")]
+        public void DeleteItem(int id)
+        {
+            using (DatasEntities ent = new DatasEntities())
+            {
+                <%=SourceTable[0].Name%> n = (from l in ent.<%=SourceTable[0].Name%> where l.ID == id select l).First();
+                ent.DeleteObject(n);
+                ent.SaveChanges();
+            }
+            this.BindData();
+            X.Msg.Notify("??", "?????").Show();
+        }
+
+        [DirectMethod(Namespace = "server")]
+        public void BindData()
+        {
+            DatasEntities ent = new DatasEntities();
+
+            var store = this.GridPanel1.GetStore();
+
+            var s = from l in ent.<%=SourceTable[0].Name%> select l;
+
+            
+			<%
+			string[] searchs=getTableColumns(SourceTable[0],"if (s_{name}.Text.IsNullOrEmpty() == false){ s=s.Where(p=>p.{name}.Contains(s_{name}.Text)); }");
+			foreach(string item in searchs)
+			{
+			%>
+			<%=item%>
+			<%
+			}
+			%>
+
+            if (s_Key.Text.Length > 0)
+            {
+                s = from l in s
+                    where 
+					<%
+					string[] exps=getTableColumns(SourceTable[0],"l.{name}.Contains(s_Key.Text) ");
+					for(int i=0;i<exps.Length;i++)
+					{
+					%>
+					<%=exps[i]%><%=i==exps.Length-1?"":"||"%>
+					<%
+					}
+					%>
+                    select l;
+            }
+
+            store.DataSource = s.OrderByDescending(p => p.ID).ToList();
+            store.DataBind();
+        }
+
+        protected void Form_Reset(object sender, DirectEventArgs e)
+        {
+            FormPanel1.SetValues(new <%=SourceTable[0].Name%>());
+            FormPanel1.Title = "??";
+        }
+
+        protected void Add_Click(object sender, DirectEventArgs e)
+        {
+            FormPanel1.SetValues(new <%=SourceTable[0].Name%>());
+            FormPanel1.Title = "??";
+            TabPanel1.SetActiveTab(1);
+        }
+
+        protected void On_Remove(object sender, DirectEventArgs e)
+        {
+            RowSelectionModel sm = this.GridPanel1.SelectionModel.Primary as RowSelectionModel;
+            DatasEntities ent = new DatasEntities();
+
+            foreach (SelectedRow row in sm.SelectedRows)
+            {
+                try
+                {
+                    int id = row.RecordID.ToInt32();
+                    var n = (from l in ent.<%=SourceTable[0].Name%> where l.ID == id select l).First();
+                    ent.DeleteObject(n);
+                }
+                catch { }
+            }
+            ent.SaveChanges();
+            ent.Dispose();
+            this.BindData();
+			X.Msg.Notify("??", "?????").Show();
+        }
+
+        protected void Cancel_Click(object sender, DirectEventArgs e)
+        {
+            FormPanel1.SetValues(new <%=SourceTable[0].Name%>());
+            FormPanel1.Title = "??";
+            TabPanel1.SetActiveTab(0);
+        }
+    }
+}
+
+
+
+
+<script runat="template">
+
+
+public string[] getTableColumns(TableSchema objTable,string strTemp)
+{
+	string[] result=new string[objTable.Columns.Count];
+	for(int i=0;i<objTable.Columns.Count;i++)
+	{
+		if(strTemp.IndexOf("{name}")>-1)
+		{
+			result[i]=strTemp.Replace("{name}",objTable.Columns[i].Name) ;
+		}
+		else
+		{
+			result[i]=objTable.Columns[i].Name ;
+		}
+		if(strTemp.IndexOf("{recordtype}")>-1)
+		{
+			result[i]=result[i].Replace("{recordtype}",GetRecordFieldType(objTable.Columns[i].SystemType.ToString()));
+		}
+		if(strTemp.IndexOf("{columntype}")>-1)
+		{
+			result[i]=result[i].Replace("{columntype}",GetColumnType(objTable.Columns[i].SystemType.ToString()));
+		}
+		if(strTemp.IndexOf("{editorype}")>-1)
+		{
+			result[i]=result[i].Replace("{editorype}",GetEditorType(objTable.Columns[i].SystemType.ToString(),objTable.Columns[i].Size));
+		}
+		result[i]=result[i].Replace("{description}",objTable.Columns[i].Description);
+		//result[i]=objTable.Columns[i].Description;
+	}
+	return result;
+}
+
+public string GetRecordFieldType(string Type)
+{
+	string result="";
+	switch(Type)
+	{
+		case "System.Int32":
+		case "System.Int64":
+		case "System.Byte":
+			result="Int";
+			break;
+		case "System.Boolean":
+			result="Boolean";
+			break;
+		case "System.DateTime":
+			result="Date";
+			break;
+		case "System.String":
+			result="String";
+			break;
+	}
+	
+	return result;
+}
+public string GetColumnType(string Type)
+{
+	string result="";
+	switch(Type)
+	{
+		case "System.Int32":
+		case "System.Int64":
+		case "System.Byte":
+			result="NumberColumn";
+			break;
+		case "System.Boolean":
+			result="BooleanColumn";
+			break;
+		case "System.DateTime":
+			result="DateColumn";
+			break;
+		case "System.String":
+			result="Column";
+			break;
+	}
+	return result;
+}
+public string GetEditorType(string Type,int DataSize)
+{
+	string result="";
+	switch(Type)
+	{
+		case "System.Int32":
+		case "System.Int64":
+		case "System.Byte":
+			result="NumberField";
+			break;
+		case "System.Boolean":
+			result="Checkbox";
+			break;
+		case "System.DateTime":
+			result="DateField";
+			break;
+		case "System.String":
+			if(DataSize<0)
+			{
+				result="HtmlEditor";
+			}
+			else
+			{
+				result="TextField";
+			}
+			break;
+	}
+	return result;
+}
+
+</script>

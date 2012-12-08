@@ -22,6 +22,12 @@ namespace Voodoo.Net.Mail
         /// <returns>发送邮件是否成功</returns>
         public static void SentMail(string from, string loginName, string password, string to,string FromText, string subject, string body, string smtpHost, string toUser)
         {
+            SentMail(from, loginName, password, to, FromText, subject, body, smtpHost, toUser, new List<string>());
+
+        }
+
+        public static void SentMail(string from, string loginName, string password, string to, string FromText, string subject, string body, string smtpHost, string toUser, List<string> attchments)
+        {
             MailMessage message = new MailMessage();
             message.From = new MailAddress(from, FromText, Encoding.GetEncoding("UTF-8"));
 
@@ -35,14 +41,19 @@ namespace Voodoo.Net.Mail
 
             message.Body = body;
 
-            //message.Body = body;
+            foreach (string att in attchments)
+            {
+                try
+                {
+                    message.Attachments.Add(new Attachment(att));
+                }
+                catch { }
+            }
 
             SmtpClient client = new SmtpClient();
             client.Host = smtpHost;
             client.Credentials = new System.Net.NetworkCredential(loginName, password);
             client.Send(message);
-
-
         }
         #endregion
     }

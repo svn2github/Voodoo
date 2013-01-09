@@ -556,7 +556,7 @@ namespace Voodoo
         /// </summary>
         /// <param name=”timeStamp”>要转换的时间戳</param>
         /// <returns></returns>
-        private DateTime GetTime(string timeStamp)
+        private static DateTime GetTime(string timeStamp)
         {
             DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
             long lTime = long.Parse(timeStamp + "0000000");
